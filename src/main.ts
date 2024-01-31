@@ -1,1 +1,5 @@
-console.log('Hello World!');
+import { hookFunction, SendChat } from "utils";
+
+function test() : void {
+    SendChat("test")
+}
