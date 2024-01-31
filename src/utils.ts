@@ -1,5 +1,4 @@
 import bcModSDKRef from "bondage-club-mod-sdk";
-import { ServerSend } from "bc-stubs";
 
 export const bcModSDK = bcModSDKRef.registerMod({
 	name: "XiaoSuActivity",
