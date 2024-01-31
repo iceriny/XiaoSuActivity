@@ -21,7 +21,7 @@
         "resolveJsonModule": true
     },
     "include": [
-        "node_modules/bondage-club-mod-sdk/dist/*",
+        "node_modules/bc-stubs/bc/**/*.d.ts",
         "./src/**/*"
     ],
     // "exclude": [
