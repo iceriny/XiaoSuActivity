@@ -21,8 +21,11 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Build and deploy
+    - name: Build
       run: npm run build
+
+    - name: Copy userLoad.user.js to dist
+      run: cp userLoad.user.js dist/
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
