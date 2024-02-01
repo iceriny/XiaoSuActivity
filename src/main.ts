@@ -1,5 +1,6 @@
 import { conDebug, hookFunction, SendChat, MSGType } from "./utils";
 import { ModVersion } from "declaration/dev_const";
+import { ChatRoomModule } from "chatRoom";
 
 function initWait() {
     conDebug({
@@ -31,7 +32,7 @@ function initWait() {
 }
 
 export function init() {
-
+    new ChatRoomModule();
 
     conDebug(`XSActivity Loaded! Version: ${ModVersion}`);
 }
