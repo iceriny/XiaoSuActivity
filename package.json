@@ -1,27 +1,30 @@
 {
-    "name": "xiao-su-activity",
-    "version": "0.0.1",
-    "main": "rollup.config.js",
-    "keywords": [],
-    "author": "XiaoSu",
-    "license": "ISC",
-    "dependencies": {
-        "bc-stubs": "^100.0.0",
-        "bondage-club-mod-sdk": "^1.1.0",
-        "lz-string": "^1.5.0"
-    },
-    "devDependencies": {
-        "@types/lz-string": "^1.5.0",
-        "@rollup/plugin-commonjs": "^25.0.7",
-        "@rollup/plugin-node-resolve": "^15.2.3",
-        "@rollup/plugin-terser": "^0.4.4",
-        "rollup": "^4.9.6",
-        "rollup-plugin-progress": "^1.1.2",
-        "rollup-plugin-typescript2": "^0.36.0",
-        "terser": "^5.27.0"
-    },
-    "scripts": {
-        "build": "rollup -c"
-    },
-    "description": ""
+  "name": "xiao-su-activity",
+  "version": "0.0.1",
+  "description": "https://iceriny.github.io/XiaoSuActivity/userLoad.user.js",
+  "main": "rollup.config.js",
+  "keywords": [],
+  "author": "XiaoSu",
+  "license": "ISC",
+  "dependencies": {
+    "bc-stubs": "^100.0.0",
+    "bondage-club-mod-sdk": "^1.1.0",
+    "lz-string": "^1.5.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@types/lz-string": "^1.5.0",
+    "install": "^0.13.0",
+    "npm": "^10.4.0",
+    "rollup": "^4.9.6",
+    "rollup-plugin-progress": "^1.1.2",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "terser": "^5.27.0"
+  },
+  "scripts": {
+    "build": "rollup -c"
+  }
 }

@@ -5,6 +5,7 @@ import resolve from "@rollup/plugin-node-resolve";
 import terser from "@rollup/plugin-terser";
 import progress from 'rollup-plugin-progress';
 import packageJson from "./package.json" assert { type: "json" };
+import json from "@rollup/plugin-json";
 
 export default {
   input: 'src/main.ts', // 入口文件路径
@@ -26,6 +27,7 @@ export default {
     progress({ clearLine: true }),
     resolve({ browser: true }),
     typescript({ tsconfig: "./tsconfig.json", inlineSources: true }), // 使用 TypeScript 插件
-    commonjs()
+    commonjs(),
+    json()
   ]
 };
