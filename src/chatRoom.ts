@@ -1,7 +1,8 @@
-import { conDebug, hookFunction, ModuleCategory,MSGType } from "utils";
+import { conDebug, hookFunction, ModuleCategory, MSGType } from "utils";
+import { BaseModule } from "BaseModule";
 
-export class ChatRoomModule{
-    Load() : void {
+export class ChatRoomModule extends BaseModule {
+    Load(): void {
         hookFunction("ChatRoomRun", 30, (args, next) => {
             const result = next(args);
             conDebug({
@@ -9,7 +10,7 @@ export class ChatRoomModule{
                 type: MSGType.DebugLog,
                 content: args
             });
-             return result;
+            return result;
         });
     }
 }

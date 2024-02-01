@@ -32,7 +32,12 @@ function initWait() {
 }
 
 export function init() {
-    new ChatRoomModule();
+    const modules = [
+        new ChatRoomModule()
+    ];
+    for (const m of modules){
+        m.Load();
+    }
 
     conDebug(`XSActivity Loaded! Version: ${ModVersion}`);
 }
