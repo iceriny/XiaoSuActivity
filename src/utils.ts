@@ -1,5 +1,9 @@
 import bcModSDKRef from "bondage-club-mod-sdk";
+import { isDebug, ModVersion } from "declaration/dev_const";
 
+
+
+// SDK
 export const bcModSDK = bcModSDKRef.registerMod({
 	name: "XiaoSuActivity",
 	fullName: "XiaoSu's Activity Expand",
@@ -7,7 +11,6 @@ export const bcModSDK = bcModSDKRef.registerMod({
 	repository: "https://github.com/iceriny/XiaoSuActivity"
 });
 type PatchHook = (args: any[], next: (args: any[]) => any) => any;
-
 export function hookFunction(target: string, priority: number, hook: PatchHook): () => void {
 	const removeCallback = bcModSDK.hookFunction(target, priority, hook);
 	return removeCallback;
@@ -15,4 +18,40 @@ export function hookFunction(target: string, priority: number, hook: PatchHook):
 
 export function SendChat(msg: string) {
     ServerSend("ChatRoomChat", {Type: "Chat", Content: msg})
+}
+
+
+// Utils
+interface XSDebugMSG {
+	name: string;
+	type: MSGType;
+	content: any;
+}
+export enum MSGType {
+	DebugLog,
+	Workflow_Log,
+}
+export function conDebug(msg: XSDebugMSG | string) {
+	if (isDebug == false) return;
+
+	let result : object;
+
+	if (typeof msg === "string") {
+		result = {
+			name: "XiaoSuActivity_Debug",
+			type: MSGType.DebugLog,
+			content: msg,
+			time: new Date().toLocaleString(),
+			ModVersion: ModVersion
+		}
+	} else {
+		result = {
+			name: msg.name,
+			type: msg.type,
+			content: msg.content,
+			time: new Date().toLocaleString(),
+			ModVersion: ModVersion
+		}
+	}
+    console.debug(result);
 }
