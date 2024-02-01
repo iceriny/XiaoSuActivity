@@ -17,6 +17,6 @@
     var script = document.createElement("script");
     script.langauge = "JavaScript";
     script.setAttribute("crossorigin", "anonymous");
-    script.src = `https://iceriny.github.io/XiaoSuActivity/bundle.js?${Date.now()}`;
+    script.src = `https://iceriny.github.io/XiaoSuActivity/XSActivity.js?${Date.now()}`;
     document.head.appendChild(script);
 })();
