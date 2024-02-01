@@ -21,7 +21,6 @@ function initWait() {
             }
         });
     } else {
-        conDebug(``);
         conDebug({
             name: "logged",
             type: MSGType.Workflow_Log,

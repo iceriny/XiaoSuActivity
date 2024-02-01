@@ -10,6 +10,13 @@ export const bcModSDK = bcModSDKRef.registerMod({
 	version: XSActivity_VERSION.startsWith("v") ? XSActivity_VERSION.slice(1) : XSActivity_VERSION,
 	repository: "https://github.com/iceriny/XiaoSuActivity"
 });
+
+export enum ModuleCategory {
+	Core = -1,
+	Global = 0,
+	Test = 1
+}
+
 type PatchHook = (args: any[], next: (args: any[]) => any) => any;
 export function hookFunction(target: string, priority: number, hook: PatchHook): () => void {
 	const removeCallback = bcModSDK.hookFunction(target, priority, hook);
@@ -17,7 +24,7 @@ export function hookFunction(target: string, priority: number, hook: PatchHook):
 }
 
 export function SendChat(msg: string) {
-    ServerSend("ChatRoomChat", {Type: "Chat", Content: msg})
+	ServerSend("ChatRoomChat", { Type: "Chat", Content: msg })
 }
 
 
@@ -34,7 +41,7 @@ export enum MSGType {
 export function conDebug(msg: XSDebugMSG | string) {
 	if (isDebug === false) return;
 
-	let result : object;
+	let result: object;
 
 	if (typeof msg === "string") {
 		result = {
@@ -53,5 +60,5 @@ export function conDebug(msg: XSDebugMSG | string) {
 			ModVersion: ModVersion
 		}
 	}
-    console.debug(result);
+	console.debug(result);
 }
