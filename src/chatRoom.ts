@@ -3,7 +3,7 @@ import { BaseModule } from "BaseModule";
 
 export class ChatRoomModule extends BaseModule {
     Load(): void {
-        hookFunction("ChatRoomRun", 30, (args, next) => {
+        hookFunction("ChatRoomLoad", 30, (args, next) => {
             const result = next(args);
             conDebug({
                 name: 'ChatRoomRunTest',
