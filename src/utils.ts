@@ -32,7 +32,7 @@ export enum MSGType {
 	Workflow_Log,
 }
 export function conDebug(msg: XSDebugMSG | string) {
-	if (isDebug == false) return;
+	if (isDebug === false) return;
 
 	let result : object;
 
