@@ -76,8 +76,19 @@ export function copyAndDownloadHtmlElement(element: HTMLElement | null, fileName
 		conDebug("element is null");
 		return;
 	}
+
+	function clearElementStyle(element: HTMLElement) {
+		const style = element.style;
+		// 逐个删除属性
+		while (style.length > 0) {
+			style.removeProperty(style[0]);
+		}
+	}
+	
 	// 复制元素
 	const copiedElement = element.cloneNode(true) as HTMLElement;
+
+	clearElementStyle(copiedElement);
 
 	copiedElement.style.fontSize = "14.784px";
 	copiedElement.style.fontFamily = "Arial, sans-serif";
