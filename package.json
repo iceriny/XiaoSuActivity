@@ -25,6 +25,7 @@
     "terser": "^5.27.0"
   },
   "scripts": {
-    "build": "rollup -c"
+    "build": "rollup -c rollup.config.mjs",
+    "dev": "rollup -c Dev_rollup.config.mjs"
   }
 }
