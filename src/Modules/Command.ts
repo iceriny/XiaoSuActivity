@@ -11,25 +11,24 @@ export class Commands extends BaseModule {
     priority = 20;
 
     commandsDict: { [CommandLevel: string]: { [CommandName: string]: ICommand } } = {
-        'first': {
+        first: {
             'help': {
                 Tag: "help",
                 Description: "显示 [小酥的活动模组] 的相关命令.",
                 Action: (args, msg, parsed) => {
-                    if (parsed.length > 0) this.CommandHandler(parsed);
-                    else this.DisplayHelp();
+                    this.DisplayHelp();
                 }
             },
             'export': {
                 Tag: "export",
                 Description: "导出当前聊天室的聊天记录.",
                 Action: (args, msg, parsed) => {
-
+                    conDebug("导出聊天记录");
                 }
             }
         },
-        'second': {},
-        'third': {}
+        second: {},
+        third: {}
     }
 
 
@@ -75,8 +74,10 @@ export class Commands extends BaseModule {
                 this.DisplayHelp();
                 break;
             case 2:
-
-                break;
+                if (parsed[1] in this.commandsDict.first){
+                    this.commandsDict.first[parsed[1]].Action?.('', '', parsed);
+                }
+                    break;
             default:
                 this.DisplayHelp();
         }
