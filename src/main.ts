@@ -1,13 +1,12 @@
 import { conDebug, hookFunction, SendChat, MSGType } from "./utils";
-import { ModVersion } from "declaration/dev_const";
-import { ChatRoomModule } from "chatRoom";
+ import { ModuleLoader } from "Modules/ModuleLoader";
 
 function initWait() {
     conDebug({
         name: "Start Init",
         type: MSGType.Workflow_Log,
         content: "Init wait"
-    });
+    });  
     if (CurrentScreen == null || CurrentScreen === 'Login') {
         hookFunction('LoginResponse', 0, (args, next) => {
             conDebug({
@@ -32,14 +31,10 @@ function initWait() {
 }
 
 export function init() {
-    const modules = [
-        new ChatRoomModule()
-    ];
-    for (const m of modules){
-        m.Load();
-    }
 
-    conDebug(`XSActivity Loaded! Version: ${ModVersion}`);
+    ModuleLoader.LoadModules();
+    
+    conDebug(`XSActivity Loaded!`);
 }
 
 

@@ -1,7 +1,9 @@
 import { conDebug, hookFunction, SendChat, MSGType } from "utils";
-import { BaseModule } from "BaseModule";
+import { BaseModule } from "Modules/BaseModule";
 
 export class ChatRoomModule extends BaseModule {
+    moduleName = "ChatRoom";
+    priority = 30;
     Load(): void {
         hookFunction("ChatRoomLoad", 30, (args, next) => {
             const result = next(args);
