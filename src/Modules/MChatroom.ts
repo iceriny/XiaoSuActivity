@@ -12,7 +12,7 @@ export class Chatroom extends BaseModule {
                 type: MSGType.DebugLog,
                 content: args
             });
-            // SendChat("ChatRoomLoadTest");
+            SendChat("我是! 小酥的小白鼠! 吱吱吱吱~~~");
             return result;
         });
     }
