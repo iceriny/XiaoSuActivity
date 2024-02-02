@@ -1,38 +1,52 @@
 import { BaseModule } from "./BaseModule";
 import { conDebug, MSGType } from "utils";
 
-enum CommandLevel {
-    first = 1,
-    second = 2,
-    third = 3,
-}
+const timeRangeRegex: RegExp = /^(((0|1)\d|2[0-3]):[0-5]\d)-(((0|1)\d|2[0-3]):[0-5]\d)$/;
+
 export class Commands extends BaseModule {
     moduleName = "Commands";
     priority = 20;
 
-    commandsDict: { [CommandLevel: string]: { [CommandName: string]: ICommand } } = {
-        first: {
-            'help': {
-                Tag: "help",
-                Description: "显示 [小酥的活动模组] 的相关命令.",
-                Action: (args, msg, parsed) => {
-                    this.DisplayHelp();
-                }
-            },
-            'export': {
-                Tag: "export",
-                Description: "导出当前聊天室的聊天记录.",
-                Action: (args, msg, parsed) => {
-                    conDebug("导出聊天记录");
-                }
+    commandsDict: { [CommandName: string]: ICommand } = {
+        help: {
+            Tag: "help",
+            Description: "显示 [小酥的活动模组] 的相关命令.",
+            Action: (args, msg, parsed) => {
+                this.DisplayHelp();
             }
         },
-        second: {},
-        third: {}
+        export: {
+            Tag: "export",
+            Description: "导出当前聊天室的聊天记录. 输入: ‘/xsa export -h’ 显示导出命令的使用方法.",
+            Action: (args, msg, parsed) => {
+                const params: string = this.getCommandParameters(parsed);
+                if ( params == '-h') {
+                    ChatRoomSendLocal('输入: ‘/xsa export -[时间]’导出指定时间范围内的聊天记录.\n例如: ‘/xsa export -05:34-20:40’\n默认导出当前聊天室的全部聊天记录.\n注意! \n如果时间段过长例如第一天的05:34到第二天的06:00则可能出现导出错误.')
+                } else if (params === '') {
+                    // 导出当前聊天室的全部聊天记录 --未实现
+                    conDebug("导出当前聊天室的全部聊天记录");
+                }
+                 else if (timeRangeRegex.test(params)) {
+                    // 导出指定时间段的聊天记录 --未实现
+                    conDebug("导出指定时间段的聊天记录");
+                }
+
+            }
+        }
     }
 
 
 
+    private getCommandParameters(parsed: string[]): string {
+        // if (parsed.length === 0) {
+        //     return '';
+        // }
+        const lastParam = parsed[parsed.length - 1];
+        if (lastParam.startsWith("-")) {
+            return lastParam.slice(1);
+        }
+        return '';
+    }
     public Load(): void {
         CommandCombine(
             {
@@ -46,45 +60,32 @@ export class Commands extends BaseModule {
         )
     }
 
-    private DisplayHelp(commandLevel: CommandLevel = CommandLevel.first): void {
-        switch (commandLevel) {
-            case CommandLevel.first:
-                ChatRoomSendLocal(this.getHelpContent('first'), 5000);
-                break;
-            case CommandLevel.second:
-                ChatRoomSendLocal(this.getHelpContent('second'), 5000);
-                break;
-            case CommandLevel.third:
-                ChatRoomSendLocal(this.getHelpContent('third'), 5000);
-                break;
+    private DisplayHelp(msg: string | undefined = undefined): void {
+        if (msg === undefined) {
+            let content: string = ``;
+            for (const c in this.commandsDict) {
+                content += `/xsa ${c} ${this.commandsDict[c].Description}\n`;
+            }
+            ChatRoomSendLocal(content, 5000);
+        } else {
+            ChatRoomSendLocal(msg, 5000)
         }
-    }
-    private getHelpContent(commandLevel: string) {
-        let content: string = ``;
-        for (const c in this.commandsDict[commandLevel]) {
-            content += `/xsa ${c} ${this.commandsDict[commandLevel][c].Description}\n`;
-        }
-        return content
     }
 
     private CommandHandler(parsed: Array<string>): void {
         const parsedCount: number = parsed.length;
-        switch (parsedCount + 1) {
-            case 1:
-                this.DisplayHelp();
-                break;
-            case 2:
-                if (parsed[0] in this.commandsDict.first){
-                    this.commandsDict.first[parsed[0]]?.Action?.('', '', parsed);
+        if (parsedCount == 0) this.DisplayHelp();
+        if (parsedCount >= 1) {
+            const last = parsed[parsedCount - 1];
+            if (last.startsWith("-")) {
+                if (parsed[parsedCount - 2] in this.commandsDict) {
+                    this.commandsDict[last]?.Action?.('', '', parsed);
                 }
-                    break;
-            case 3:
-                if (parsed[0] in this.commandsDict.first && parsed[1] in this.commandsDict.second){
-                    this.commandsDict.second[parsed[1]]?.Action?.('', '', parsed);
+            } else {
+                if (last in this.commandsDict) {
+                    this.commandsDict[last]?.Action?.('', '', parsed);
                 }
-                    break;
-            default:
-                this.DisplayHelp();
+            }
         }
     }
 }
