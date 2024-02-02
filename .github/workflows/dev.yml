@@ -25,10 +25,11 @@ jobs:
       run: npm run dev
 
     - name: Copy userLoad_dev.user.js to dist
-      run: cp userLoad_dev.user.js dist/dev
+      run: cp userLoad_dev.user.js dist/dev/
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GH_TOKEN }}
         publish_dir: ./dist/dev
+        destination_dir: dev
