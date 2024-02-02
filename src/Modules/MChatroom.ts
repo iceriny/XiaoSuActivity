@@ -5,10 +5,10 @@ export class Chatroom extends BaseModule {
     moduleName = "Chatroom";
     priority = 30;
     Load(): void {
-        hookFunction("ChatRoomLoad", 30, (args, next) => {
+        hookFunction("ChatRoomJoin", 30, (args, next) => {
             const result = next(args);
             conDebug({
-                name: 'ChatRoomLoadTest',
+                name: 'ChatRoomJoinTest',
                 type: MSGType.DebugLog,
                 content: args
             });

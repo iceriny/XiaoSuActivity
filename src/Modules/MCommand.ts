@@ -30,8 +30,7 @@ export class Commands extends BaseModule {
                 }
                 else if (timeRangeRegex.test(params)) {
                     // 导出指定时间段的聊天记录 --未实现
-                    conDebug("导出指定时间段的聊天记录");
-
+                    conDebug(`导出指定的 ${params} 时间段的聊天记录`);
                     const separatorIndex = params.indexOf('-');
 
                     if (separatorIndex !== -1) {
