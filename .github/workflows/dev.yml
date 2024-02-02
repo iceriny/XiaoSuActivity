@@ -32,3 +32,4 @@ jobs:
       with:
         github_token: ${{ secrets.GH_TOKEN }}
         publish_dir: ./dist/dev
+        destination_dir: dev
