@@ -20,7 +20,7 @@ export class Commands extends BaseModule {
             Description: "导出当前聊天室的聊天记录. 输入: ‘/xsa export -h’ 显示导出命令的使用方法.",
             Action: (args, msg, parsed) => {
                 const params: string = this.getCommandParameters(parsed);
-                if ( params == '-h') {
+                if ( params == 'h') {
                     ChatRoomSendLocal('输入: ‘/xsa export -[时间]’导出指定时间范围内的聊天记录.\n例如: ‘/xsa export -05:34-20:40’\n默认导出当前聊天室的全部聊天记录.\n注意! \n如果时间段过长例如第一天的05:34到第二天的06:00则可能出现导出错误.')
                 } else if (params === '') {
                     // 导出当前聊天室的全部聊天记录 --未实现
@@ -77,6 +77,17 @@ export class Commands extends BaseModule {
         if (parsedCount == 0) this.DisplayHelp();
         if (parsedCount >= 1) {
             const last = parsed[parsedCount - 1];
+
+            conDebug({
+                name: 'CommandsTestDebug',
+                type: MSGType.DebugLog,
+                content: {
+                    l :last,
+                    j: last.startsWith("-"),
+                    j2: parsed[parsedCount - 2] in this.commandsDict
+                }
+            });
+            
             if (last.startsWith("-")) {
                 if (parsed[parsedCount - 2] in this.commandsDict) {
                     this.commandsDict[last]?.Action?.('', '', parsed);
