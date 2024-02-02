@@ -19,8 +19,10 @@ export class Chatroom extends BaseModule {
 
 
     ExportChat() : void {
+        const exportName : string | undefined = `${ChatRoomData?.Name}_${new Date().toLocaleString()}`;
+
         const mainElement : HTMLElement | null = document.getElementById('TextAreaChatLog')
 
-        copyAndDownloadHtmlElement(mainElement, 'ChatRoomExport.html')
+        copyAndDownloadHtmlElement(mainElement, exportName)
     }
 }
