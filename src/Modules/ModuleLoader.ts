@@ -1,9 +1,9 @@
 import { BaseModule } from "./BaseModule";
-import { ChatRoomModule } from "./ChatRoom";
+import { Chatroom } from "./Chatroom";
 import { Commands } from "./Command";
 
 export class ModuleLoader {
-    private static modules: { [key: string]: BaseModule } = {};
+    public static modules: { [key: string]: BaseModule } = {};
     static mList: [BaseModule] | undefined;
 
 
@@ -40,11 +40,8 @@ export class ModuleLoader {
     }
 
     private static generateModule(): void {
-        this.pushToModules(new ChatRoomModule());
+        this.pushToModules(new Chatroom());
         this.pushToModules(new Commands());
     }
 
-    public static GetModule(moduleName: string): BaseModule {
-        return this.modules[moduleName];
-    }
 }

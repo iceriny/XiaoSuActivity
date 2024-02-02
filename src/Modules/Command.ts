@@ -1,5 +1,6 @@
 import { BaseModule } from "./BaseModule";
-import { conDebug, MSGType } from "utils";
+import { conDebug, MSGType, GetModule } from "utils";
+import { Chatroom } from "./Chatroom";
 
 const timeRangeRegex: RegExp = /^(((0|1)\d|2[0-3]):[0-5]\d)-(((0|1)\d|2[0-3]):[0-5]\d)$/;
 
@@ -25,6 +26,7 @@ export class Commands extends BaseModule {
                 } else if (params === '') {
                     // 导出当前聊天室的全部聊天记录 --未实现
                     conDebug("导出当前聊天室的全部聊天记录");
+                    (GetModule("Chatroom") as Chatroom).ExportChat();
                 }
                  else if (timeRangeRegex.test(params)) {
                     // 导出指定时间段的聊天记录 --未实现
@@ -77,17 +79,6 @@ export class Commands extends BaseModule {
         if (parsedCount == 0) this.DisplayHelp();
         if (parsedCount >= 1) {
             const last = parsed[parsedCount - 1];
-
-            conDebug({
-                name: 'CommandsTestDebug',
-                type: MSGType.DebugLog,
-                content: {
-                    l :last,
-                    j: last.startsWith("-"),
-                    j2: parsed[parsedCount - 2] in this.commandsDict
-                }
-            });
-            
             if (last.startsWith("-")) {
                 const cmd :string = parsed[parsedCount - 2]; 
                 if (cmd in this.commandsDict) {

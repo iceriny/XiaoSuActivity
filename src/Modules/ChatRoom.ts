@@ -1,8 +1,8 @@
 import { conDebug, hookFunction, SendChat, MSGType } from "utils";
 import { BaseModule } from "Modules/BaseModule";
 
-export class ChatRoomModule extends BaseModule {
-    moduleName = "ChatRoom";
+export class Chatroom extends BaseModule {
+    moduleName = "Chatroom";
     priority = 30;
     Load(): void {
         hookFunction("ChatRoomLoad", 30, (args, next) => {
@@ -14,6 +14,17 @@ export class ChatRoomModule extends BaseModule {
             });
             SendChat("ChatRoomLoadTest");
             return result;
+        });
+    }
+
+
+    ExportChat() : void {
+        const mainElement : HTMLElement | null = document.getElementById('TextAreaChatLog')
+
+        conDebug({
+            name: 'ChatRoomExport',
+            type: MSGType.DebugLog,
+            content: mainElement
         });
     }
 }
