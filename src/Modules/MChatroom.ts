@@ -1,4 +1,4 @@
-import { conDebug, hookFunction, SendChat, MSGType , copyAndDownloadHtmlElement} from "utils";
+import { conDebug, hookFunction, SendChat, MSGType , copyAndDownloadHtmlElement, timeRange} from "utils";
 import { BaseModule } from "Modules/BaseModule";
 
 export class Chatroom extends BaseModule {
@@ -18,11 +18,11 @@ export class Chatroom extends BaseModule {
     }
 
 
-    ExportChat() : void {
+    ExportChat(time_limit : timeRange | null = null) : void {
         const exportName : string | undefined = `${ChatRoomData?.Name}_${new Date().toLocaleString()}`;
 
         const mainElement : HTMLElement | null = document.getElementById('TextAreaChatLog')
 
-        copyAndDownloadHtmlElement(mainElement, exportName)
+        copyAndDownloadHtmlElement(mainElement, exportName, time_limit)
     }
 }

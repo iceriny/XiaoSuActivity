@@ -69,36 +69,36 @@ export function GetModule(moduleName: string): BaseModule {
 }
 
 
-function removeElementsByTimeRange(element: HTMLElement, time_limit: timeRangeRegex) {
+function removeElementsByTimeRange(element: HTMLElement, time_limit: timeRange) {
 	const elements = element.querySelectorAll('[data-time]');
-  
+
 	elements.forEach((element) => {
-	  const dataTimeValue = element.getAttribute('data-time');
-  
-	  if (dataTimeValue) {
-		// 将字符串时间值转换为 Date 对象
-		const currentTime = new Date(`2000-01-01 ${dataTimeValue}`);
-		const minTimeDate = new Date(`2000-01-01 ${time_limit.minTime}`);
-		const maxTimeDate = new Date(`2000-01-01 ${time_limit.maxTime}`);
-  
-		// 判断是否在时间范围内
-		if (currentTime < minTimeDate || currentTime > maxTimeDate) {
-		  // 使用 remove 方法
-		  element.remove();
-  
-		  // 或者使用 parentNode.removeChild 方法
-		  // element.parentNode.removeChild(element);
+		const dataTimeValue = element.getAttribute('data-time');
+
+		if (dataTimeValue) {
+			// 将字符串时间值转换为 Date 对象
+			const currentTime = new Date(`2000-01-01 ${dataTimeValue}`);
+			const minTimeDate = new Date(`2000-01-01 ${time_limit.minTime}`);
+			const maxTimeDate = new Date(`2000-01-01 ${time_limit.maxTime}`);
+
+			// 判断是否在时间范围内
+			if (currentTime < minTimeDate || currentTime > maxTimeDate) {
+				// 使用 remove 方法
+				element.remove();
+
+				// 或者使用 parentNode.removeChild 方法
+				// element.parentNode.removeChild(element);
+			}
 		}
-	  }
 	});
-  }
-  
-interface timeRangeRegex {
+}
+
+export interface timeRange {
 	minTime: string;
 	maxTime: string;
 }
-  
-export function copyAndDownloadHtmlElement(element: HTMLElement | null, fileName: string, time_limit: timeRangeRegex | null = null) {
+
+export function copyAndDownloadHtmlElement(element: HTMLElement | null, fileName: string, time_limit: timeRange | null = null) {
 	// 创建新文档
 	const newDoc = document.implementation.createHTMLDocument();
 
@@ -114,7 +114,7 @@ export function copyAndDownloadHtmlElement(element: HTMLElement | null, fileName
 			style.removeProperty(style[0]);
 		}
 	}
-	
+
 	// 复制元素
 	const copiedElement = element.cloneNode(true) as HTMLElement;
 
