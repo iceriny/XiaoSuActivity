@@ -74,8 +74,13 @@ export class Commands extends BaseModule {
                 this.DisplayHelp();
                 break;
             case 2:
-                if (parsed[1] in this.commandsDict.first){
+                if (parsed[0] in this.commandsDict.first){
                     this.commandsDict.first[parsed[1]].Action?.('', '', parsed);
+                }
+                    break;
+            case 3:
+                if (parsed[0] in this.commandsDict.first && parsed[1] in this.commandsDict.second){
+                    this.commandsDict.second[parsed[1]].Action?.('', '', parsed);
                 }
                     break;
             default:
