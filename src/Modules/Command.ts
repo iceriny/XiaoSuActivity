@@ -89,8 +89,9 @@ export class Commands extends BaseModule {
             });
             
             if (last.startsWith("-")) {
-                if (parsed[parsedCount - 2] in this.commandsDict) {
-                    this.commandsDict[last]?.Action?.('', '', parsed);
+                const cmd :string = parsed[parsedCount - 2]; 
+                if (cmd in this.commandsDict) {
+                    this.commandsDict[cmd]?.Action?.('', '', parsed);
                 }
             } else {
                 if (last in this.commandsDict) {
