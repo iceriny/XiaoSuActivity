@@ -72,25 +72,35 @@ export function copyAndDownloadHtmlElement(element: HTMLElement | null, fileName
 	// 创建新文档
 	const newDoc = document.implementation.createHTMLDocument();
 
-	if (element === null){
+	if (element === null) {
 		conDebug("element is null");
 		return;
 	}
 	// 复制元素
 	const copiedElement = element.cloneNode(true) as HTMLElement;
-  
+
+	copiedElement.style.fontSize = "14.784px";
+	copiedElement.style.fontFamily = "Arial, sans-serif";
+	copiedElement.style.display = "flex";
+	copiedElement.style.flexDirection = "column";
+	copiedElement.style.width = "70vw";
+
+	newDoc.body.style.display = "flex";
+	newDoc.body.style.alignItems = "center";
+	newDoc.body.style.justifyContent = "center";
+	newDoc.body.style.backgroundColor = "#f2f2f2";
 	// 将复制的元素添加到新文档的 body 中
 	newDoc.body.appendChild(copiedElement);
-  
+
 	// 将新文档转换为 HTML 字符串
 	const htmlString = newDoc.documentElement.outerHTML;
-  
+
 	// 创建一个下载链接
 	const blob = new Blob([htmlString], { type: 'text/html' });
 	const link = document.createElement('a');
 	link.href = URL.createObjectURL(blob);
 	link.download = fileName;
-  
+
 	// 触发下载
 	link.click();
-  }
+}
