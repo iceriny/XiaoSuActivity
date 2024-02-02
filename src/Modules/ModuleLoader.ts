@@ -1,9 +1,10 @@
 import { BaseModule } from "./BaseModule";
-import { Chatroom } from "./Chatroom";
-import { Commands } from "./Command";
+import { Chatroom } from "./MChatroom";
+import { Commands } from "./MCommand";
+import { modules } from "./ModulesDict";
 
 export class ModuleLoader {
-    public static modules: { [key: string]: BaseModule } = {};
+    public static modules: { [key: string]: BaseModule } = modules;
     static mList: [BaseModule] | undefined;
 
 

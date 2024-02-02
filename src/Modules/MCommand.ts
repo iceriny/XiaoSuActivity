@@ -1,6 +1,6 @@
 import { BaseModule } from "./BaseModule";
 import { conDebug, MSGType, GetModule } from "utils";
-import { Chatroom } from "./Chatroom";
+import { Chatroom } from "./MChatroom";
 
 const timeRangeRegex: RegExp = /^(((0|1)\d|2[0-3]):[0-5]\d)-(((0|1)\d|2[0-3]):[0-5]\d)$/;
 

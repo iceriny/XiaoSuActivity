@@ -1,6 +1,6 @@
 import bcModSDKRef from "bondage-club-mod-sdk";
 import { isDebug, ModVersion } from "declaration/dev_const";
-import { ModuleLoader } from "Modules/ModuleLoader";
+import { modules } from "Modules/ModulesDict";
 import { BaseModule } from "Modules/BaseModule";
 
 
@@ -65,5 +65,5 @@ export function conDebug(msg: XSDebugMSG | string) {
 }
 
 export function GetModule(moduleName: string): BaseModule {
-	return ModuleLoader.modules[moduleName];
+	return modules[moduleName];
 }
