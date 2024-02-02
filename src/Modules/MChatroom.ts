@@ -1,4 +1,4 @@
-import { conDebug, hookFunction, SendChat, MSGType } from "utils";
+import { conDebug, hookFunction, SendChat, MSGType , copyAndDownloadHtmlElement} from "utils";
 import { BaseModule } from "Modules/BaseModule";
 
 export class Chatroom extends BaseModule {
@@ -21,10 +21,6 @@ export class Chatroom extends BaseModule {
     ExportChat() : void {
         const mainElement : HTMLElement | null = document.getElementById('TextAreaChatLog')
 
-        conDebug({
-            name: 'ChatRoomExport',
-            type: MSGType.DebugLog,
-            content: mainElement
-        });
+        copyAndDownloadHtmlElement(mainElement, 'ChatRoomExport')
     }
 }

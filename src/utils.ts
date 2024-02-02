@@ -67,3 +67,30 @@ export function conDebug(msg: XSDebugMSG | string) {
 export function GetModule(moduleName: string): BaseModule {
 	return modules[moduleName];
 }
+
+export function copyAndDownloadHtmlElement(element: HTMLElement | null, fileName: string) {
+	// 创建新文档
+	const newDoc = document.implementation.createHTMLDocument();
+
+	if (element === null){
+		conDebug("element is null");
+		return;
+	}
+	// 复制元素
+	const copiedElement = element.cloneNode(true) as HTMLElement;
+  
+	// 将复制的元素添加到新文档的 body 中
+	newDoc.body.appendChild(copiedElement);
+  
+	// 将新文档转换为 HTML 字符串
+	const htmlString = newDoc.documentElement.outerHTML;
+  
+	// 创建一个下载链接
+	const blob = new Blob([htmlString], { type: 'text/html' });
+	const link = document.createElement('a');
+	link.href = URL.createObjectURL(blob);
+	link.download = fileName;
+  
+	// 触发下载
+	link.click();
+  }
