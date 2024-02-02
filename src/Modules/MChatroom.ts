@@ -21,6 +21,6 @@ export class Chatroom extends BaseModule {
     ExportChat() : void {
         const mainElement : HTMLElement | null = document.getElementById('TextAreaChatLog')
 
-        copyAndDownloadHtmlElement(mainElement, 'ChatRoomExport')
+        copyAndDownloadHtmlElement(mainElement, 'ChatRoomExport.html')
     }
 }
