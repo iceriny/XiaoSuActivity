@@ -1,5 +1,6 @@
 import { BaseModule } from "./BaseModule";
 import { ChatRoomModule } from "./ChatRoom";
+import { Commands } from "./Command";
 
 export class ModuleLoader {
     private static modules: { [key: string]: BaseModule } = {};
@@ -40,6 +41,7 @@ export class ModuleLoader {
 
     private static generateModule(): void {
         this.pushToModules(new ChatRoomModule());
+        this.pushToModules(new Commands());
     }
 
     public static GetModule(moduleName: string): BaseModule {
