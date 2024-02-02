@@ -44,7 +44,7 @@ export class ModuleLoader {
     private static generateModule(): void {
         this.pushToModules(new Chatroom());
         this.pushToModules(new Commands());
-        this.pushToModules(new Activity());
+        // this.pushToModules(new Activity());
     }
 
 }
