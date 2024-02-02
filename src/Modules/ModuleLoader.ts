@@ -2,6 +2,7 @@ import { BaseModule } from "./BaseModule";
 import { Chatroom } from "./MChatroom";
 import { Commands } from "./MCommand";
 import { modules } from "./ModulesDict";
+import { Activity } from "./MActivity";
 
 export class ModuleLoader {
     public static modules: { [key: string]: BaseModule } = modules;
@@ -43,6 +44,7 @@ export class ModuleLoader {
     private static generateModule(): void {
         this.pushToModules(new Chatroom());
         this.pushToModules(new Commands());
+        this.pushToModules(new Activity());
     }
 
 }
