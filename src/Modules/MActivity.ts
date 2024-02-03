@@ -1,4 +1,5 @@
 import { BaseModule } from "./BaseModule";
+import { hookFunction } from "utils";
 
 export class ActivityModule extends BaseModule {
     moduleName = 'Activity';
@@ -14,7 +15,11 @@ export class ActivityModule extends BaseModule {
 
     LoadActivity(): void {
         for (const a in this.activityToAddDict) {
-            this.pushToActivity(this.activityToAddDict[a]);
+            this.pushToActivity(this.activityToAddDict[a].act);
+            const activityDesc = this.activityToAddDict[a].desc;
+            activityDesc?.forEach((d) => {
+                ActivityDictionary?.push(d);
+            });
         }
     }
     //============================================================
@@ -42,7 +47,7 @@ export class ActivityModule extends BaseModule {
         reverse?: true,
         makeSound?: boolean,
         stimulationAction?: StimulationAction,
-        activityExpression?: Array<ExpressionTrigger>) : Activity {
+        activityExpression?: Array<ExpressionTrigger>): Activity {
         const activity: Activity = {
             Name: name,
             Target: [target],
@@ -54,6 +59,37 @@ export class ActivityModule extends BaseModule {
         };
         return activity;
     }
+
+    /**
+     * 活动添加文字描述
+     * @param name - 活动的名称
+     * @param target - 对别人的描述
+     * @param targetSelf - 对自己的描述
+     * @returns - 包含添加的值的数组
+     */
+    activityDictAdd(name: ActivityName, target: string, targetSelf: string): null | string[][] {
+        const addedValues = [];
+        // 使用 filter 函数来检查 Name 属性中是否包含指定名称
+        const actActivityFemale3DCG = ActivityFemale3DCG.filter(activity => activity.Name.includes(name));
+        if (actActivityFemale3DCG.length > 0) {
+            const actName = actActivityFemale3DCG[0].Name;
+            const actNameWithoutPrefix = actName.substring(4);
+            const actTarget = actActivityFemale3DCG[0].Target;
+            const actTargetSelf = actActivityFemale3DCG[0].TargetSelf;
+
+            addedValues.push([`ActivityAct_${actNameWithoutPrefix}`, `${actNameWithoutPrefix}`]);
+            if (actTarget.length > 0) {
+                addedValues.push([`Label-ChatOther-${actTarget}-${actName}`, `${actNameWithoutPrefix}`]);
+                addedValues.push([`ChatOther-${actTarget}-${actName}`, target]);
+            }
+            if (typeof actTargetSelf !== 'undefined' && typeof actTargetSelf !== 'boolean' && actTargetSelf.length > 0) {
+                addedValues.push([`Label-ChatSelf-${actTargetSelf}-${actName}`, `${actNameWithoutPrefix}`]);
+                addedValues.push([`ChatSelf-${actTargetSelf}-${actName}`, targetSelf]);
+            }
+        }
+        // 返回添加的值的数组
+        return addedValues;
+    }
     private pushToActivity(activity: Activity) {
 
         ActivityFemale3DCG.push(activity);
@@ -61,23 +97,31 @@ export class ActivityModule extends BaseModule {
     }
     //============================================================
     //type ActivityNameXiaoSu = "眯眼" | "眼神飘忽" | "甩头发" | "轻抚发梢" | "叼起头发" | "嗅头发" | "皱鼻子" | "打喷嚏" | "深呼吸"
-    activityToAddDict: { [ActivityName: string]: Activity } = {
+    // SourceCharacter 为动作发起人  TargetCharacter 为动作目标人
+    activityToAddDict: { [ActivityName: string]: { act: Activity, desc: null | string[][] } } = {
         squint: {
-            Name: "眯眼",
-            Target: [""],
-            TargetSelf: ["ItemHead"],
-            MaxProgress: 20,
-            MaxProgressSelf: 20,
-            Prerequisite: [],
-            ActivityExpression: []
+            act: {
+                Name: "眯眼",
+                Target: [""],
+                TargetSelf: ["ItemHead"],
+                MaxProgress: 20,
+                MaxProgressSelf: 20,
+                Prerequisite: [],
+                ActivityExpression: []
+            },
+            desc: this.activityDictAdd("眯眼", "", "SourceCharacter眯了眯眼.")
         },
         eyeFlutter: {
-            Name: "眼神飘忽",
-            Target: [""],
-            TargetSelf: ["ItemHead"],
-            MaxProgress: 20,
-            MaxProgressSelf: 20,
-            Prerequisite: []
+            act: {
+                Name: "眼神飘忽",
+                Target: [""],
+                TargetSelf: ["ItemHead"],
+                MaxProgress: 20,
+                MaxProgressSelf: 20,
+                Prerequisite: []
+            },
+            desc: this.activityDictAdd("眼神飘忽", "", "SourceCharacter眼神飘忽的左看右看.")
         }
     }
+
 }
