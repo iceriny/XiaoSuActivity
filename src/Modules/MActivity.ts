@@ -1,5 +1,5 @@
 import { BaseModule } from "./BaseModule";
-import { hookFunction } from "utils";
+import { conDebug, hookFunction, MSGType } from "utils";
 
 export class ActivityModule extends BaseModule {
     moduleName = 'Activity';
@@ -70,7 +70,14 @@ export class ActivityModule extends BaseModule {
     activityDictAdd(name: ActivityName, target: string, targetSelf: string): null | string[][] {
         const addedValues = [];
         // 使用 filter 函数来检查 Name 属性中是否包含指定名称
-        const actActivityFemale3DCG = ActivityFemale3DCG.filter(activity => activity.Name.includes(name));
+        const actActivityFemale3DCG = ActivityFemale3DCG.filter(activity => {
+            conDebug({
+                name: 'ActivityFemale3DCG',
+                type: MSGType.DebugLog,
+                content: activity
+            });
+            return activity.Name.includes(name);
+        });
         if (actActivityFemale3DCG.length > 0) {
             const actName = actActivityFemale3DCG[0].Name;
             const actNameWithoutPrefix = actName.substring(4);
