@@ -1,1 +1,1 @@
-https://iceriny.github.io/XiaoSuActivity/userLoad.user.js
+https://iceriny.github.io/XiaoSuActivity/main/userLoad.user.js
