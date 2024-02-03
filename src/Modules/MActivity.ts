@@ -15,7 +15,10 @@ export class ActivityModule extends BaseModule {
             conDebug({
                 name: 'ActivityDictionaryText',
                 type: MSGType.DebugLog,
-                content: args
+                content: {
+                    args: args,
+                    ActivityDictionary: ActivityDictionary
+                }
             });
             // SendChat("我是! 小酥的小白鼠! 吱吱吱吱~~~");
             return result;
