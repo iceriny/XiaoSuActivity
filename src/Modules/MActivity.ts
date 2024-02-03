@@ -59,20 +59,21 @@ export class ActivityModule extends BaseModule {
         for (const a in this.activityToAddDict) {
             const pendingActivity = this.activityToAddDict[a];
 
-            const actName = pendingActivity.act.Name.substring(4);
+            const actName = pendingActivity.act.Name;
+            const nameWithoutPrefix = actName.substring(4);
             const actTarget = pendingActivity.act.Target;
             const actTargetSelf = pendingActivity.act.TargetSelf;
 
             const addedValues = [];
 
-            addedValues.push([`ActivityAct_${actName}`, `${actName}`]);
-            addedValues.push([`Activity${actName}`, `${actName}`]);
+            addedValues.push([`ActivityAct_${actName}`, `${nameWithoutPrefix}`]);
+            addedValues.push([`Activity${actName}`, `${nameWithoutPrefix}`]);
             if (actTarget.length > 0) {
-                addedValues.push([`Label-ChatOther-${actTarget}-${actName}`, `${actName}`]);
+                addedValues.push([`Label-ChatOther-${actTarget}-${actName}`, `${nameWithoutPrefix}`]);
                 addedValues.push([`ChatOther-${actTarget}-${actName}`, pendingActivity.descSting[0]]);
             }
             if (typeof actTargetSelf !== 'undefined' && typeof actTargetSelf !== 'boolean' && actTargetSelf.length > 0) {
-                addedValues.push([`Label-ChatSelf-${actTargetSelf}-${actName}`, `${actName}`]);
+                addedValues.push([`Label-ChatSelf-${actTargetSelf}-${actName}`, `${nameWithoutPrefix}`]);
                 addedValues.push([`ChatSelf-${actTargetSelf}-${actName}`, pendingActivity.descSting[1]]);
             }
 
