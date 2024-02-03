@@ -76,7 +76,7 @@ export class ActivityModule extends BaseModule {
                 type: MSGType.DebugLog,
                 content: activity
             });
-            return activity.Name.includes(name);
+            return activity?.Name?.includes(name);
         });
         if (actActivityFemale3DCG.length > 0) {
             const actName = actActivityFemale3DCG[0].Name;
