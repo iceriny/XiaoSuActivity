@@ -937,6 +937,12 @@ type ActivityNameBasic = "Bite" | "Caress" | "Choke" | "Cuddle" | "FrenchKiss" |
 type ActivityNameXiaoSu = "XSAct_眯眼" | "XSAct_眼神飘忽" | "XSAct_甩头发" | "XSAct_轻抚发梢" | "XSAct_叼起头发" | "XSAct_嗅头发" | "XSAct_皱鼻子" | "XSAct_打喷嚏" | "XSAct_深呼吸"
 ;
 
+/*
+ * 小酥添加的额外限定组
+*/
+
+type ActivityPrerequisiteXiaoSu = "" | "";
+
 type ActivityNameItem = "Inject" | "MasturbateItem" | "PenetrateItem" | "PourItem" | "RollItem" | "RubItem" | "ShockItem" | "SipItem" | "SpankItem" | "TickleItem" | "EatItem" | "Scratch" | "ThrowItem";
 
 type ActivityName = ActivityNameBasic | ActivityNameItem | ActivityNameXiaoSu;

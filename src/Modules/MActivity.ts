@@ -28,7 +28,20 @@ export class ActivityModule extends BaseModule {
             }
             return next(args);
         });
+
+        hookFunction("ActivityCheckPrerequisite", 500, (args, next) => {
+            conDebug({
+                name: "ActivityCheckPrerequisite",
+                type: MSGType.DebugLog,
+                content: args
+            });
+
+            return next(args);
+        });
     }
+
+    // hook:
+
 
 
 
@@ -128,7 +141,20 @@ export class ActivityModule extends BaseModule {
             },
             desc: null,
             descSting: ["", "SourceCharacter眼神飘忽的左看右看."]
+        },
+        tossHair:{
+            act: {
+                Name: "XSAct_甩头发",
+                Target: [""],
+                TargetSelf: ["ItemHood"],
+                MaxProgress: 20,
+                MaxProgressSelf: 20,
+                Prerequisite: []
+            },
+            desc: null,
+            descSting: ["", "SourceCharacter甩动着头发."]
+
         }
     }
-
+//622731db
 }
