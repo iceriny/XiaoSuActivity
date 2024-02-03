@@ -27,6 +27,7 @@
     "exclude": [
     	"node_modules/bc-stubs/bc/Scripts/lib/three/FBXLoader.d.ts",
     	"node_modules/bc-stubs/bc/Scripts/lib/three/GLTFLoader.d.ts",
-        "node_modules/bc-stubs/bc/Scripts/lib/webgl/resources/m4.d.ts"
+        "node_modules/bc-stubs/bc/Scripts/lib/webgl/resources/m4.d.ts",
+        "node_modules/bc-stubs/bc/Typedef.d.ts"
     ]
 }

@@ -1,10 +1,10 @@
 import { BaseModule } from "./BaseModule";
 import { conDebug, MSGType, GetModule, timeRange } from "utils";
-import { Chatroom } from "./MChatroom";
+import { ChatroomModule } from "./MChatroom";
 
 const timeRangeRegex: RegExp = /^(((0|1)\d|2[0-3]):[0-5]\d)-(((0|1)\d|2[0-3]):[0-5]\d)$/;
 
-export class Commands extends BaseModule {
+export class CommandsModule extends BaseModule {
     moduleName = "Commands";
     priority = 20;
 
@@ -26,7 +26,7 @@ export class Commands extends BaseModule {
                 } else if (params === '') {
                     // 导出当前聊天室的全部聊天记录
                     conDebug("导出当前聊天室的全部聊天记录");
-                    (GetModule("Chatroom") as Chatroom).ExportChat();
+                    (GetModule("Chatroom") as ChatroomModule).ExportChat();
                 }
                 else if (timeRangeRegex.test(params)) {
                     // 导出指定时间段的聊天记录 
@@ -41,7 +41,7 @@ export class Commands extends BaseModule {
                             minTime: startTime,
                             maxTime: endTime
                         };
-                        (GetModule("Chatroom") as Chatroom).ExportChat();
+                        (GetModule("Chatroom") as ChatroomModule).ExportChat();
                     }
                 }
 
