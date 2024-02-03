@@ -15,7 +15,7 @@ export class ActivityModule extends BaseModule {
             if (args[0] == "ChatRoomChat" && args[1]?.Type == "Activity") {
                 let data = args[1];
                 let actName = data.Dictionary[3]?.ActivityName ?? "";
-                if (actName.indexOf("XSAct_") == 0) { // 这个条件表示只有当消息中包含以 "Act_" 开头的自定义活动时,才会执行下面的操作
+                if (actName.indexOf("XSAct_") == 0) { // 这个条件表示只有当消息中包含以 "XSAct_" 开头的自定义活动时,才会执行下面的操作
                     // 拦截自定义活动的发送并执行自定义操作
                     let { metadata, substitutions } = ChatRoomMessageRunExtractors(data, Player)
                     let msg = ActivityDictionaryText(data.Content);
@@ -60,7 +60,7 @@ export class ActivityModule extends BaseModule {
             const pendingActivity = this.activityToAddDict[a];
 
             const actName = pendingActivity.act.Name;
-            const nameWithoutPrefix = actName.substring(4);
+            const nameWithoutPrefix = actName.substring(6);
             const actTarget = pendingActivity.act.Target;
             const actTargetSelf = pendingActivity.act.TargetSelf;
 
