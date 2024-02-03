@@ -15,7 +15,7 @@ export class ActivityModule extends BaseModule {
             if (args[0] == "ChatRoomChat" && args[1]?.Type == "Activity") {
                 let data = args[1];
                 let actName = data.Dictionary[3]?.ActivityName ?? "";
-                if (actName.indexOf("Act_") == 0) { // 这个条件表示只有当消息中包含以 "Act_" 开头的自定义活动时,才会执行下面的操作
+                if (actName.indexOf("XSAct_") == 0) { // 这个条件表示只有当消息中包含以 "Act_" 开头的自定义活动时,才会执行下面的操作
                     // 拦截自定义活动的发送并执行自定义操作
                     let { metadata, substitutions } = ChatRoomMessageRunExtractors(data, Player)
                     let msg = ActivityDictionaryText(data.Content);
@@ -86,7 +86,7 @@ export class ActivityModule extends BaseModule {
     }
     //============================================================
 
-    //type ActivityNameXiaoSu = "眯眼" | "眼神飘忽" | "甩头发" | "轻抚发梢" | "叼起头发" | "嗅头发" | "皱鼻子" | "打喷嚏" | "深呼吸"
+    // ActivityNameXiaoSu = "XSAct_眯眼" | "XSAct_眼神飘忽" | "XSAct_甩头发" | "XSAct_轻抚发梢" | "XSAct_叼起头发" | "XSAct_嗅头发" | "XSAct_皱鼻子" | "XSAct_打喷嚏" | "XSAct_深呼吸"
     // SourceCharacter 为动作发起人  TargetCharacter 为动作目标人
     /**
      * 将要添加的动作字典
@@ -106,7 +106,7 @@ export class ActivityModule extends BaseModule {
     activityToAddDict: { [ActivityName: string]: { act: Activity, desc: null | string[][], descSting: [string, string] } } = {
         squint: {
             act: {
-                Name: "眯眼",
+                Name: "XSAct_眯眼",
                 Target: [""],
                 TargetSelf: ["ItemHead"],
                 MaxProgress: 20,
@@ -118,7 +118,7 @@ export class ActivityModule extends BaseModule {
         },
         eyeFlutter: {
             act: {
-                Name: "眼神飘忽",
+                Name: "XSAct_眼神飘忽",
                 Target: [""],
                 TargetSelf: ["ItemHead"],
                 MaxProgress: 20,
