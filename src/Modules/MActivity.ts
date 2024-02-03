@@ -59,7 +59,7 @@ export class ActivityModule extends BaseModule {
         for (const a in this.activityToAddDict) {
             const pendingActivity = this.activityToAddDict[a];
 
-            const actName = pendingActivity.act.Name;
+            const actName = pendingActivity.act.Name.substring(4);
             const actTarget = pendingActivity.act.Target;
             const actTargetSelf = pendingActivity.act.TargetSelf;
 
