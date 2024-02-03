@@ -29,7 +29,9 @@ export class ActivityModule extends BaseModule {
     LoadActivity(): void {
         for (const a in this.activityToAddDict) {
             this.pushToActivity(this.activityToAddDict[a].act);
-            
+
+            this.activityDictAdd();
+
             const activityDesc = this.activityToAddDict[a].desc;
             activityDesc?.forEach((d) => {
                 ActivityDictionary?.push(d);
@@ -81,16 +83,7 @@ export class ActivityModule extends BaseModule {
      * @param targetSelf - 对自己的描述
      * @returns - 包含添加的值的数组
      */
-    activityDictAdd(name: ActivityName) {
-        // 使用 filter 函数来检查 Name 属性中是否包含指定名称
-        const actActivityFemale3DCG = ActivityFemale3DCG.filter(activity => {
-            conDebug({
-                name: 'ActivityFemale3DCG',
-                type: MSGType.DebugLog,
-                content: activity
-            });
-            return activity?.Name?.includes(name);
-        });
+    activityDictAdd() {
 
         for (const a in this.activityToAddDict) {
             const pendingActivity = this.activityToAddDict[a];
