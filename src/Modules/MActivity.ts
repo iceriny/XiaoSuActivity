@@ -10,6 +10,24 @@ export class ActivityModule extends BaseModule {
     }
     Load(): void {
         this.LoadActivity();
+
+        hookFunction("ServerSend", 5, (args, next) => { // ServerSend 只能检测自己发出的聊天信息 可以用来替换自己发出去的文字
+            if (args[0] == "ChatRoomChat" && args[1]?.Type == "Activity") {
+                let data = args[1];
+                let actName = data.Dictionary[3]?.ActivityName ?? "";
+                if (actName.indexOf("Act_") == 0) { // 这个条件表示只有当消息中包含以 "Act_" 开头的自定义活动时,才会执行下面的操作
+                    // 拦截自定义活动的发送并执行自定义操作
+                    let { metadata, substitutions } = ChatRoomMessageRunExtractors(data, Player)
+                    let msg = ActivityDictionaryText(data.Content);
+                    msg = CommonStringSubstitute(msg, substitutions ?? [])
+                    data.Dictionary.push({
+                        Tag: "MISSING ACTIVITY DESCRIPTION FOR KEYWORD " + data.Content,
+                        Text: msg
+                    });
+                }
+            }
+            return next(args);
+        });
     }
 
 
