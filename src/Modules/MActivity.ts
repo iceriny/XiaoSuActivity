@@ -37,13 +37,15 @@ export class ActivityModule extends BaseModule {
         });
 
         hookFunction("ActivityCheckPrerequisite", 500, (args, next) => {
-            conDebug({
-                name: "ActivityCheckPrerequisite",
-                type: MSGType.DebugLog,
-                content: args
-            });
-
-            return next(args);
+            // conDebug({
+            //     name: "ActivityCheckPrerequisite",
+            //     type: MSGType.DebugLog,
+            //     content: args
+            // });
+            const prereq = args[0];
+            const customPrereq = this.prerequisiteDict[prereq];
+            if (typeof customPrereq === "undefined") return next(args);
+            else return this.prerequisiteDict[prereq].Action(args);
         });
     }
 
@@ -165,20 +167,15 @@ export class ActivityModule extends BaseModule {
     }
 
     prerequisiteDict: { [PrerequisiteName: string]: prerequisite } = {
-        TargetHeadBlocked: {
+        'ItemHood': {
             Name: "ItemHood",
             Action: (args) => {
-                const prereq = args[0] as ActivityPrerequisite;
+                //const prereq = args[0] as ActivityPrerequisite;
                 const acting = args[1] as Character | PlayerCharacter;
-                const acted = args[2] as Character | PlayerCharacter;
-                const group = args[3] as AssetGroup;
+                //const acted = args[2] as Character | PlayerCharacter;
+                //const group = args[3] as AssetGroup;
 
-                switch (prereq) {
-                    case 'ItemHood':
-                        return this.Judgment.ItemHood(acting);
-                    default:
-                        return false;
-                }
+                return this.Judgment.ItemHood(acting);
             }
         }
     }
