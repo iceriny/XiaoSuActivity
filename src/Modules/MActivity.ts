@@ -258,10 +258,7 @@ export class ActivityModule extends BaseModule {
         'TargetItemHoodCovered': { //目标的头部面罩位置是否覆盖
             Name: "TargetItemHoodCovered",
             Action: (args) => {
-                //const prereq = args[0] as ActivityPrerequisite;
-                //const acting = args[1] as Character | PlayerCharacter;
                 const acted = args[2] as Character | PlayerCharacter;
-                //const group = args[3] as AssetGroup;
 
                 return this.Judgment.ItemHoodCovered(acted);
             }
@@ -269,10 +266,7 @@ export class ActivityModule extends BaseModule {
         'ItemNoseCovered': { //头部鼻子位置是否覆盖
             Name: "ItemNoseCovered",
             Action: (args) => {
-                //const prereq = args[0] as ActivityPrerequisite;
                 const acting = args[1] as Character | PlayerCharacter;
-                //const acted = args[2] as Character | PlayerCharacter;
-                //const group = args[3] as AssetGroup;
 
                 return this.Judgment.ItemNoseCovered(acting);
             }

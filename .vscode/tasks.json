@@ -15,7 +15,7 @@
 			"group": "build",
 			"problemMatcher": [],
 			"label": "npm: dev",
-			"detail": "rollup -c Dev_rollup.config.mjs"
+			"detail": "rollup -c rollup.dev.config.mjs"
 		}
 	]
 }
