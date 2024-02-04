@@ -187,7 +187,7 @@ export class ActivityModule extends BaseModule {
                 TargetSelf: ["ItemHood"],
                 MaxProgress: 20,
                 MaxProgressSelf: 20,
-                Prerequisite: ["ItemHoodCovered", "TargetItemHoodCovered"]
+                Prerequisite: ["ItemHoodCovered", "TargetItemHoodCovered", "CantUseArms"]
             },
             desc: null,
             descString: ["SourceCharacter轻柔抚动着TargetCharacter的头发.", "SourceCharacter轻柔抚动着自己的头发."]
@@ -212,7 +212,7 @@ export class ActivityModule extends BaseModule {
                 TargetSelf: ["ItemHood"],
                 MaxProgress: 20,
                 MaxProgressSelf: 20,
-                Prerequisite: ["ItemHoodCovered", "ItemNoseCovered", "TargetItemHoodCovered"],
+                Prerequisite: ["ItemHoodCovered", "TargetItemHoodCovered"],//"ItemNoseCovered"
                 StimulationAction: "Talk"
             },
             desc: null,
