@@ -225,7 +225,7 @@ export class ActivityModule extends BaseModule {
                 TargetSelf: ["ItemNose"],
                 MaxProgress: 20,
                 MaxProgressSelf: 20,
-                Prerequisite: ["ItemNoseCovered", "ItemNoseCovered"]
+                Prerequisite: ["ItemHoodCovered"]// , "ItemNoseCovered"]
             },
             desc: null,
             descString: ["", "SourceCharacter撩起自己的头发轻轻嗅着."]
@@ -266,7 +266,7 @@ export class ActivityModule extends BaseModule {
                 return this.Judgment.ItemHoodCovered(acted);
             }
         },
-        'ItemNoseCovered': { //头部面罩位置是否覆盖
+        'ItemNoseCovered': { //头部鼻子位置是否覆盖
             Name: "ItemNoseCovered",
             Action: (args) => {
                 //const prereq = args[0] as ActivityPrerequisite;
@@ -286,7 +286,7 @@ export class ActivityModule extends BaseModule {
         ItemHoodCovered: (acting: Character | PlayerCharacter): boolean => { // 头部面罩位置是否覆盖
             return InventoryPrerequisiteMessage(acting, "HoodEmpty") === "";
         },
-        ItemNoseCovered: (acting: Character | PlayerCharacter): boolean => { // 鼻子位置是否覆盖
+        ItemNoseCovered: (acting: Character | PlayerCharacter): boolean => { // 鼻子位置是否覆盖 // 暂时无效 回头修复
             return InventoryGroupIsBlocked(acting, "NoseEmpty");
         }
     }
