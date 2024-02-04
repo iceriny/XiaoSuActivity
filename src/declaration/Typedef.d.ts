@@ -941,7 +941,7 @@ type ActivityNameXiaoSu = "XSAct_眯眼" | "XSAct_眼神飘忽" | "XSAct_甩头�
  * 小酥添加的额外限定组
 */
 
-type ActivityPrerequisiteXiaoSu = "ItemHoodCovered" | "TargetItemHoodCovered";
+type ActivityPrerequisiteXiaoSu = "ItemHoodCovered" | "TargetItemHoodCovered" | "ItemNoseCovered";
 
 type ActivityNameItem = "Inject" | "MasturbateItem" | "PenetrateItem" | "PourItem" | "RollItem" | "RubItem" | "ShockItem" | "SipItem" | "SpankItem" | "TickleItem" | "EatItem" | "Scratch" | "ThrowItem";
 

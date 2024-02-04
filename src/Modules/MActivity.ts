@@ -187,7 +187,7 @@ export class ActivityModule extends BaseModule {
                 TargetSelf: ["ItemHood"],
                 MaxProgress: 20,
                 MaxProgressSelf: 20,
-                Prerequisite: ["ItemHoodCovered"]
+                Prerequisite: ["ItemHoodCovered", "TargetItemHoodCovered"]
             },
             desc: null,
             descString: ["SourceCharacter轻柔抚动着TargetCharacter的头发.", "SourceCharacter轻柔抚动着自己的头发."]
@@ -199,7 +199,7 @@ export class ActivityModule extends BaseModule {
                 TargetSelf: ["ItemHood"],
                 MaxProgress: 20,
                 MaxProgressSelf: 20,
-                Prerequisite: ["ItemHoodCovered", "TargetItemHoodCovered"],
+                Prerequisite: ["IsGagged", "ItemHoodCovered", "TargetItemHoodCovered"],
                 StimulationAction: "Talk"
             },
             desc: null,
@@ -212,11 +212,23 @@ export class ActivityModule extends BaseModule {
                 TargetSelf: ["ItemHood"],
                 MaxProgress: 20,
                 MaxProgressSelf: 20,
-                Prerequisite: ["ItemHoodCovered", "TargetItemHoodCovered"],
+                Prerequisite: ["ItemHoodCovered", "ItemNoseCovered", "TargetItemHoodCovered"],
                 StimulationAction: "Talk"
             },
             desc: null,
-            descString: ["SourceCharacter轻轻咬起TargetCharacter的头发.", "SourceCharacter轻轻咬起自己的头发."]
+            descString: ["SourceCharacter在TargetCharacter的发间嗅着，鼻息弥漫着TargetCharacter的发香.", "SourceCharacter撩起自己的头发轻轻嗅着."]
+        },
+        wrinkleNose: {
+            act: {
+                Name: "XSAct_皱鼻子",
+                Target: [""],
+                TargetSelf: ["ItemNose"],
+                MaxProgress: 20,
+                MaxProgressSelf: 20,
+                Prerequisite: ["ItemNoseCovered", "ItemNoseCovered"]
+            },
+            desc: null,
+            descString: ["", "SourceCharacter撩起自己的头发轻轻嗅着."]
         }
     }
 
@@ -253,15 +265,29 @@ export class ActivityModule extends BaseModule {
 
                 return this.Judgment.ItemHoodCovered(acted);
             }
-        }
+        },
+        'ItemNoseCovered': { //头部面罩位置是否覆盖
+            Name: "ItemNoseCovered",
+            Action: (args) => {
+                //const prereq = args[0] as ActivityPrerequisite;
+                const acting = args[1] as Character | PlayerCharacter;
+                //const acted = args[2] as Character | PlayerCharacter;
+                //const group = args[3] as AssetGroup;
+
+                return this.Judgment.ItemNoseCovered(acting);
+            }
+        },
     }
     /**
      * 判断函数字典
      * 前置条件字典将要调用的方法集合
     */
     Judgment: { [judgmentName: string]: (acting: Character | PlayerCharacter, acted?: Character | PlayerCharacter, group?: AssetGroup) => boolean } = {
-        ItemHoodCovered: (acting: Character | PlayerCharacter): boolean => {
+        ItemHoodCovered: (acting: Character | PlayerCharacter): boolean => { // 头部面罩位置是否覆盖
             return InventoryPrerequisiteMessage(acting, "HoodEmpty") === "";
+        },
+        ItemNoseCovered: (acting: Character | PlayerCharacter): boolean => { // 鼻子位置是否覆盖
+            return InventoryGroupIsBlocked(acting, "NoseEmpty");
         }
     }
 }
