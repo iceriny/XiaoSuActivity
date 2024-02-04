@@ -199,7 +199,7 @@ export class ActivityModule extends BaseModule {
                 TargetSelf: ["ItemHood"],
                 MaxProgress: 20,
                 MaxProgressSelf: 20,
-                Prerequisite: ["IsGagged", "ItemHoodCovered", "TargetItemHoodCovered"],
+                Prerequisite: ["UseMouth", "ItemHoodCovered", "TargetItemHoodCovered"],
                 StimulationAction: "Talk"
             },
             desc: null,
