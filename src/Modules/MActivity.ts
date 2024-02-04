@@ -156,7 +156,7 @@ export class ActivityModule extends BaseModule {
                 TargetSelf: ["ItemHood"],
                 MaxProgress: 20,
                 MaxProgressSelf: 20,
-                Prerequisite: ["TargetHeadBlocked"]
+                Prerequisite: ["ItemHood"]
             },
             desc: null,
             descSting: ["", "SourceCharacter甩动着头发."]
@@ -166,7 +166,7 @@ export class ActivityModule extends BaseModule {
 
     prerequisiteDict: { [PrerequisiteName: string]: prerequisite } = {
         TargetHeadBlocked: {
-            Name: "TargetHeadBlocked",
+            Name: "ItemHood",
             Action: (args) => {
                 const prereq = args[0] as ActivityPrerequisite;
                 const acting = args[1] as Character | PlayerCharacter;
@@ -174,8 +174,8 @@ export class ActivityModule extends BaseModule {
                 const group = args[3] as AssetGroup;
 
                 switch (prereq) {
-                    case 'TargetHeadBlocked':
-                        return this.Judgment.TargetHeadBlocked(acting);
+                    case 'ItemHood':
+                        return this.Judgment.ItemHood(acting);
                     default:
                         return false;
                 }
@@ -183,9 +183,9 @@ export class ActivityModule extends BaseModule {
         }
     }
 
-    Judgment : {[judgmentName:string] : (acting: Character | PlayerCharacter, acted?: Character | PlayerCharacter, group?: AssetGroup) => boolean} = {
-        TargetHeadBlocked: (acting: Character | PlayerCharacter) : boolean =>{
-            return InventoryPrerequisiteMessage(acting, "HoodEmpty") === ""
+    Judgment: { [judgmentName: string]: (acting: Character | PlayerCharacter, acted?: Character | PlayerCharacter, group?: AssetGroup) => boolean } = {
+        ItemHood: (acting: Character | PlayerCharacter): boolean => {
+            return InventoryPrerequisiteMessage(acting, "HoodEmpty") !== ""
         }
     }
 }
