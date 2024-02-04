@@ -228,7 +228,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ["ItemHoodCovered"]// , "ItemNoseCovered"]
             },
             desc: null,
-            descString: ["", "SourceCharacter撩起自己的头发轻轻嗅着."]
+            descString: ["", "SourceCharacter皱了皱自己的鼻头."]
         }
     }
 
