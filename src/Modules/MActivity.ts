@@ -182,7 +182,7 @@ export class ActivityModule extends BaseModule {
 
     Judgment: { [judgmentName: string]: (acting: Character | PlayerCharacter, acted?: Character | PlayerCharacter, group?: AssetGroup) => boolean } = {
         ItemHood: (acting: Character | PlayerCharacter): boolean => {
-            return InventoryPrerequisiteMessage(acting, "HoodEmpty") !== ""
+            return InventoryPrerequisiteMessage(acting, "HoodEmpty") === ""
         }
     }
 }
