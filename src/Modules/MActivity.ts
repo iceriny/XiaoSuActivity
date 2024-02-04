@@ -1,6 +1,13 @@
 import { BaseModule } from "./BaseModule";
 import { conDebug, hookFunction, MSGType } from "utils";
 
+/*
+ * 动作的限定条件信息对象
+*/
+interface prerequisite {
+    Name: ActivityPrerequisiteXiaoSu;
+    Action: (args: any) => boolean;
+}
 export class ActivityModule extends BaseModule {
     moduleName = 'Activity';
     priority = 50;
@@ -142,19 +149,43 @@ export class ActivityModule extends BaseModule {
             desc: null,
             descSting: ["", "SourceCharacter眼神飘忽的左看右看."]
         },
-        tossHair:{
+        tossHair: {
             act: {
                 Name: "XSAct_甩头发",
                 Target: [""],
                 TargetSelf: ["ItemHood"],
                 MaxProgress: 20,
                 MaxProgressSelf: 20,
-                Prerequisite: []
+                Prerequisite: ["TargetHeadBlocked"]
             },
             desc: null,
             descSting: ["", "SourceCharacter甩动着头发."]
 
         }
     }
-//622731db
+
+    prerequisiteDict: { [PrerequisiteName: string]: prerequisite } = {
+        TargetHeadBlocked: {
+            Name: "TargetHeadBlocked",
+            Action: (args) => {
+                const prereq = args[0] as ActivityPrerequisite;
+                const acting = args[1] as Character | PlayerCharacter;
+                const acted = args[2] as Character | PlayerCharacter;
+                const group = args[3] as AssetGroup;
+
+                switch (prereq) {
+                    case 'TargetHeadBlocked':
+                        return this.Judgment.TargetHeadBlocked(acting);
+                    default:
+                        return false;
+                }
+            }
+        }
+    }
+
+    Judgment : {[judgmentName:string] : (acting: Character | PlayerCharacter, acted?: Character | PlayerCharacter, group?: AssetGroup) => boolean} = {
+        TargetHeadBlocked: (acting: Character | PlayerCharacter) : boolean =>{
+            return InventoryPrerequisiteMessage(acting, "HoodEmpty") === ""
+        }
+    }
 }
