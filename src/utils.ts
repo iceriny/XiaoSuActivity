@@ -1,5 +1,5 @@
 import bcModSDKRef from "bondage-club-mod-sdk";
-import { isDebug, ModVersion } from "declaration/dev_const";
+import { DEBUG, ModVersion } from "declaration/dev_const";
 import { modules } from "Modules/ModulesDict";
 import { BaseModule } from "Modules/BaseModule";
 
@@ -40,7 +40,7 @@ export enum MSGType {
 	Workflow_Log,
 }
 export function conDebug(msg: XSDebugMSG | string) {
-	if (isDebug === false) return;
+	if (DEBUG === false) return;
 
 	let result: object;
 

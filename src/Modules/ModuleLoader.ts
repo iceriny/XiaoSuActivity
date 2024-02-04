@@ -1,8 +1,8 @@
 import { BaseModule } from "./BaseModule";
-import { Chatroom } from "./MChatroom";
-import { Commands } from "./MCommand";
+import { ChatroomModule } from "./MChatroom";
+import { CommandsModule } from "./MCommand";
 import { modules } from "./ModulesDict";
-import { Activity } from "./MActivity";
+import { ActivityModule } from "./MActivity";
 
 export class ModuleLoader {
     public static modules: { [key: string]: BaseModule } = modules;
@@ -42,9 +42,9 @@ export class ModuleLoader {
     }
 
     private static generateModule(): void {
-        this.pushToModules(new Chatroom());
-        this.pushToModules(new Commands());
-        // this.pushToModules(new Activity());
+        this.pushToModules(new ChatroomModule());
+        this.pushToModules(new CommandsModule());
+        this.pushToModules(new ActivityModule());
     }
 
 }
