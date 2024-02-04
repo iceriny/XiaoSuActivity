@@ -18,6 +18,11 @@ export class ActivityModule extends BaseModule {
     Load(): void {
         this.LoadActivity();
 
+        /**
+         * 处理没有装本插件的玩家接受到的消息
+         * 原理为使用hookFunction来拦截ServerSend函数的执行,并判断消息中是否包含自定义活动的关键词,如果包含则执行自定义操作
+         * - 即替换原本的描述
+         */
         hookFunction("ServerSend", 5, (args, next) => { // ServerSend 只能检测自己发出的聊天信息 可以用来替换自己发出去的文字
             if (args[0] == "ChatRoomChat" && args[1]?.Type == "Activity") {
                 let data = args[1];
@@ -36,6 +41,12 @@ export class ActivityModule extends BaseModule {
             return next(args);
         });
 
+        /**
+         * 1. 当条件关键词为自定义关键词时
+         * - 处理限制条件
+         * 2. 当关键词不是自定义关键词时
+         * - 执行原方法
+         */
         hookFunction("ActivityCheckPrerequisite", 500, (args, next) => {
             // conDebug({
             //     name: "ActivityCheckPrerequisite",
@@ -56,12 +67,16 @@ export class ActivityModule extends BaseModule {
 
     //============================================================
 
+    /**
+     * 载入自定义动作
+     */
     LoadActivity(): void {
-        for (const a in this.activityToAddDict) {
-            this.pushToActivity(this.activityToAddDict[a].act);
+        for (const a in this.activityToAddDict) { // a 为活动名
+            this.pushToActivity(this.activityToAddDict[a].act); 
 
-            this.activityDictAdd();
+            this.activityDictAdd(); 
 
+            //加载文字描述
             const activityDesc = this.activityToAddDict[a].desc;
             activityDesc?.forEach((d) => {
                 ActivityDictionary?.push(d);
@@ -70,11 +85,7 @@ export class ActivityModule extends BaseModule {
     }
     //============================================================
     /**
-     * 活动添加文字描述
-     * @param name - 活动的名称
-     * @param target - 对别人的描述
-     * @param targetSelf - 对自己的描述
-     * @returns - 包含添加的值的数组
+     * 初始化活动的文字描述。
      */
     activityDictAdd() {
 
@@ -92,16 +103,20 @@ export class ActivityModule extends BaseModule {
             addedValues.push([`Activity${actName}`, `${nameWithoutPrefix}`]);
             if (actTarget.length > 0) {
                 addedValues.push([`Label-ChatOther-${actTarget}-${actName}`, `${nameWithoutPrefix}`]);
-                addedValues.push([`ChatOther-${actTarget}-${actName}`, pendingActivity.descSting[0]]);
+                addedValues.push([`ChatOther-${actTarget}-${actName}`, pendingActivity.descString[0]]);
             }
             if (typeof actTargetSelf !== 'undefined' && typeof actTargetSelf !== 'boolean' && actTargetSelf.length > 0) {
                 addedValues.push([`Label-ChatSelf-${actTargetSelf}-${actName}`, `${nameWithoutPrefix}`]);
-                addedValues.push([`ChatSelf-${actTargetSelf}-${actName}`, pendingActivity.descSting[1]]);
+                addedValues.push([`ChatSelf-${actTargetSelf}-${actName}`, pendingActivity.descString[1]]);
             }
 
             pendingActivity.desc = addedValues;
         }
     }
+    /**
+     * 将传入的活动对象载入
+     * @param activity 将要载入的活动对象
+     */
     private pushToActivity(activity: Activity) {
 
         ActivityFemale3DCG.push(activity);
@@ -113,7 +128,7 @@ export class ActivityModule extends BaseModule {
     // SourceCharacter 为动作发起人  TargetCharacter 为动作目标人
     /**
      * 将要添加的动作字典
-     * act : Activity Activity如下定义:
+     * @interface Activity - Activity对象的属性如下定义:
      * @param  Name - 活动的名称
      * @param  MaxProgress - 活动的最大进度
      * @param  MaxProgressSelf - 活动自身的最大进度
@@ -124,9 +139,11 @@ export class ActivityModule extends BaseModule {
      * @param  MakeSound - 是否播放声音 used for setting {@link ExtendedItemAutoPunishHandled} 
      * @param  StimulationAction - 当使用该活动时触发的动作
      * @param  ActivityExpression - 活动表达式,包含一系列的动作 该活动的默认表达式。可以使用资产上的ActivityExpression进行覆盖。
-     * @interface Activity - 上述就是属性为活动的对象的属性
+     * -------
+     * @desc - desc默认需要为null,当活动初始化时,会自动添加文字描述
+     * @descString - 两个元素的数组 [0]为如果目标为他人的描述，[1]为目标自己的描述
     */
-    activityToAddDict: { [ActivityName: string]: { act: Activity, desc: null | string[][], descSting: [string, string] } } = {
+    activityToAddDict: { [ActivityName: string]: { act: Activity, desc: null | string[][], descString: [string, string] } } = {
         squint: {
             act: {
                 Name: "XSAct_眯眼",
@@ -137,7 +154,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: []
             },
             desc: null,
-            descSting: ["", "SourceCharacter眯了眯眼."]
+            descString: ["", "SourceCharacter眯了眯眼."]
         },
         eyeFlutter: {
             act: {
@@ -149,7 +166,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: []
             },
             desc: null,
-            descSting: ["", "SourceCharacter眼神飘忽的左看右看."]
+            descString: ["", "SourceCharacter眼神飘忽的左看右看."]
         },
         tossHair: {
             act: {
@@ -158,31 +175,93 @@ export class ActivityModule extends BaseModule {
                 TargetSelf: ["ItemHood"],
                 MaxProgress: 20,
                 MaxProgressSelf: 20,
-                Prerequisite: ["ItemHood"]
+                Prerequisite: ["ItemHoodCovered"]
             },
             desc: null,
-            descSting: ["", "SourceCharacter甩动着头发."]
-
+            descString: ["", "SourceCharacter甩动着头发."]
+        },
+        caressOfHair: {
+            act: {
+                Name: "XSAct_轻抚发梢",
+                Target: ["ItemHood"],
+                TargetSelf: ["ItemHood"],
+                MaxProgress: 20,
+                MaxProgressSelf: 20,
+                Prerequisite: ["ItemHoodCovered"]
+            },
+            desc: null,
+            descString: ["SourceCharacter轻柔抚动着TargetCharacter的头发.", "SourceCharacter轻柔抚动着自己的头发."]
+        },
+        pickUpHair: {
+            act: {
+                Name: "XSAct_叼起头发",
+                Target: ["ItemHood"],
+                TargetSelf: ["ItemHood"],
+                MaxProgress: 20,
+                MaxProgressSelf: 20,
+                Prerequisite: ["ItemHoodCovered", "TargetItemHoodCovered"],
+                StimulationAction: "Talk"
+            },
+            desc: null,
+            descString: ["SourceCharacter轻轻咬起TargetCharacter的头发.", "SourceCharacter轻轻咬起自己的头发."]
+        },
+        sniffHair: {
+            act: {
+                Name: "XSAct_嗅头发",
+                Target: ["ItemHood"],
+                TargetSelf: ["ItemHood"],
+                MaxProgress: 20,
+                MaxProgressSelf: 20,
+                Prerequisite: ["ItemHoodCovered", "TargetItemHoodCovered"],
+                StimulationAction: "Talk"
+            },
+            desc: null,
+            descString: ["SourceCharacter轻轻咬起TargetCharacter的头发.", "SourceCharacter轻轻咬起自己的头发."]
         }
     }
 
+    /**
+     * 前置条件字典
+     * @PrerequisiteName - 需要是在{@link ActivityPrerequisiteXiaoSu}的字符串
+     * @Name - 需要是在{@link ActivityPrerequisiteXiaoSu}的字符串
+     * @Action - 检测判断的具体动作
+     * - @param args - 一个数组,包含四个元素.
+     * - args[0]为@param prereq:{@link ActivityPrerequisite} 判定决定使用哪个条件的依据，但此处无用 请不要在这里使用该参数
+     * - args[1]为@param acting:{@link Character} | {@link PlayerCharacter} 代表动作发起者的数据
+     * - args[2]为@param acted:{@link Character} | {@link PlayerCharacter} 代表动作目标的数据
+     * - args[3]为@param group:{@link AssetGroup}.
+     */
     prerequisiteDict: { [PrerequisiteName: string]: prerequisite } = {
-        'ItemHood': {
-            Name: "ItemHood",
+        'ItemHoodCovered': { //头部面罩位置是否覆盖
+            Name: "ItemHoodCovered",
             Action: (args) => {
                 //const prereq = args[0] as ActivityPrerequisite;
                 const acting = args[1] as Character | PlayerCharacter;
                 //const acted = args[2] as Character | PlayerCharacter;
                 //const group = args[3] as AssetGroup;
 
-                return this.Judgment.ItemHood(acting);
+                return this.Judgment.ItemHoodCovered(acting);
+            }
+        },
+        'TargetItemHoodCovered': { //目标的头部面罩位置是否覆盖
+            Name: "TargetItemHoodCovered",
+            Action: (args) => {
+                //const prereq = args[0] as ActivityPrerequisite;
+                //const acting = args[1] as Character | PlayerCharacter;
+                const acted = args[2] as Character | PlayerCharacter;
+                //const group = args[3] as AssetGroup;
+
+                return this.Judgment.ItemHoodCovered(acted);
             }
         }
     }
-
+    /**
+     * 判断函数字典
+     * 前置条件字典将要调用的方法集合
+    */
     Judgment: { [judgmentName: string]: (acting: Character | PlayerCharacter, acted?: Character | PlayerCharacter, group?: AssetGroup) => boolean } = {
-        ItemHood: (acting: Character | PlayerCharacter): boolean => {
-            return InventoryPrerequisiteMessage(acting, "HoodEmpty") === ""
+        ItemHoodCovered: (acting: Character | PlayerCharacter): boolean => {
+            return InventoryPrerequisiteMessage(acting, "HoodEmpty") === "";
         }
     }
 }
