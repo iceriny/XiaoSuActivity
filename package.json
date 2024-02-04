@@ -26,6 +26,6 @@
   },
   "scripts": {
     "build": "rollup -c rollup.config.mjs",
-    "dev": "rollup -c Dev_rollup.config.mjs"
+    "dev": "rollup -c rollup.dev.config.mjs"
   }
 }
