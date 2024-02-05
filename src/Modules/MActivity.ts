@@ -65,7 +65,7 @@ export class ActivityModule extends BaseModule {
         /**
          * "Assets/Female3DCG/Activity/XSAct_眯眼.png"
          */
-        hookFunction("DrawGetImage", 10, (args, next) => {
+        hookFunction("DrawImageResize", 10, (args, next) => {
             const source = args[0];
 
             // 使用 split 方法拆分字符串
