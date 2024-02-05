@@ -77,7 +77,8 @@ export class ActivityModule extends BaseModule {
 
             if (aName.indexOf("XSAct_") == 0) {
                 const resultName = this.GetActImgPathMap[source];
-                return next(resultName);
+                args[0] = resultName;
+                return next(args);
             }
 
 
