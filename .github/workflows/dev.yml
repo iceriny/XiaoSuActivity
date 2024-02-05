@@ -27,7 +27,7 @@ jobs:
     - name: Copy userLoad_dev.user.js to dist
       run: cp userLoad_dev.user.js dist/dev/
 
-    - name: Deploy to GitHub Pages
+    - name: Deploy dev to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GH_TOKEN }}

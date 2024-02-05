@@ -22,7 +22,7 @@ export class CommandsModule extends BaseModule {
             Action: (args, msg, parsed) => {
                 const params: string = this.getCommandParameters(parsed);
                 if (params == 'h') {
-                    ChatRoomSendLocal('输入: ‘/xsa export -[时间]’导出指定时间范围内的聊天记录.\n例如: ‘/xsa export -05:34-20:40’\n默认导出当前聊天室的全部聊天记录.\n注意! \n如果时间段过长例如第一天的05:34到第二天的06:00则可能出现导出错误.')
+                    ChatRoomSendLocal('输入: ‘/xsa export -[时间]’导出指定时间范围内的聊天记录.\n例如: ‘/xsa export -05:34-20:40’\n默认导出当前聊天室的全部聊天记录.\n注意! \n如果时间段过长例如第一天的05:34到第二天的06:00则可能出现导出错误.', 20000)
                 } else if (params === '') {
                     // 导出当前聊天室的全部聊天记录
                     conDebug("导出当前聊天室的全部聊天记录");
@@ -80,9 +80,9 @@ export class CommandsModule extends BaseModule {
             for (const c in this.commandsDict) {
                 content += `/xsa ${c} ${this.commandsDict[c].Description}\n`;
             }
-            ChatRoomSendLocal(content, 5000);
+            ChatRoomSendLocal(content, 10000);
         } else {
-            ChatRoomSendLocal(msg, 5000)
+            ChatRoomSendLocal(msg, 10000)
         }
     }
 

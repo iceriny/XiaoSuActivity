@@ -1,5 +1,4 @@
 import bcModSDKRef from "bondage-club-mod-sdk";
-import { DEBUG, ModVersion } from "declaration/dev_const";
 import { modules } from "Modules/ModulesDict";
 import { BaseModule } from "Modules/BaseModule";
 
@@ -42,24 +41,18 @@ export enum MSGType {
 export function conDebug(msg: XSDebugMSG | string) {
 	if (DEBUG === false) return;
 
-	let result: object;
-
-	if (typeof msg === "string") {
-		result = {
-			name: "XiaoSuActivity_Debug",
-			type: MSGType.DebugLog,
-			content: msg,
-			time: new Date().toLocaleString(),
-			ModVersion: ModVersion
-		}
-	} else {
-		result = {
-			name: msg.name,
-			type: msg.type,
-			content: msg.content,
-			time: new Date().toLocaleString(),
-			ModVersion: ModVersion
-		}
+	let result: object = typeof msg === "string" ? {
+		name: "XiaoSuActivity_Debug",
+		type: MSGType.DebugLog,
+		content: msg,
+		time: new Date().toLocaleString(),
+		ModVersion: XSActivity_VERSION,
+	} : {
+		name: msg.name,
+		type: msg.type,
+		content: msg.content,
+		time: new Date().toLocaleString(),
+		ModVersion: XSActivity_VERSION
 	}
 	console.debug(result);
 }
@@ -80,6 +73,11 @@ function removeElementsByTimeRange(element: HTMLElement, time_limit: timeRange) 
 			const currentTime = new Date(`2000-01-01 ${dataTimeValue}`);
 			const minTimeDate = new Date(`2000-01-01 ${time_limit.minTime}`);
 			const maxTimeDate = new Date(`2000-01-01 ${time_limit.maxTime}`);
+
+			// 判断是否跨越了 00:00
+            if (maxTimeDate < minTimeDate) {
+                maxTimeDate.setDate(maxTimeDate.getDate() + 1);
+            }
 
 			// 判断是否在时间范围内
 			if (currentTime < minTimeDate || currentTime > maxTimeDate) {

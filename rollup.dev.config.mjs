@@ -17,7 +17,8 @@ export default {
     intro: async () => {
       let XSActivity_VERSION = packageJson.version;
       XSActivity_VERSION = (XSActivity_VERSION.length > 0 && XSActivity_VERSION[0] == 'v') ? XSActivity_VERSION : "v" + XSActivity_VERSION;
-      return `const XSActivity_VERSION="${XSActivity_VERSION}";`;
+      return `const XSActivity_VERSION="${XSActivity_VERSION}";
+      const DEBUG=true;`;
     },
     plugins: [terser({
       mangle: false
