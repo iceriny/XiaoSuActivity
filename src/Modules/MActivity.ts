@@ -11,6 +11,8 @@ interface prerequisite {
 export class ActivityModule extends BaseModule {
     moduleName = 'Activity';
     priority = 50;
+    
+
 
     init(): void {
 
@@ -58,6 +60,17 @@ export class ActivityModule extends BaseModule {
             if (typeof customPrereq === "undefined") return next(args);
             else return this.prerequisiteDict[prereq].Action(args);
         });
+
+        hookFunction("DrawGetImage", 10, (args, next) =>{
+            const source = args[0];
+            conDebug({
+                name: "DrawGetImage",
+                type: MSGType.DebugLog,
+                content: source
+            });
+
+            return next(args);
+        });
     }
 
     // hook:
@@ -72,9 +85,9 @@ export class ActivityModule extends BaseModule {
      */
     LoadActivity(): void {
         for (const a in this.activityToAddDict) { // a 为活动名
-            this.pushToActivity(this.activityToAddDict[a].act); 
+            this.pushToActivity(this.activityToAddDict[a].act);
 
-            this.activityDictAdd(); 
+            this.activityDictAdd();
 
             //加载文字描述
             const activityDesc = this.activityToAddDict[a].desc;
@@ -282,6 +295,19 @@ export class ActivityModule extends BaseModule {
         },
         ItemNoseCovered: (acting: Character | PlayerCharacter): boolean => { // 鼻子位置是否覆盖 // 暂时无效 回头修复
             return InventoryGroupIsBlocked(acting, "NoseEmpty");
+        }
+    }
+
+    /**
+     * 通过动作名字得到路径
+     */
+    GetActImgPathMap: { [actName in ActivityName]: [string, string] } | {} = {}
+
+
+    InitActImgPathMap(): void {
+        this.GetActImgPathMap = {
+            "shakeHands": ["shakeHands", "shakeHands"],
+            "shakeHands2": []
         }
     }
 }
