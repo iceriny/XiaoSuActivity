@@ -76,7 +76,7 @@ export class ActivityModule extends BaseModule {
             const aName = fileName.replace('.png', '');
 
             if (aName.indexOf("XSAct_") == 0) {
-                const resultName = this.GetActImgPathMap[source];
+                const resultName = this.GetActImgPathMap[aName][1];
                 args[0] = resultName;
                 return next(args);
             }
