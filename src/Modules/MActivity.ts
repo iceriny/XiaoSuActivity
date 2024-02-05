@@ -1,4 +1,4 @@
-import { BaseModule } from "./BaseModule";
+import { BaseModule, _module } from "./BaseModule";
 import { conDebug, hookFunction, MSGType } from "utils";
 
 /*
@@ -8,11 +8,9 @@ interface prerequisite {
     Name: ActivityPrerequisiteXiaoSu;
     Action: (args: any) => boolean;
 }
-export class ActivityModule extends BaseModule {
-    moduleName = 'Activity';
+export class ActivityModule extends BaseModule implements _module{
+    moduleName = 'ActivityModule';
     priority = 50;
-
-
 
 
     init(): void {
@@ -76,7 +74,7 @@ export class ActivityModule extends BaseModule {
             const aName = fileName.replace('.png', '');
 
             if (aName.indexOf("XSAct_") == 0) {
-                const resultName = this.GetActImgPathMap[aName][1];
+                const resultName = `Assets/Female3DCG/Activity/${this.activityToAddDict[aName].img}.png`;
                 args[0] = resultName;
                 return next(args);
             }
@@ -107,8 +105,6 @@ export class ActivityModule extends BaseModule {
             activityDesc?.forEach((d) => {
                 ActivityDictionary?.push(d);
             });
-            //处理图片路径映射
-            this.InitActImgPathMap();
         }
     }
     //============================================================
@@ -172,7 +168,7 @@ export class ActivityModule extends BaseModule {
      * @descString - 两个元素的数组 [0]为如果目标为他人的描述，[1]为目标自己的描述
     */
     activityToAddDict: { [ActivityName: string]: { act: Activity, desc: null | string[][], descString: [string, string], img: ActivityName } } = {
-        squint: {
+        XSAct_眯眼: {
             act: {
                 Name: "XSAct_眯眼",
                 Target: [""],
@@ -185,7 +181,7 @@ export class ActivityModule extends BaseModule {
             descString: ["", "SourceCharacter眯了眯眼."],
             img: "RestHead"
         },
-        eyeFlutter: {
+        XSAct_眼神飘忽: {
             act: {
                 Name: "XSAct_眼神飘忽",
                 Target: [""],
@@ -198,7 +194,7 @@ export class ActivityModule extends BaseModule {
             descString: ["", "SourceCharacter眼神飘忽的左看右看."],
             img: "RestHead"
         },
-        tossHair: {
+        XSAct_甩头发: {
             act: {
                 Name: "XSAct_甩头发",
                 Target: [""],
@@ -211,7 +207,7 @@ export class ActivityModule extends BaseModule {
             descString: ["", "SourceCharacter甩动着头发."],
             img: "RestHead"
         },
-        caressOfHair: {
+        XSAct_轻抚发梢: {
             act: {
                 Name: "XSAct_轻抚发梢",
                 Target: ["ItemHood"],
@@ -224,7 +220,7 @@ export class ActivityModule extends BaseModule {
             descString: ["SourceCharacter轻柔抚动着TargetCharacter的头发.", "SourceCharacter轻柔抚动着自己的头发."],
             img: "RestHead"
         },
-        pickUpHair: {
+        XSAct_叼起头发: {
             act: {
                 Name: "XSAct_叼起头发",
                 Target: ["ItemHood"],
@@ -238,7 +234,7 @@ export class ActivityModule extends BaseModule {
             descString: ["SourceCharacter轻轻咬起TargetCharacter的头发.", "SourceCharacter轻轻咬起自己的头发."],
             img: "SiblingsCheekKiss"
         },
-        sniffHair: {
+        XSAct_嗅头发: {
             act: {
                 Name: "XSAct_嗅头发",
                 Target: ["ItemHood"],
@@ -252,7 +248,7 @@ export class ActivityModule extends BaseModule {
             descString: ["SourceCharacter在TargetCharacter的发间嗅着，鼻息弥漫着TargetCharacter的发香.", "SourceCharacter撩起自己的头发轻轻嗅着."],
             img: "SiblingsCheekKiss"
         },
-        wrinkleNose: {
+        XSAct_皱鼻子: {
             act: {
                 Name: "XSAct_皱鼻子",
                 Target: [""],
@@ -264,6 +260,34 @@ export class ActivityModule extends BaseModule {
             desc: null,
             descString: ["", "SourceCharacter皱了皱自己的鼻头."],
             img: "RestHead"
+        },
+        XSAct_打喷嚏: {
+            act: {
+                Name: "XSAct_打喷嚏",
+                Target: [""],
+                TargetSelf: ["ItemNose"],
+                MaxProgress: 20,
+                MaxProgressSelf: 20,
+                Prerequisite: ["UseMouth", "ItemHoodCovered"],
+                StimulationAction: "Talk"
+            },
+            desc: null,
+            descString: ["", "SourceCharacter打了个喷嚏."],
+            img: "Kiss"
+        },
+        XSAct_深呼吸: {
+            act: {
+                Name: "XSAct_深呼吸",
+                Target: [""],
+                TargetSelf: ["ItemNose"],
+                MaxProgress: 20,
+                MaxProgressSelf: 20,
+                Prerequisite: ["UseMouth", "ItemHoodCovered"],////////////////////////////
+                StimulationAction: "Talk"
+            },
+            desc: null,
+            descString: ["", "SourceCharacter皱了皱自己的鼻头."],
+            img: "Kiss"
         }
     }
 
@@ -320,18 +344,18 @@ export class ActivityModule extends BaseModule {
         }
     }
 
-    /**
-     * 通过动作名字得到路径
-     */
-    GetActImgPathMap: { [actName: string]: [ActivityNamePath, ActivityNamePath] } = {}
+    // /**
+    //  * 通过动作名字得到路径
+    //  */
+    // GetActImgPathMap: { [actName: string]: [ActivityName, ActivityName] } = {}
 
-    //Assets/Female3DCG/Activity/
-    InitActImgPathMap(): void {
-        for (const a in this.activityToAddDict) {
-            const _act = this.activityToAddDict[a];
-            const _actName = _act.act.Name;
+    // //Assets/Female3DCG/Activity/
+    // InitActImgPathMap(): void {
+    //     for (const a in this.activityToAddDict) {
+    //         const _act = this.activityToAddDict[a];
+    //         const _actName = _act.act.Name;
 
-            this.GetActImgPathMap[_actName] = [`Assets/Female3DCG/Activity/${_actName}.png`, `Assets/Female3DCG/Activity/${_act.img}.png`]
-        }
-    }
+    //         this.GetActImgPathMap[_actName] = [_actName, _act.img]
+    //     }
+    // }
 }

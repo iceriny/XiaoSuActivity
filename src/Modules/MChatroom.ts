@@ -1,8 +1,8 @@
 import { conDebug, hookFunction, SendChat, MSGType , copyAndDownloadHtmlElement, timeRange} from "utils";
-import { BaseModule } from "Modules/BaseModule";
+import { BaseModule, _module } from "Modules/BaseModule";
 
-export class ChatroomModule extends BaseModule {
-    moduleName = "Chatroom";
+export class ChatroomModule extends BaseModule implements _module{
+    moduleName = "ChatroomModule";
     priority = 30;
     Load(): void {
         hookFunction("ChatRoomLoad", 30, (args, next) => {

@@ -1,11 +1,11 @@
-import { BaseModule } from "./BaseModule";
+import { BaseModule, _module } from "./BaseModule";
 import { conDebug, MSGType, GetModule, timeRange } from "utils";
 import { ChatroomModule } from "./MChatroom";
 
 const timeRangeRegex: RegExp = /^(((0|1)\d|2[0-3]):[0-5]\d)-(((0|1)\d|2[0-3]):[0-5]\d)$/;
 
-export class CommandsModule extends BaseModule {
-    moduleName = "Commands";
+export class CommandsModule extends BaseModule implements _module {
+    moduleName = "CommandsModule";
     priority = 20;
 
     commandsDict: { [CommandName: string]: ICommand } = {
