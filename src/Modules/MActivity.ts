@@ -11,7 +11,8 @@ interface prerequisite {
 export class ActivityModule extends BaseModule {
     moduleName = 'Activity';
     priority = 50;
-    
+
+
 
 
     init(): void {
@@ -61,13 +62,24 @@ export class ActivityModule extends BaseModule {
             else return this.prerequisiteDict[prereq].Action(args);
         });
 
-        hookFunction("DrawGetImage", 10, (args, next) =>{
+        /**
+         * "Assets/Female3DCG/Activity/XSAct_眯眼.png"
+         */
+        hookFunction("DrawGetImage", 10, (args, next) => {
             const source = args[0];
-            conDebug({
-                name: "DrawGetImage",
-                type: MSGType.DebugLog,
-                content: source
-            });
+
+            // 使用 split 方法拆分字符串
+            const parts = source.split('/');
+            const fileName = parts[parts.length - 1];  // 获取文件名部分，即 "XSAct_XXX.png"
+
+            // 进一步处理文件名，去掉 ".png" 后缀
+            const aName = fileName.replace('.png', '');
+
+            if (aName.indexOf("XSAct_") == 0) {
+                const resultName = this.GetActImgPathMap[source];
+                return next(resultName);
+            }
+
 
             return next(args);
         });
@@ -94,6 +106,8 @@ export class ActivityModule extends BaseModule {
             activityDesc?.forEach((d) => {
                 ActivityDictionary?.push(d);
             });
+            //处理图片路径映射
+            this.InitActImgPathMap();
         }
     }
     //============================================================
@@ -156,7 +170,7 @@ export class ActivityModule extends BaseModule {
      * @desc - desc默认需要为null,当活动初始化时,会自动添加文字描述
      * @descString - 两个元素的数组 [0]为如果目标为他人的描述，[1]为目标自己的描述
     */
-    activityToAddDict: { [ActivityName: string]: { act: Activity, desc: null | string[][], descString: [string, string] } } = {
+    activityToAddDict: { [ActivityName: string]: { act: Activity, desc: null | string[][], descString: [string, string], img: ActivityName } } = {
         squint: {
             act: {
                 Name: "XSAct_眯眼",
@@ -167,7 +181,8 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: []
             },
             desc: null,
-            descString: ["", "SourceCharacter眯了眯眼."]
+            descString: ["", "SourceCharacter眯了眯眼."],
+            img: "RestHead"
         },
         eyeFlutter: {
             act: {
@@ -179,7 +194,8 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: []
             },
             desc: null,
-            descString: ["", "SourceCharacter眼神飘忽的左看右看."]
+            descString: ["", "SourceCharacter眼神飘忽的左看右看."],
+            img: "RestHead"
         },
         tossHair: {
             act: {
@@ -191,7 +207,8 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ["ItemHoodCovered"]
             },
             desc: null,
-            descString: ["", "SourceCharacter甩动着头发."]
+            descString: ["", "SourceCharacter甩动着头发."],
+            img: "RestHead"
         },
         caressOfHair: {
             act: {
@@ -203,7 +220,8 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ["ItemHoodCovered", "TargetItemHoodCovered", "CantUseArms"]
             },
             desc: null,
-            descString: ["SourceCharacter轻柔抚动着TargetCharacter的头发.", "SourceCharacter轻柔抚动着自己的头发."]
+            descString: ["SourceCharacter轻柔抚动着TargetCharacter的头发.", "SourceCharacter轻柔抚动着自己的头发."],
+            img: "RestHead"
         },
         pickUpHair: {
             act: {
@@ -216,7 +234,8 @@ export class ActivityModule extends BaseModule {
                 StimulationAction: "Talk"
             },
             desc: null,
-            descString: ["SourceCharacter轻轻咬起TargetCharacter的头发.", "SourceCharacter轻轻咬起自己的头发."]
+            descString: ["SourceCharacter轻轻咬起TargetCharacter的头发.", "SourceCharacter轻轻咬起自己的头发."],
+            img: "SiblingsCheekKiss"
         },
         sniffHair: {
             act: {
@@ -229,7 +248,8 @@ export class ActivityModule extends BaseModule {
                 StimulationAction: "Talk"
             },
             desc: null,
-            descString: ["SourceCharacter在TargetCharacter的发间嗅着，鼻息弥漫着TargetCharacter的发香.", "SourceCharacter撩起自己的头发轻轻嗅着."]
+            descString: ["SourceCharacter在TargetCharacter的发间嗅着，鼻息弥漫着TargetCharacter的发香.", "SourceCharacter撩起自己的头发轻轻嗅着."],
+            img: "SiblingsCheekKiss"
         },
         wrinkleNose: {
             act: {
@@ -241,7 +261,8 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ["ItemHoodCovered"]// , "ItemNoseCovered"]
             },
             desc: null,
-            descString: ["", "SourceCharacter皱了皱自己的鼻头."]
+            descString: ["", "SourceCharacter皱了皱自己的鼻头."],
+            img: "RestHead"
         }
     }
 
@@ -283,7 +304,7 @@ export class ActivityModule extends BaseModule {
 
                 return this.Judgment.ItemNoseCovered(acting);
             }
-        },
+        }
     }
     /**
      * 判断函数字典
@@ -301,13 +322,15 @@ export class ActivityModule extends BaseModule {
     /**
      * 通过动作名字得到路径
      */
-    GetActImgPathMap: { [actName in ActivityName]: [string, string] } | {} = {}
+    GetActImgPathMap: { [actName: string]: [ActivityNamePath, ActivityNamePath] } = {}
 
-
+    //Assets/Female3DCG/Activity/
     InitActImgPathMap(): void {
-        this.GetActImgPathMap = {
-            "shakeHands": ["shakeHands", "shakeHands"],
-            "shakeHands2": []
+        for (const a in this.activityToAddDict) {
+            const _act = this.activityToAddDict[a];
+            const _actName = _act.act.Name;
+
+            this.GetActImgPathMap[_actName] = [`Assets/Female3DCG/Activity/${_actName}.png`, `Assets/Female3DCG/Activity/${_act.img}.png`]
         }
     }
 }
