@@ -50,6 +50,10 @@ export class ModuleLoader {
         }
     }
 
+    private static ModuleMap : {[mName: string]: () => void} = {
+        
+    }
+
     private static generateModule(): number {
         this.pushToModules(new ChatroomModule());
         this.pushToModules(new CommandsModule());

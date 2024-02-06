@@ -2,19 +2,23 @@ import { conDebug, hookFunction, SendChat, MSGType , copyAndDownloadHtmlElement,
 import { BaseModule, _module } from "Modules/BaseModule";
 
 export class ChatroomModule extends BaseModule implements _module{
-    moduleName = "ChatroomModule";
-    priority = 30;
-    Load(): void {
-        hookFunction("ChatRoomLoad", 30, (args, next) => {
-            const result = next(args);
-            conDebug({
-                name: 'ChatRoomLoadTest',
-                type: MSGType.DebugLog,
-                content: args
-            });
-            // SendChat("我是! 小酥的小白鼠! 吱吱吱吱~~~");
-            return result;
-        });
+
+    public Load(): void {
+        // hookFunction("ChatRoomLoad", 30, (args, next) => {
+        //     conDebug({
+        //         name: 'ChatRoomLoadTest',
+        //         type: MSGType.DebugLog,
+        //         content: args
+        //     });
+        //     // SendChat("我是! 小酥的小白鼠! 吱吱吱吱~~~");
+        //     return next(args);
+        // });
+
+        ChatroomModule.Loaded = true;
+    }
+    public init(): void {
+        this.moduleName = "ChatroomModule";
+        this.priority = 30;
     }
 
 

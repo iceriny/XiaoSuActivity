@@ -5,8 +5,6 @@ import { ChatroomModule } from "./MChatroom";
 const timeRangeRegex: RegExp = /^(((0|1)\d|2[0-3]):[0-5]\d)-(((0|1)\d|2[0-3]):[0-5]\d)$/;
 
 export class CommandsModule extends BaseModule implements _module {
-    moduleName = "CommandsModule";
-    priority = 20;
 
     commandsDict: { [CommandName: string]: ICommand } = {
         help: {
@@ -49,18 +47,6 @@ export class CommandsModule extends BaseModule implements _module {
         }
     }
 
-
-
-    private getCommandParameters(parsed: string[]): string {
-        // if (parsed.length === 0) {
-        //     return '';
-        // }
-        const lastParam = parsed[parsed.length - 1];
-        if (lastParam.startsWith("-")) {
-            return lastParam.slice(1);
-        }
-        return '';
-    }
     public Load(): void {
         CommandCombine(
             {
@@ -72,6 +58,24 @@ export class CommandsModule extends BaseModule implements _module {
                 }
             }
         )
+
+        CommandsModule.Loaded = true;
+    }
+    public init(): void {
+        this.moduleName = "CommandsModule";
+        this.priority = 20;
+    }
+
+
+    private getCommandParameters(parsed: string[]): string {
+        // if (parsed.length === 0) {
+        //     return '';
+        // }
+        const lastParam = parsed[parsed.length - 1];
+        if (lastParam.startsWith("-")) {
+            return lastParam.slice(1);
+        }
+        return '';
     }
 
     private DisplayHelp(msg: string | undefined = undefined): void {

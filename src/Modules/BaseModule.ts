@@ -2,18 +2,21 @@ export interface _module {
     moduleName: string;
     priority: number;
 
+
     init(): void;
     Load(): void;
 }
+export type XS_ModuleName ="Base" | "ActivityModule" | "ChatroomModule" | "CommandsModule";
 
-export class BaseModule  implements  _module{
-    moduleName: string = '';
+export abstract class BaseModule implements _module {
+    moduleName: XS_ModuleName = 'Base';
     priority: number = 0;
+    static Loaded: Boolean = false;
 
     constructor() {
         this.init();
     }
 
-    init(): void { }
-    Load(): void { }
+    public abstract init(): void
+    public abstract Load(): void
 }

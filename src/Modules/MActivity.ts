@@ -1,5 +1,5 @@
 import { BaseModule, _module } from "./BaseModule";
-import { conDebug, hookFunction, MSGType } from "utils";
+import { conDebug, hookFunction, MSGType  } from "utils";
 
 /*
  * 动作的限定条件信息对象
@@ -9,14 +9,14 @@ interface prerequisite {
     Action: (args: any) => boolean;
 }
 export class ActivityModule extends BaseModule implements _module{
-    moduleName = 'ActivityModule';
-    priority = 50;
 
+    actNameOfReg = /XSAct_(.*)$/
 
-    init(): void {
-
+    public init(): void {
+        this.moduleName  = "ActivityModule";
+        this.priority = 50;
     }
-    Load(): void {
+    public Load(): void {
         this.LoadActivity();
 
         /**
@@ -82,6 +82,11 @@ export class ActivityModule extends BaseModule implements _module{
 
             return next(args);
         });
+
+
+
+
+        ActivityModule.Loaded = true;
     }
 
     // hook:
@@ -96,22 +101,27 @@ export class ActivityModule extends BaseModule implements _module{
      */
     LoadActivity(): void {
         conDebug("加载自定义活动");
-        for (const a in this.activityToAddDict) { // a 为活动名
+        for (const aN in this.activityToAddDict) { // a 为活动名
             conDebug({
                 type: MSGType.DebugLog,
                 name:"加载动作:",
-                content: a
+                content: aN
             });
-            this.pushToActivity(this.activityToAddDict[a].act);
+            this.pushToActivity(this.activityToAddDict[aN].act);
 
             this.activityDictAdd();
 
             //加载文字描述
-            const activityDesc = this.activityToAddDict[a].desc;
+            const activityDesc = this.activityToAddDict[aN].desc;
+
+            const Loaded_XSA_ActivityDictionary_Index0 = ActivityDictionary
+            ?.filter(d => d[0].includes(aN))
+            .map(d => d[0]);
+
             activityDesc?.forEach((d) => {
-                ActivityDictionary?.push(d);
+                if (typeof Loaded_XSA_ActivityDictionary_Index0 !== "undefined" && !(d[0] in Loaded_XSA_ActivityDictionary_Index0)) ActivityDictionary?.push(d);
             });
-            conDebug(`${this.activityToAddDict[a].act.Name}加载完成.`)
+            conDebug(`${aN}加载完成.`)
         }
     }
     //============================================================
