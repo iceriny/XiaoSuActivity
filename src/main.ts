@@ -11,22 +11,15 @@ function initWait() {
         hookFunction('LoginResponse', 0, (args, next) => {
             next(args);
             conDebug({
-                name: `Init! LoginResponse caught`,
+                name: `Init! Login Response caught`,
                 content: args,
                 type: MSGType.Workflow_Log
             });
             const response = args[0];
-            if (response && typeof response.Name === 'string' && typeof response.AccountName === 'string') {
+            if (response && typeof response.Name === 'string' && typeof response.AccountName === 'string' || !ModuleLoader.CompleteLoadingSuccessful) {
                 init();
             }
         });
-    } else {
-        conDebug({
-            name: "logged",
-            type: MSGType.Workflow_Log,
-            content: "Already logged in, init"
-        });
-        //init();
     }
 }
 
@@ -37,7 +30,7 @@ export function init() {
     conDebug({
         type: MSGType.Workflow_Log,
         name: "XSActivity Loaded!",
-        content: `Loaded ${moduleCount} modules`
+        content: `Loaded ${moduleCount} modules    FullLoaded: ${ModuleLoader.CompleteLoadingSuccessful}`
     });
 }
 

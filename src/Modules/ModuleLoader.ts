@@ -1,4 +1,4 @@
-import { BaseModule, XS_ModuleName } from "./BaseModule";
+import { BaseModule, XS_ModuleName, FullModCount } from "./BaseModule";
 import { ChatroomModule } from "./MChatroom";
 import { CommandsModule } from "./MCommand";
 import { modules } from "./ModulesDict";
@@ -9,6 +9,7 @@ export class ModuleLoader {
     public static modules: { [key: string]: BaseModule } = modules;
     static mList: [BaseModule] | undefined;
     public static modulesCount: number = 0;
+    public static CompleteLoadingSuccessful: boolean = false;
 
 
     /**
@@ -28,6 +29,8 @@ export class ModuleLoader {
                     conDebug(`模块 ${m.moduleName} 加载完成`);
                 });
         }
+
+        if (moduleC == FullModCount) this.CompleteLoadingSuccessful = true;
         return moduleC
     }
 

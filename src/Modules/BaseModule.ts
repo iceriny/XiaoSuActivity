@@ -7,6 +7,7 @@ export interface _module {
     Load(): void;
 }
 export type XS_ModuleName ="Base" | "ActivityModule" | "ChatroomModule" | "CommandsModule";
+export const FullModCount = 3;
 
 export abstract class BaseModule implements _module {
     moduleName: XS_ModuleName = 'Base';
