@@ -1,6 +1,7 @@
 import bcModSDKRef from "bondage-club-mod-sdk";
 import { modules } from "Modules/ModulesDict";
 import { BaseModule } from "Modules/BaseModule";
+import { CHANGELOG } from "changeLogData";
 
 
 // SDK

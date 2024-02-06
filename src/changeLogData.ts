@@ -9,7 +9,7 @@ interface ChangeLogObj {
 	changes: string[];
 }
 
-let CHANGELOG: ChangeLogObj[] = [
+export let CHANGELOG: ChangeLogObj[] = [
     {
         version: "0.0.1",
         description: "Initial release",
