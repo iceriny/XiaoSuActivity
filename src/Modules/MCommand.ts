@@ -1,5 +1,5 @@
 import { BaseModule, _module } from "./BaseModule";
-import { conDebug, MSGType, GetModule, timeRange } from "utils";
+import { conDebug, MSGType, GetModule, timeRange, sendChangeLog } from "utils";
 import { ChatroomModule } from "./MChatroom";
 
 const timeRangeRegex: RegExp = /^(((0|1)\d|2[0-3]):[0-5]\d)-(((0|1)\d|2[0-3]):[0-5]\d)$/;
@@ -44,6 +44,13 @@ export class CommandsModule extends BaseModule implements _module {
                 }
 
             }
+        },
+        v: {
+            Tag: "v",
+            Description: "显示 [小酥的活动模组] 的版本信息.",
+            Action: (args, msg, parsed) => {
+                sendChangeLog();
+            }
         }
     }
 
@@ -84,6 +91,7 @@ export class CommandsModule extends BaseModule implements _module {
             for (const c in this.commandsDict) {
                 content += `/xsa ${c} ${this.commandsDict[c].Description}\n`;
             }
+            content += `小酥的活动模组 版本号: ${XSActivity_VERSION}\n`
             ChatRoomSendLocal(content, 10000);
         } else {
             ChatRoomSendLocal(msg, 10000)
