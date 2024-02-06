@@ -65,7 +65,7 @@ export class ModuleLoader {
 
     private static generateModule(): number {
         for (const mN in ModuleLoader.ModuleMap) {
-            if (this.modules[mN] === undefined) ModuleLoader.ModuleMap[mN as XS_ModuleName]();
+            if (mN !== "Base" && this.modules[mN] === undefined) ModuleLoader.ModuleMap[mN as XS_ModuleName]();
         }
 
         return this.modulesCount;
