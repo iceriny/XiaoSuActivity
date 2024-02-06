@@ -3,6 +3,7 @@ import { ChatroomModule } from "./MChatroom";
 import { CommandsModule } from "./MCommand";
 import { modules } from "./ModulesDict";
 import { ActivityModule } from "./MActivity";
+import { conDebug } from "utils";
 
 export class ModuleLoader {
     public static modules: { [key: string]: BaseModule } = modules;
@@ -13,8 +14,8 @@ export class ModuleLoader {
     /**
      * 加载模块   Loader对外入口.
      */
-    public static LoadModules(): void {
-        this.generateModule();
+    public static LoadModules(): number {
+        const moduleC = this.generateModule();
 
         // 如果模块列表存在
         if (typeof this.mList !== "undefined") {
@@ -24,8 +25,10 @@ export class ModuleLoader {
                 .forEach((m) => {
                     // 加载模块
                     m.Load();
+                    conDebug(`模块 ${m.moduleName} 加载完成`);
                 });
         }
+        return moduleC
     }
 
 
@@ -34,7 +37,7 @@ export class ModuleLoader {
      * @param module 要添加的模块对象
      */
     private static pushToModules(module: BaseModule): void {
-        if (this.modules[module.moduleName] !== undefined) {
+        if (this.modules[module.moduleName] === undefined) {
             
             this.modules[module.moduleName] = module;
             if (typeof this.mList !== "undefined" && this.mList.includes(module)) {
