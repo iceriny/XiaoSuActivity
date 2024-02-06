@@ -1,4 +1,4 @@
-import { BaseModule } from "./BaseModule";
+import { BaseModule, XS_ModuleName } from "./BaseModule";
 import { ChatroomModule } from "./MChatroom";
 import { CommandsModule } from "./MCommand";
 import { modules } from "./ModulesDict";
@@ -37,27 +37,36 @@ export class ModuleLoader {
      * @param module 要添加的模块对象
      */
     private static pushToModules(module: BaseModule): void {
-        if (this.modules[module.moduleName] === undefined) {
-            
-            this.modules[module.moduleName] = module;
-            if (typeof this.mList !== "undefined" && !this.mList.includes(module)) {
-                this.mList.push(module);
-            } else {
-                this.mList = [module];
-            }
+        this.modules[module.moduleName] = module;
+        if (typeof this.mList !== "undefined") {
+            this.mList.push(module);
+        } else {
+            this.mList = [module];
+        }
 
-            this.modulesCount++;
+        this.modulesCount++;
+    }
+
+    public static ModuleMap: { [mName in XS_ModuleName]: () => void } = {
+        Base: () => {
+            throw new Error("Base为模块的抽象类，请勿加载");
+        },
+        ActivityModule: () => {
+            this.pushToModules(new ActivityModule());
+        },
+        ChatroomModule: () => {
+            this.pushToModules(new ChatroomModule());
+        },
+        CommandsModule: () => {
+            this.pushToModules(new CommandsModule());
         }
     }
 
-    private static ModuleMap : {[mName: string]: () => void} = {
-        
-    }
 
     private static generateModule(): number {
-        this.pushToModules(new ChatroomModule());
-        this.pushToModules(new CommandsModule());
-        this.pushToModules(new ActivityModule());
+        for (const mN in ModuleLoader.ModuleMap) {
+            if (this.modules[mN] === undefined) ModuleLoader.ModuleMap[mN as XS_ModuleName]();
+        }
 
         return this.modulesCount;
     }
