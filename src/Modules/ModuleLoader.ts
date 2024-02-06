@@ -33,8 +33,10 @@ export class ModuleLoader {
      * @param module 要添加的模块对象
      */
     private static pushToModules(module: BaseModule): void {
-        this.modules[module.moduleName] = module;
-        if (typeof this.mList !== "undefined") {
+        if (this.modules[module.moduleName] !== undefined) {
+            this.modules[module.moduleName] = module;
+        }
+        if (typeof this.mList !== "undefined" && this.mList.includes(module)) {
             this.mList.push(module);
         } else {
             this.mList = [module];

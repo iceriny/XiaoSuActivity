@@ -286,7 +286,7 @@ export class ActivityModule extends BaseModule implements _module{
                 StimulationAction: "Talk"
             },
             desc: null,
-            descString: ["", "SourceCharacter皱了皱自己的鼻头."],
+            descString: ["", "SourceCharacter深深的吸了口气."],
             img: "Kiss"
         }
     }
