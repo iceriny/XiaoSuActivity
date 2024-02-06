@@ -26,7 +26,7 @@ function initWait() {
             type: MSGType.Workflow_Log,
             content: "Already logged in, init"
         });
-        init();
+        //init();
     }
 }
 
