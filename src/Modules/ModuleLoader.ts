@@ -40,7 +40,7 @@ export class ModuleLoader {
         if (this.modules[module.moduleName] === undefined) {
             
             this.modules[module.moduleName] = module;
-            if (typeof this.mList !== "undefined" && this.mList.includes(module)) {
+            if (typeof this.mList !== "undefined" && !this.mList.includes(module)) {
                 this.mList.push(module);
             } else {
                 this.mList = [module];
