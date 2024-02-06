@@ -9,12 +9,12 @@ function initWait() {
     });  
     if (CurrentScreen == null || CurrentScreen === 'Login') {
         hookFunction('LoginResponse', 0, (args, next) => {
+            next(args);
             conDebug({
                 name: `Init! LoginResponse caught`,
                 content: args,
                 type: MSGType.Workflow_Log
             });
-            next(args);
             const response = args[0];
             if (response && typeof response.Name === 'string' && typeof response.AccountName === 'string') {
                 init();
@@ -32,9 +32,13 @@ function initWait() {
 
 export function init() {
 
-    ModuleLoader.LoadModules();
+    const moduleCount = ModuleLoader.LoadModules();
     
-    conDebug(`XSActivity Loaded!`);
+    conDebug({
+        type: MSGType.Workflow_Log,
+        name: "XSActivity Loaded!",
+        content: `Loaded ${moduleCount} modules`
+    });
 }
 
 

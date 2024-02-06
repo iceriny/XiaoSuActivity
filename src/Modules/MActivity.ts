@@ -95,7 +95,13 @@ export class ActivityModule extends BaseModule implements _module{
      * 载入自定义动作
      */
     LoadActivity(): void {
+        conDebug("加载自定义活动");
         for (const a in this.activityToAddDict) { // a 为活动名
+            conDebug({
+                type: MSGType.DebugLog,
+                name:"加载动作:",
+                content: a
+            });
             this.pushToActivity(this.activityToAddDict[a].act);
 
             this.activityDictAdd();
@@ -105,6 +111,7 @@ export class ActivityModule extends BaseModule implements _module{
             activityDesc?.forEach((d) => {
                 ActivityDictionary?.push(d);
             });
+            conDebug(`${this.activityToAddDict[a].act.Name}加载完成.`)
         }
     }
     //============================================================

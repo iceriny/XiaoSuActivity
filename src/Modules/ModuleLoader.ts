@@ -7,6 +7,7 @@ import { ActivityModule } from "./MActivity";
 export class ModuleLoader {
     public static modules: { [key: string]: BaseModule } = modules;
     static mList: [BaseModule] | undefined;
+    public static modulesCount: number = 0;
 
 
     /**
@@ -34,19 +35,24 @@ export class ModuleLoader {
      */
     private static pushToModules(module: BaseModule): void {
         if (this.modules[module.moduleName] !== undefined) {
+            
             this.modules[module.moduleName] = module;
-        }
-        if (typeof this.mList !== "undefined" && this.mList.includes(module)) {
-            this.mList.push(module);
-        } else {
-            this.mList = [module];
+            if (typeof this.mList !== "undefined" && this.mList.includes(module)) {
+                this.mList.push(module);
+            } else {
+                this.mList = [module];
+            }
+
+            this.modulesCount++;
         }
     }
 
-    private static generateModule(): void {
+    private static generateModule(): number {
         this.pushToModules(new ChatroomModule());
         this.pushToModules(new CommandsModule());
         this.pushToModules(new ActivityModule());
+
+        return this.modulesCount;
     }
 
 }
