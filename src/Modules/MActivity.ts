@@ -650,7 +650,7 @@ export class ActivityModule extends BaseModule implements _module {
     }
 
 
-    getAllAct(): ActivityNameXiaosu_onlyName[] {
+    public getAllAct(): ActivityNameXiaosu_onlyName[] {
         const result: ActivityNameXiaosu_onlyName[] = []
         for (const a in this.activityToAddDict) {
             const suffix = a.substring(6) as ActivityNameXiaosu_onlyName; // 从索引为 6 的位置开始截取到字符串末尾
