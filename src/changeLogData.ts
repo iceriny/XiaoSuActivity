@@ -32,6 +32,12 @@ export let CHANGELOG: ChangeLogObj[] = [
         version: "0.0.4",
         description: "终于修复了重复加载的Bug",
         type: ChangeType.dev,
-        changes: ["修复重复加载的BUG!!!!!!>.<", "修复若干其他bug","完善框架"]
+        changes: ["修复重复加载的BUG!!!!!! O.o", "修复若干其他bug","完善框架"]
+    },
+    {
+        version: "0.0.5",
+        description: "优化",
+        type: ChangeType.dev,
+        changes: ["优化版本信息显示效果"]
     }
 ]
