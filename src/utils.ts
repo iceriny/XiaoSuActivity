@@ -59,8 +59,8 @@ export function conDebug(msg: XSDebugMSG | string) {
 	console.debug(result);
 }
 
-export function GetModule(moduleName: XS_ModuleName): BaseModule | undefined {
-	return modules[moduleName];
+export function GetModule<T>(moduleName: XS_ModuleName): T {
+	return modules[moduleName] as T;
 }
 
 

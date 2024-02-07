@@ -1,5 +1,5 @@
 import { BaseModule, _module } from "./BaseModule";
-import { conDebug, hookFunction, MSGType  } from "utils";
+import { conDebug, hookFunction, MSGType } from "utils";
 
 /*
  * 动作的限定条件信息对象
@@ -8,12 +8,14 @@ interface prerequisite {
     Name: ActivityPrerequisiteXiaoSu;
     Action: (args: any) => boolean;
 }
-export class ActivityModule extends BaseModule implements _module{
 
-    actNameOfReg = /XSAct_(.*)$/
+const selfPlaceholder = "SourceCharacter";
+const targetPlaceholder = "TargetCharacter";
+export class ActivityModule extends BaseModule implements _module {
+
 
     public init(): void {
-        this.moduleName  = "ActivityModule";
+        this.moduleName = "ActivityModule";
         this.priority = 50;
     }
     public Load(): void {
@@ -55,13 +57,16 @@ export class ActivityModule extends BaseModule implements _module{
             //     content: args
             // });
             const prereq = args[0];
-            const customPrereq = this.prerequisiteDict[prereq];
-            if (typeof customPrereq === "undefined") return next(args);
-            else return this.prerequisiteDict[prereq].Action(args);
+            if (prereq in this.prerequisiteDict) {
+                const customPrereq = this.prerequisiteDict[prereq as ActivityPrerequisiteXiaoSu];
+                return customPrereq.Action(args);
+            } else {
+                return next(args);
+            }
         });
 
         /**
-         * "Assets/Female3DCG/Activity/XSAct_眯眼.png"
+         * args[0]: "Assets/Female3DCG/Activity/XSAct_XXX.png"
          */
         hookFunction("DrawImageResize", 10, (args, next) => {
             const source = args[0];
@@ -74,7 +79,7 @@ export class ActivityModule extends BaseModule implements _module{
             const aName = fileName.replace('.png', '');
 
             if (aName.indexOf("XSAct_") == 0) {
-                const resultName = `Assets/Female3DCG/Activity/${this.activityToAddDict[aName].img}.png`;
+                const resultName = `Assets/Female3DCG/Activity/${this.activityToAddDict[aName as ActivityNameXiaoSu].img}.png`;
                 args[0] = resultName;
                 return next(args);
             }
@@ -104,19 +109,19 @@ export class ActivityModule extends BaseModule implements _module{
         for (const aN in this.activityToAddDict) { // a 为活动名
             conDebug({
                 type: MSGType.DebugLog,
-                name:"加载动作:",
+                name: "加载动作:",
                 content: aN
             });
-            this.pushToActivity(this.activityToAddDict[aN].act);
+            this.pushToActivity(this.activityToAddDict[aN as ActivityNameXiaoSu].act);
 
             this.activityDictAdd();
 
             //加载文字描述
-            const activityDesc = this.activityToAddDict[aN].desc;
+            const activityDesc = this.activityToAddDict[aN as ActivityNameXiaoSu].desc;
 
             const Loaded_XSA_ActivityDictionary_Index0 = ActivityDictionary
-            ?.filter(d => d[0].includes(aN))
-            .map(d => d[0]);
+                ?.filter(d => d[0].includes(aN))
+                .map(d => d[0]);
 
             activityDesc?.forEach((d) => {
                 if (typeof Loaded_XSA_ActivityDictionary_Index0 !== "undefined" && !(d[0] in Loaded_XSA_ActivityDictionary_Index0)) ActivityDictionary?.push(d);
@@ -131,7 +136,7 @@ export class ActivityModule extends BaseModule implements _module{
     activityDictAdd() {
 
         for (const a in this.activityToAddDict) {
-            const pendingActivity = this.activityToAddDict[a];
+            const pendingActivity = this.activityToAddDict[a as ActivityNameXiaoSu];
 
             const actName = pendingActivity.act.Name;
             const nameWithoutPrefix = actName.substring(6);
@@ -163,9 +168,16 @@ export class ActivityModule extends BaseModule implements _module{
         ActivityFemale3DCG.push(activity);
         ActivityFemale3DCGOrdering.push(activity.Name);
     }
+
     //============================================================
 
-    // ActivityNameXiaoSu = "XSAct_眯眼" | "XSAct_眼神飘忽" | "XSAct_甩头发" | "XSAct_轻抚发梢" | "XSAct_叼起头发" | "XSAct_嗅头发" | "XSAct_皱鼻子" | "XSAct_打喷嚏" | "XSAct_深呼吸"
+    //     ActivityNameXiaosu_onlyName =
+    //     "眯眼" | "眼神飘忽" | "甩头发" | "轻抚发梢" | "叼起头发" | "嗅头发" |  "绕头发" | "大力甩头发" | "抿住嘴巴" | "恳求的看" | "恳求的摇头"
+    //   | "皱鼻子" | "打喷嚏" | "深呼吸" 
+    //   | "低头" | "挺胸收腹" | "站直身体" | "坐直身体" | "身体一颤"
+    //   | "活动手臂" | "活动大腿" | "绷紧膝盖" | "内八夹腿"
+    //   | "蜷缩脚趾" | "绷直脚踝" | "踮脚"
+    // ;
     // SourceCharacter 为动作发起人  TargetCharacter 为动作目标人
     /**
      * 将要添加的动作字典
@@ -184,7 +196,7 @@ export class ActivityModule extends BaseModule implements _module{
      * @desc - desc默认需要为null,当活动初始化时,会自动添加文字描述
      * @descString - 两个元素的数组 [0]为如果目标为他人的描述，[1]为目标自己的描述
     */
-    activityToAddDict: { [ActivityName: string]: { act: Activity, desc: null | string[][], descString: [string, string], img: ActivityName } } = {
+    activityToAddDict: { [ActivityIndex in ActivityNameXiaoSu]: { act: Activity, desc: null | string[][], descString: [string, string], img: ActivityName } } = {
         XSAct_眯眼: {
             act: {
                 Name: "XSAct_眯眼",
@@ -195,7 +207,7 @@ export class ActivityModule extends BaseModule implements _module{
                 Prerequisite: []
             },
             desc: null,
-            descString: ["", "SourceCharacter眯了眯眼."],
+            descString: ["", `${selfPlaceholder}眯了眯眼.`],
             img: "RestHead"
         },
         XSAct_眼神飘忽: {
@@ -208,7 +220,7 @@ export class ActivityModule extends BaseModule implements _module{
                 Prerequisite: []
             },
             desc: null,
-            descString: ["", "SourceCharacter眼神飘忽的左看右看."],
+            descString: ["", `${selfPlaceholder}眼神飘忽的左看右看.`],
             img: "RestHead"
         },
         XSAct_甩头发: {
@@ -221,7 +233,20 @@ export class ActivityModule extends BaseModule implements _module{
                 Prerequisite: ["ItemHoodCovered"]
             },
             desc: null,
-            descString: ["", "SourceCharacter甩动着头发."],
+            descString: ["", `${selfPlaceholder}甩动着头发.`],
+            img: "RestHead"
+        },
+        XSAct_大力甩头发: {
+            act: {
+                Name: "XSAct_大力甩头发",
+                Target: [""],
+                TargetSelf: ["ItemHood"],
+                MaxProgress: 20,
+                MaxProgressSelf: 20,
+                Prerequisite: ["ItemHoodCovered"]
+            },
+            desc: null,
+            descString: ["", `${selfPlaceholder}连连摇头，慌乱的甩动着头发.`],
             img: "RestHead"
         },
         XSAct_轻抚发梢: {
@@ -234,7 +259,7 @@ export class ActivityModule extends BaseModule implements _module{
                 Prerequisite: ["ItemHoodCovered", "TargetItemHoodCovered", "CantUseArms"]
             },
             desc: null,
-            descString: ["SourceCharacter轻柔抚动着TargetCharacter的头发.", "SourceCharacter轻柔抚动着自己的头发."],
+            descString: [`${selfPlaceholder}轻柔抚动着${targetPlaceholder}的头发.`, `${selfPlaceholder}轻柔抚动着自己的头发.`],
             img: "RestHead"
         },
         XSAct_叼起头发: {
@@ -242,13 +267,13 @@ export class ActivityModule extends BaseModule implements _module{
                 Name: "XSAct_叼起头发",
                 Target: ["ItemHood"],
                 TargetSelf: ["ItemHood"],
-                MaxProgress: 20,
+                MaxProgress: 50,
                 MaxProgressSelf: 20,
                 Prerequisite: ["UseMouth", "ItemHoodCovered", "TargetItemHoodCovered"],
                 StimulationAction: "Talk"
             },
             desc: null,
-            descString: ["SourceCharacter轻轻咬起TargetCharacter的头发.", "SourceCharacter轻轻咬起自己的头发."],
+            descString: [`${selfPlaceholder}轻轻咬起${targetPlaceholder}的头发.`, `${selfPlaceholder}轻轻咬起自己的头发.`],
             img: "SiblingsCheekKiss"
         },
         XSAct_嗅头发: {
@@ -256,13 +281,26 @@ export class ActivityModule extends BaseModule implements _module{
                 Name: "XSAct_嗅头发",
                 Target: ["ItemHood"],
                 TargetSelf: ["ItemHood"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
+                MaxProgress: 30,
+                MaxProgressSelf: 30,
                 Prerequisite: ["ItemHoodCovered", "TargetItemHoodCovered"],//"ItemNoseCovered"
                 StimulationAction: "Talk"
             },
             desc: null,
-            descString: ["SourceCharacter在TargetCharacter的发间嗅着，鼻息弥漫着TargetCharacter的发香.", "SourceCharacter撩起自己的头发轻轻嗅着."],
+            descString: [`${selfPlaceholder}在${targetPlaceholder}的发间嗅着，鼻息弥漫着${targetPlaceholder}的发香.`, `${selfPlaceholder}撩起自己的头发轻轻嗅着.`],
+            img: "SiblingsCheekKiss"
+        },
+        XSAct_绕头发: {
+            act: {
+                Name: "XSAct_绕头发",
+                Target: ["ItemHood"],
+                TargetSelf: ["ItemHood"],
+                MaxProgress: 30,
+                MaxProgressSelf: 30,
+                Prerequisite: ["CantUseArms", "ItemHoodCovered", "TargetItemHoodCovered"]
+            },
+            desc: null,
+            descString: [`${selfPlaceholder}勾起一缕${targetPlaceholder}的发丝，在指尖绕来绕去.`, `${selfPlaceholder}勾起自己的一缕头发在指尖绕来绕去.`],
             img: "SiblingsCheekKiss"
         },
         XSAct_皱鼻子: {
@@ -275,7 +313,7 @@ export class ActivityModule extends BaseModule implements _module{
                 Prerequisite: ["ItemHoodCovered"]// , "ItemNoseCovered"]
             },
             desc: null,
-            descString: ["", "SourceCharacter皱了皱自己的鼻头."],
+            descString: ["", `${selfPlaceholder}皱了皱自己的鼻头.`],
             img: "RestHead"
         },
         XSAct_打喷嚏: {
@@ -289,7 +327,7 @@ export class ActivityModule extends BaseModule implements _module{
                 StimulationAction: "Talk"
             },
             desc: null,
-            descString: ["", "SourceCharacter打了个喷嚏."],
+            descString: ["", `${selfPlaceholder}打了个喷嚏.`],
             img: "Kiss"
         },
         XSAct_深呼吸: {
@@ -303,9 +341,233 @@ export class ActivityModule extends BaseModule implements _module{
                 StimulationAction: "Talk"
             },
             desc: null,
-            descString: ["", "SourceCharacter深深的吸了口气."],
+            descString: ["", `${selfPlaceholder}深深的吸了口气.`],
             img: "Kiss"
+        },
+        XSAct_低头: {
+            act: {
+                Name: "XSAct_低头",
+                Target: [""],
+                TargetSelf: ["ItemHood"],
+                MaxProgress: 20,
+                MaxProgressSelf: 20,
+                Prerequisite: ["ItemHoodCovered", "MoveHead"]
+            },
+            desc: null,
+            descString: ["", `${selfPlaceholder}红润着脸蛋低头逃避.`],
+            img: "RestHead"
+        },
+        XSAct_恳求的摇头: {
+            act: {
+                Name: "XSAct_恳求的摇头",
+                Target: ["ItemHead"],
+                TargetSelf: [""],
+                MaxProgress: 20,
+                MaxProgressSelf: 20,
+                Prerequisite: ["MoveHead"]
+            },
+            desc: null,
+            descString: [`${selfPlaceholder}对着${targetPlaceholder}的方向恳求的摇头.`, ``],
+            img: "RestHead"
+        },
+        XSAct_恳求的看: {
+            act: {
+                Name: "XSAct_恳求的看",
+                Target: ["ItemHead"],
+                TargetSelf: [""],
+                MaxProgress: 20,
+                MaxProgressSelf: 20,
+                Prerequisite: ["TargetZoneNaked", "MoveHead"]
+            },
+            desc: null,
+            descString: [`${selfPlaceholder}汪着眼睛恳求的看着${targetPlaceholder}的眼睛.`, ""],
+            img: "RestHead"
+        },
+        XSAct_内八夹腿: {
+            act: {
+                Name: "XSAct_内八夹腿",
+                Target: [""],
+                TargetSelf: ["ItemLegs"],
+                MaxProgress: 20,
+                MaxProgressSelf: 20,
+                Prerequisite: []
+            },
+            desc: null,
+            descString: ["", `${selfPlaceholder}通红的脸蛋忍耐着快感，大腿紧紧夹起来，摆出着内八的姿势，身体微微颤抖.`],
+            img: "Kick"
+        },
+        XSAct_噘嘴: {
+            act: {
+                Name: "XSAct_噘嘴",
+                Target: [""],
+                TargetSelf: ["ItemMouth", "ItemMouth2", "ItemMouth3"],
+                MaxProgress: 20,
+                MaxProgressSelf: 20,
+                Prerequisite: ["UseMouth"]
+            },
+            desc: null,
+            descString: ["", `${selfPlaceholder}有些不满的噘起嘴吧.`],
+            img: "PoliteKiss"
+        },
+        XSAct_抿住嘴巴: {
+            act: {
+                Name: "XSAct_抿住嘴巴",
+                Target: [""],
+                TargetSelf: ["ItemMouth", "ItemMouth2", "ItemMouth3"],
+                MaxProgress: 20,
+                MaxProgressSelf: 20,
+                Prerequisite: ["UseMouth"]
+            },
+            desc: null,
+            descString: ["", `${selfPlaceholder}抿住嘴巴.`],
+            img: "PoliteKiss"
+        },
+        XSAct_瘪嘴: {
+            act: {
+                Name: "XSAct_瘪嘴",
+                Target: [""],
+                TargetSelf: ["ItemMouth", "ItemMouth2", "ItemMouth3"],
+                MaxProgress: 20,
+                MaxProgressSelf: 20,
+                Prerequisite: ["UseMouth"]
+            },
+            desc: null,
+            descString: ["", `${selfPlaceholder}憋着嘴巴，一副委屈的样子.`],
+            img: "PoliteKiss"
+        },
+        XSAct_坐直身体: {
+            act: {
+                Name: "XSAct_坐直身体",
+                Target: [""],
+                TargetSelf: ["ItemTorso", "ItemTorso2"],
+                MaxProgress: 20,
+                MaxProgressSelf: 20,
+                Prerequisite: []
+            },
+            desc: null,
+            descString: ["", `${selfPlaceholder}挺直了腰，坐直了身体.`],
+            img: "Kick"
+        },
+        XSAct_挺胸收腹: {
+            act: {
+                Name: "XSAct_挺胸收腹",
+                Target: [""],
+                TargetSelf: ["ItemBreast"],
+                MaxProgress: 20,
+                MaxProgressSelf: 20,
+                Prerequisite: []
+            },
+            desc: null,
+            descString: ["", `${selfPlaceholder}挺起胸部，微收下巴，腹部用力收腰.`],
+            img: "Kick"
+        },
+        XSAct_站直身体: {
+            act: {
+                Name: "XSAct_站直身体",
+                Target: [""],
+                TargetSelf: ["ItemTorso", "ItemTorso2"],
+                MaxProgress: 20,
+                MaxProgressSelf: 20,
+                Prerequisite: ["Kneeling"],
+                Reverse: true
+            },
+            desc: null,
+            descString: ["", `${selfPlaceholder}挺胸收腹，努力绷紧小腿，站直了身体.`],
+            img: "Kick"
+        },
+        XSAct_身体一颤: {
+            act: {
+                Name: "XSAct_身体一颤",
+                Target: [""],
+                TargetSelf: ["ItemTorso", "ItemTorso2"],
+                MaxProgress: 20,
+                MaxProgressSelf: 20,
+                Prerequisite: []
+            },
+            desc: null,
+            descString: ["", `${selfPlaceholder}的身体猛然颤抖了一下.`],
+            img: "Kick"
+        },
+        XSAct_活动大腿: {
+            act: {
+                Name: "XSAct_活动大腿",
+                Target: [""],
+                TargetSelf: ["ItemLegs"],
+                MaxProgress: 20,
+                MaxProgressSelf: 20,
+                Prerequisite: []
+            },
+            desc: null,
+            descString: ["", `${selfPlaceholder}尝试活动了一下腿部.`],
+            img: "Kick"
+        },
+        XSAct_活动手臂: {
+            act: {
+                Name: "XSAct_活动手臂",
+                Target: [""],
+                TargetSelf: ["ItemArms"],
+                MaxProgress: 30,
+                MaxProgressSelf: 30,
+                Prerequisite: ["CantUseArms"]
+            },
+            desc: null,
+            descString: ["", `${selfPlaceholder}一边按摩一边活动着手臂.`],
+            img: "MasturbateHand"
+        },
+        XSAct_绷紧膝盖: {
+            act: {
+                Name: "XSAct_绷紧膝盖",
+                Target: [""],
+                TargetSelf: ["ItemLegs"],
+                MaxProgress: 20,
+                MaxProgressSelf: 20,
+                Prerequisite: ["Kneeling"],
+                Reverse: true
+            },
+            desc: null,
+            descString: ["", `${selfPlaceholder}努力的绷紧膝盖，尽可能站的更直.`],
+            img: "Kick"
+        },
+        XSAct_绷直脚踝: {
+            act: {
+                Name: "XSAct_绷直脚踝",
+                Target: [""],
+                TargetSelf: ["ItemBoots"],
+                MaxProgress: 20,
+                MaxProgressSelf: 20,
+                Prerequisite: [],
+            },
+            desc: null,
+            descString: ["", `${selfPlaceholder}不自觉的用力绷直脚踝，释放涌来的快感.`],
+            img: "Kick"
+        },
+        XSAct_蜷缩脚趾: {
+            act: {
+                Name: "XSAct_蜷缩脚趾",
+                Target: [""],
+                TargetSelf: ["ItemBoots"],
+                MaxProgress: 20,
+                MaxProgressSelf: 20,
+                Prerequisite: [],
+            },
+            desc: null,
+            descString: ["", `${selfPlaceholder}脚趾互相纠结，又时而蜷缩，忍耐着快感袭来.`],
+            img: "Kick"
+        },
+        XSAct_踮脚: {
+            act: {
+                Name: "XSAct_踮脚",
+                Target: [""],
+                TargetSelf: ["ItemBoots"],
+                MaxProgress: 20,
+                MaxProgressSelf: 20,
+                Prerequisite: ["CantUseFeet"],
+            },
+            desc: null,
+            descString: ["", `${selfPlaceholder}努力的踮起脚.`],
+            img: "Kick"
         }
+
     }
 
     /**
@@ -319,8 +581,8 @@ export class ActivityModule extends BaseModule implements _module{
      * - args[2]为@param acted:{@link Character} | {@link PlayerCharacter} 代表动作目标的数据
      * - args[3]为@param group:{@link AssetGroup}.
      */
-    prerequisiteDict: { [PrerequisiteName: string]: prerequisite } = {
-        'ItemHoodCovered': { //头部面罩位置是否覆盖
+    prerequisiteDict: { [PrerequisiteName in ActivityPrerequisiteXiaoSu]: prerequisite } = {
+        ItemHoodCovered: { //头部面罩位置是否覆盖
             Name: "ItemHoodCovered",
             Action: (args) => {
                 //const prereq = args[0] as ActivityPrerequisite;
@@ -331,7 +593,7 @@ export class ActivityModule extends BaseModule implements _module{
                 return this.Judgment.ItemHoodCovered(acting);
             }
         },
-        'TargetItemHoodCovered': { //目标的头部面罩位置是否覆盖
+        TargetItemHoodCovered: { //目标的头部面罩位置是否覆盖
             Name: "TargetItemHoodCovered",
             Action: (args) => {
                 const acted = args[2] as Character | PlayerCharacter;
@@ -339,12 +601,20 @@ export class ActivityModule extends BaseModule implements _module{
                 return this.Judgment.ItemHoodCovered(acted);
             }
         },
-        'ItemNoseCovered': { //头部鼻子位置是否覆盖
+        ItemNoseCovered: { //头部鼻子位置是否覆盖
             Name: "ItemNoseCovered",
             Action: (args) => {
                 const acting = args[1] as Character | PlayerCharacter;
 
                 return this.Judgment.ItemNoseCovered(acting);
+            }
+        },
+        Kneeling: {
+            Name: "Kneeling",
+            Action: (args) => {
+                const acting = args[1] as Character | PlayerCharacter;
+
+                return this.Judgment.Kneeling(acting);
             }
         }
     }
@@ -357,22 +627,21 @@ export class ActivityModule extends BaseModule implements _module{
             return InventoryPrerequisiteMessage(acting, "HoodEmpty") === "";
         },
         ItemNoseCovered: (acting: Character | PlayerCharacter): boolean => { // 鼻子位置是否覆盖 // 暂时无效 回头修复
-            return InventoryGroupIsBlocked(acting, "NoseEmpty");
+            return InventoryGroupIsBlocked(acting, "NoseEmpty", true);
+        },
+        Kneeling: (acting: Character | PlayerCharacter): boolean => { // 是否跪着
+            return (acting as PlayerCharacter).IsKneeling();
         }
+
     }
 
-    // /**
-    //  * 通过动作名字得到路径
-    //  */
-    // GetActImgPathMap: { [actName: string]: [ActivityName, ActivityName] } = {}
 
-    // //Assets/Female3DCG/Activity/
-    // InitActImgPathMap(): void {
-    //     for (const a in this.activityToAddDict) {
-    //         const _act = this.activityToAddDict[a];
-    //         const _actName = _act.act.Name;
-
-    //         this.GetActImgPathMap[_actName] = [_actName, _act.img]
-    //     }
-    // }
+    getAllAct(): ActivityNameXiaosu_onlyName[] {
+        const result: ActivityNameXiaosu_onlyName[] = []
+        for (const a in this.activityToAddDict) {
+            const suffix = a.substring(6) as ActivityNameXiaosu_onlyName; // 从索引为 6 的位置开始截取到字符串末尾
+            result.push(suffix); // 输出：XXXX
+        }
+        return result;
+    }
 }

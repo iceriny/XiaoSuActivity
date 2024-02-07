@@ -1,6 +1,7 @@
 import { BaseModule, _module } from "./BaseModule";
 import { conDebug, MSGType, GetModule, timeRange, sendChangeLog } from "utils";
 import { ChatroomModule } from "./MChatroom";
+import { ActivityModule } from "./MActivity";
 
 const timeRangeRegex: RegExp = /^(((0|1)\d|2[0-3]):[0-5]\d)-(((0|1)\d|2[0-3]):[0-5]\d)$/;
 
@@ -24,7 +25,7 @@ export class CommandsModule extends BaseModule implements _module {
                 } else if (params === '') {
                     // 导出当前聊天室的全部聊天记录
                     conDebug("导出当前聊天室的全部聊天记录");
-                    (GetModule("ChatroomModule") as ChatroomModule).ExportChat();
+                    GetModule<ChatroomModule>("ChatroomModule").ExportChat();
                 }
                 else if (timeRangeRegex.test(params)) {
                     // 导出指定时间段的聊天记录 
@@ -39,7 +40,7 @@ export class CommandsModule extends BaseModule implements _module {
                             minTime: startTime,
                             maxTime: endTime
                         };
-                        (GetModule("ChatroomModule") as ChatroomModule).ExportChat(time_limit);
+                        GetModule<ChatroomModule>("ChatroomModule").ExportChat(time_limit);
                     }
                 }
 
@@ -50,6 +51,18 @@ export class CommandsModule extends BaseModule implements _module {
             Description: "显示 [小酥的活动模组] 的版本信息.",
             Action: (args, msg, parsed) => {
                 sendChangeLog();
+            }
+        },
+        AL: {
+            Tag: "AL",
+            Description: "显示 [小酥的活动模组] 所添加的全部动作列表.",
+            Action: (args, msg, parsed) => {
+                let content = ''
+                GetModule<ActivityModule>("ChatroomModule").getAllAct().forEach((item) => {
+                    content += `<p style="font-weight: bold; margin: 0;">${item}</p>`
+                })
+
+                ChatRoomSendLocal(content, 20000)
             }
         }
     }

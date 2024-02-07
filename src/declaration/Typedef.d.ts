@@ -222,6 +222,7 @@ interface ExpressionNameMap {
 type ExpressionGroupName = keyof ExpressionNameMap;
 type ExpressionName = ExpressionNameMap[ExpressionGroupName];
 
+type AssetGroupItemName_XSA = "NoseEmpty" | ""
 type AssetGroupItemName =
 	'ItemAddon' | 'ItemArms' | 'ItemBoots' | 'ItemBreast' | 'ItemButt' |
 	'ItemDevices' | 'ItemEars' | 'ItemFeet' | 'ItemHands' | 'ItemHead' |
@@ -229,12 +230,12 @@ type AssetGroupItemName =
 	'ItemMouth3' | 'ItemNeck' | 'ItemNeckAccessories' | 'ItemNeckRestraints' |
 	'ItemNipples' | 'ItemNipplesPiercings' | 'ItemNose' | 'ItemPelvis' |
 	'ItemTorso' | 'ItemTorso2'| 'ItemVulva' | 'ItemVulvaPiercings' |
-	'ItemHandheld' | string
+	'ItemHandheld' | AssetGroupItemName_XSA
 	;
 
 type AssetGroupScriptName = 'ItemScript';
 
-type AssetGroupBodyName =
+type AssetGroupBodyName = 
 	ExpressionGroupName | 'BodyLower' | 'BodyUpper' | 'Bra' | 'Bracelet' | 'Cloth' |
 	'ClothAccessory' | 'ClothLower' | 'Corset' | 'EyeShadow' | 'FacialHair' | 'Garters' | 'Glasses' | 'Gloves' |
 	'HairAccessory1' | 'HairAccessory2' | 'HairAccessory3' | 'HairBack' |
@@ -934,8 +935,17 @@ type ActivityNameBasic = "Bite" | "Caress" | "Choke" | "Cuddle" | "FrenchKiss" |
 /*
  * 小酥添加的额外动作
 */
-type ActivityNameXiaoSu = "XSAct_眯眼" | "XSAct_眼神飘忽" | "XSAct_甩头发" | "XSAct_轻抚发梢" | "XSAct_叼起头发" | "XSAct_嗅头发" | "XSAct_皱鼻子" | "XSAct_打喷嚏" | "XSAct_深呼吸"
+type ActivityNameXiaosu_onlyName =
+	  "眯眼" | "眼神飘忽" | "恳求的看" | "恳求的摇头"
+	| "甩头发" | "轻抚发梢" | "叼起头发" | "嗅头发" |  "绕头发" | "大力甩头发" 
+	| "抿住嘴巴" | "噘嘴" | "瘪嘴"
+	| "皱鼻子" | "打喷嚏" | "深呼吸" 
+	| "低头" | "挺胸收腹" | "站直身体" | "坐直身体" | "身体一颤"
+	| "活动手臂" | "活动大腿" | "绷紧膝盖" | "内八夹腿"
+	| "蜷缩脚趾" | "绷直脚踝" | "踮脚"
 ;
+
+type ActivityNameXiaoSu = `XSAct_${ActivityNameXiaosu_onlyName}`;
 
 type ActivityNamePath = `Assets/Female3DCG/Activity/${ActivityName}.png`
 
@@ -943,7 +953,7 @@ type ActivityNamePath = `Assets/Female3DCG/Activity/${ActivityName}.png`
  * 小酥添加的额外限定组
 */
 
-type ActivityPrerequisiteXiaoSu = "ItemHoodCovered" | "TargetItemHoodCovered" | "ItemNoseCovered";
+type ActivityPrerequisiteXiaoSu = "ItemHoodCovered" | "TargetItemHoodCovered" | "ItemNoseCovered" | "Kneeling";
 
 type ActivityNameItem = "Inject" | "MasturbateItem" | "PenetrateItem" | "PourItem" | "RollItem" | "RubItem" | "ShockItem" | "SipItem" | "SpankItem" | "TickleItem" | "EatItem" | "Scratch" | "ThrowItem";
 

@@ -45,5 +45,11 @@ export let CHANGELOG: ChangeLogObj[] = [
         description: "正式发布!当前功能如下: ",
         type: ChangeType.main,
         changes: ["使用命令导出当前聊天室聊天记录 支持按时间范围导出 详细请查看 /xsa ","添加9个额外动作."]
+    },
+    {
+        version: "0.1.1",
+        description: "添加了新的动作.",
+        type: ChangeType.dev,
+        changes: ["添加了额外的17个动作","添加 AL 命令 显示添加的全部动作"]
     }
 ]

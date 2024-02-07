@@ -4,4 +4,3 @@ interface Window {
 	XSActivity_Loaded?: boolean;
 	XSActivity_VERSION_Version?: string;
 }
-
