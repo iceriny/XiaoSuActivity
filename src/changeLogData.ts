@@ -39,5 +39,11 @@ export let CHANGELOG: ChangeLogObj[] = [
         description: "优化",
         type: ChangeType.dev,
         changes: ["优化版本信息显示效果"]
+    },
+    {
+        version: "0.1.0",
+        description: "正式发布!当前功能如下: ",
+        type: ChangeType.main,
+        changes: ["使用命令导出当前聊天室聊天记录 支持按时间范围导出 详细请查看 /xsa ","添加9个额外动作."]
     }
 ]
