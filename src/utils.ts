@@ -1,7 +1,7 @@
 import bcModSDKRef from "bondage-club-mod-sdk";
 import { modules } from "Modules/ModulesDict";
 import { BaseModule } from "Modules/BaseModule";
-import { CHANGELOG } from "changeLogData";
+import { CHANGELOG, ChangeType } from "changeLogData";
 
 
 // SDK
@@ -155,7 +155,7 @@ export function sendChangeLog() {
 	let content = '';
 	for (const c in CHANGELOG) {
 		const version = CHANGELOG[c].version;
-		const type = CHANGELOG[c].type;
+		const type = CHANGELOG[c].type == ChangeType.main ? "主版本" : "开发版本";
 		const description = CHANGELOG[c].description;
 		const changes = CHANGELOG[c].changes;
 
@@ -165,8 +165,8 @@ export function sendChangeLog() {
 		}
 		changesString += '</ul>';
 
-		const backgroundColor = version == XSActivity_VERSION ? "#FF62BA" : "#FFA4D8"
-		content += `<div style="background-color: ${backgroundColor}"><div>版本: ${version}</div> <div>类型: ${type}</div> <div>描述: ${description}</div> <div>改动: ${changesString}</div></div>`
+		const backgroundColor = version == XSActivity_VERSION && (!DEBUG && type === "主版本") ? "#FF62BA" : "#FFA4D8"
+		content += `<div style="background-color: ${backgroundColor}"><div>版本: ${version}</div> <p>类型: ${type}</p> <p>描述: ${description}</p> <div>改动: ${changesString}</div></div>`
 	}
 	ChatRoomSendLocal(content, 60000);
 }
