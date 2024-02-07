@@ -36,7 +36,7 @@ export class ChatroomModule extends BaseModule implements _module {
      * @param message 传入的信息
      * @returns 处理后的文本
      */
-    stammer(message: string, stutteringFactor: number = 0.5): string {
+    stammer(message: string, stammeringProbability: number = 0.5): string {
         const stringArray: string[] = message.split(' ');
         let result = '';
 
@@ -47,12 +47,12 @@ export class ChatroomModule extends BaseModule implements _module {
             result += currentWord;
 
             // 随机决定是否添加结巴效果
-            if (Math.random() < stutteringFactor) { // 假设添加结巴效果的概率为50%
+            if (Math.random() < stammeringProbability) { // 假设添加结巴效果的概率为50%
                 result += this.addStammerEffect(currentWord);
             }
 
             // 添加-分隔符，除了最后一个单词外
-            if (i < stringArray.length - 1 && Math.random() < stutteringFactor){
+            if (i < stringArray.length - 1 && Math.random() < stammeringProbability) {
                 result += '-';
             }
         }
@@ -67,14 +67,20 @@ export class ChatroomModule extends BaseModule implements _module {
         return result;
     }
     // 添加结巴效果的辅助方法
-    private addStammerEffect(word: string): string {
+    private addStammerEffect(word: string, depth: number = 0): string {
+        // 设置最大递归深度
+        const maxDepth = 3;
+        // 如果递归深度达到最大值，返回原单词
+        if (depth >= maxDepth) {
+            return word;
+        }
         // 在这里实现添加结巴效果的逻辑，可以是随机的字符、重复的部分、乱序等等
-        let result: string;
         const randomNumber: number = Math.random();
-        if (randomNumber < 0.5) result = `...`;
-        else result = `-${word}`;
+        let result: string = randomNumber < 0.5 ? '...' : `-${word}`;
 
-        if (Math.random() < 0.1) result = this.addStammerEffect(result)
+        if (Math.random() < 0.2) {
+            result = this.addStammerEffect(result, depth + 1);
+        }
         return result;
     }
 }
