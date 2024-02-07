@@ -119,12 +119,13 @@ export class ActivityModule extends BaseModule implements _module {
             //加载文字描述
             const activityDesc = this.activityToAddDict[aN as ActivityNameXiaoSu].desc;
 
-            const Loaded_XSA_ActivityDictionary_Index0 = ActivityDictionary
-                ?.filter(d => d[0].includes(aN))
-                .map(d => d[0]);
+            // const Loaded_XSA_ActivityDictionary_Index0 = ActivityDictionary
+            //     ?.filter(d => d[0].includes(aN))
+            //     .map(d => d[0]);
 
             activityDesc?.forEach((d) => {
-                if (typeof Loaded_XSA_ActivityDictionary_Index0 !== "undefined" && !(d[0] in Loaded_XSA_ActivityDictionary_Index0)) ActivityDictionary?.push(d);
+                // if (typeof Loaded_XSA_ActivityDictionary_Index0 !== "undefined" && !(d[0] in Loaded_XSA_ActivityDictionary_Index0)) ActivityDictionary?.push(d);
+                ActivityDictionary?.push(d);
             });
             conDebug(`${aN}加载完成.`)
         }
