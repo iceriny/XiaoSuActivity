@@ -43,11 +43,12 @@ export class ChatroomModule extends BaseModule implements _module {
         // 遍历单词数组
         for (let i = 0; i < stringArray.length; i++) {
             // 将当前单词加入结果字符串
-            result += stringArray[i];
+            const currentWord: string = stringArray[i];
+            result += currentWord;
 
             // 随机决定是否添加结巴效果
             if (Math.random() < 0.5) { // 假设添加结巴效果的概率为50%
-                result += this.addStammerEffect();
+                result += this.addStammerEffect(currentWord);
             }
 
             // 添加-分隔符，除了最后一个单词外
@@ -66,9 +67,14 @@ export class ChatroomModule extends BaseModule implements _module {
         return result;
     }
     // 添加结巴效果的辅助方法
-    private addStammerEffect(): string {
+    private addStammerEffect(word: string): string {
         // 在这里实现添加结巴效果的逻辑，可以是随机的字符、重复的部分、乱序等等
-        // 这里只是一个示例，你可以根据实际需求进行更复杂的处理
-        return '...';
+        let result: string;
+        const randomNumber: number = Math.random();
+        if (randomNumber < 0.5) result = `...`;
+        else result = `-${word}`;
+
+        if (Math.random() < 0.1) this.addStammerEffect(result)
+        return result;
     }
 }
