@@ -30,7 +30,10 @@ export class ModuleLoader {
                 });
         }
 
-        if (moduleC == FullModCount) this.CompleteLoadingSuccessful = true;
+        if (moduleC == FullModCount){
+            this.CompleteLoadingSuccessful = true;
+            window.XSActivity_Loaded = true;
+        }
         return moduleC
     }
 
