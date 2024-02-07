@@ -24,7 +24,7 @@ export class CommandsModule extends BaseModule implements _module {
                 } else if (params === '') {
                     // 导出当前聊天室的全部聊天记录
                     conDebug("导出当前聊天室的全部聊天记录");
-                    (GetModule("Chatroom") as ChatroomModule).ExportChat();
+                    (GetModule("ChatroomModule") as ChatroomModule).ExportChat();
                 }
                 else if (timeRangeRegex.test(params)) {
                     // 导出指定时间段的聊天记录 
@@ -39,7 +39,7 @@ export class CommandsModule extends BaseModule implements _module {
                             minTime: startTime,
                             maxTime: endTime
                         };
-                        (GetModule("Chatroom") as ChatroomModule).ExportChat();
+                        (GetModule("ChatroomModule") as ChatroomModule).ExportChat();
                     }
                 }
 
