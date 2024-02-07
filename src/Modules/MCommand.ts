@@ -61,6 +61,7 @@ export class CommandsModule extends BaseModule implements _module {
                 GetModule<ActivityModule>("ChatroomModule").getAllAct().forEach((item) => {
                     content += `<p style="font-weight: bold; margin: 0;">${item}</p>`
                 })
+                conDebug(`command: AL    content: ${content}`)
 
                 ChatRoomSendLocal(content, 20000)
             }
