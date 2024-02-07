@@ -39,7 +39,7 @@ export class CommandsModule extends BaseModule implements _module {
                             minTime: startTime,
                             maxTime: endTime
                         };
-                        (GetModule("ChatroomModule") as ChatroomModule).ExportChat();
+                        (GetModule("ChatroomModule") as ChatroomModule).ExportChat(time_limit);
                     }
                 }
 

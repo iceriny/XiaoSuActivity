@@ -93,11 +93,23 @@ function removeElementsByTimeRange(element: HTMLElement, time_limit: timeRange) 
 	});
 }
 
+
+/**
+ * 传入{@link copyAndDownloadHtmlElement}的最小时间值和最大时间值
+ */
 export interface timeRange {
 	minTime: string;
 	maxTime: string;
 }
 
+
+/**
+ * 将传入的元素复制并提供下载
+ * @param element 需要下载的原始元素
+ * @param fileName 下载的文件名字
+ * @param time_limit 时间范围
+ * @returns void
+ */
 export function copyAndDownloadHtmlElement(element: HTMLElement | null, fileName: string, time_limit: timeRange | null = null) {
 	// 创建新文档
 	const newDoc = document.implementation.createHTMLDocument();
@@ -150,7 +162,9 @@ export function copyAndDownloadHtmlElement(element: HTMLElement | null, fileName
 	link.click();
 }
 
-
+/**
+ * 发送更新信息到本地
+ */
 export function sendChangeLog() {
 	let content = '';
 	for (const c in CHANGELOG) {
