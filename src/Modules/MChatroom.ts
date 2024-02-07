@@ -13,7 +13,7 @@ export class ChatroomModule extends BaseModule implements _module {
         //     // SendChat("我是! 小酥的小白鼠! 吱吱吱吱~~~");
         //     return next(args);
         // });
-        this.stammer("小 酥 必须 时刻 提醒自己 是 莹的私有物")
+        this.stammer("小 酥 必须 时刻 提醒自己 是 莹的私有物", 0.9)
 
         ChatroomModule.Loaded = true;
     }
@@ -36,7 +36,7 @@ export class ChatroomModule extends BaseModule implements _module {
      * @param message 传入的信息
      * @returns 处理后的文本
      */
-    stammer(message: string): string {
+    stammer(message: string, stutteringFactor: number = 0.5): string {
         const stringArray: string[] = message.split(' ');
         let result = '';
 
@@ -47,12 +47,12 @@ export class ChatroomModule extends BaseModule implements _module {
             result += currentWord;
 
             // 随机决定是否添加结巴效果
-            if (Math.random() < 0.5) { // 假设添加结巴效果的概率为50%
+            if (Math.random() < stutteringFactor) { // 假设添加结巴效果的概率为50%
                 result += this.addStammerEffect(currentWord);
             }
 
             // 添加-分隔符，除了最后一个单词外
-            if (i < stringArray.length - 1) {
+            if (i < stringArray.length - 1 && Math.random() < stutteringFactor){
                 result += '-';
             }
         }
@@ -74,7 +74,7 @@ export class ChatroomModule extends BaseModule implements _module {
         if (randomNumber < 0.5) result = `...`;
         else result = `-${word}`;
 
-        if (Math.random() < 0.1) this.addStammerEffect(result)
+        if (Math.random() < 0.1) result = this.addStammerEffect(result)
         return result;
     }
 }
