@@ -49,7 +49,7 @@ export let CHANGELOG: ChangeLogObj[] = [
     {
         version: "0.1.1",
         description: "添加了新的动作.",
-        type: ChangeType.dev,
+        type: ChangeType.main,
         changes: ["添加了额外的17个动作","添加 AL 命令 显示添加的全部动作"]
     }
 ]

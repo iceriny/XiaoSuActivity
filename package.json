@@ -9,7 +9,8 @@
   "dependencies": {
     "bc-stubs": "^100.0.0",
     "bondage-club-mod-sdk": "^1.1.0",
-    "lz-string": "^1.5.0"
+    "lz-string": "^1.5.0",
+    "segmentit": "^2.0.3"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.7",
