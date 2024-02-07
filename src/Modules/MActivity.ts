@@ -656,6 +656,11 @@ export class ActivityModule extends BaseModule implements _module {
             const suffix = a.substring(6) as ActivityNameXiaosu_onlyName; // 从索引为 6 的位置开始截取到字符串末尾
             result.push(suffix); // 输出：XXXX
         }
+        conDebug({
+            content:result,
+            name: "ActivityNameXiaosu_onlyName",
+            type: MSGType.DebugLog
+        });
         return result;
     }
 }
