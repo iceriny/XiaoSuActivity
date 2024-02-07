@@ -144,17 +144,21 @@ export class ActivityModule extends BaseModule implements _module {
             const actTarget = pendingActivity.act.Target;
             const actTargetSelf = pendingActivity.act.TargetSelf;
 
-            const addedValues = [];
+            const addedValues: string[][] = [];
 
             addedValues.push([`ActivityAct_${actName}`, `${nameWithoutPrefix}`]);
             addedValues.push([`Activity${actName}`, `${nameWithoutPrefix}`]);
             if (actTarget.length > 0) {
-                addedValues.push([`Label-ChatOther-${actTarget}-${actName}`, `${nameWithoutPrefix}`]);
-                addedValues.push([`ChatOther-${actTarget}-${actName}`, pendingActivity.descString[0]]);
+                for (const aT of actTarget) {
+                    addedValues.push([`Label-ChatOther-${aT}-${actName}`, `${nameWithoutPrefix}`]);
+                    addedValues.push([`ChatOther-${aT}-${actName}`, pendingActivity.descString[0]]);
+                }
             }
             if (typeof actTargetSelf !== 'undefined' && typeof actTargetSelf !== 'boolean' && actTargetSelf.length > 0) {
-                addedValues.push([`Label-ChatSelf-${actTargetSelf}-${actName}`, `${nameWithoutPrefix}`]);
-                addedValues.push([`ChatSelf-${actTargetSelf}-${actName}`, pendingActivity.descString[1]]);
+                for (const aTS of actTargetSelf) {
+                    addedValues.push([`Label-ChatSelf-${aTS}-${actName}`, `${nameWithoutPrefix}`]);
+                    addedValues.push([`ChatSelf-${aTS}-${actName}`, pendingActivity.descString[1]]);
+                }
             }
 
             pendingActivity.desc = addedValues;
@@ -469,8 +473,7 @@ export class ActivityModule extends BaseModule implements _module {
                 TargetSelf: ["ItemTorso", "ItemTorso2"],
                 MaxProgress: 20,
                 MaxProgressSelf: 20,
-                Prerequisite: ["Kneeling"],
-                Reverse: true
+                Prerequisite: ["NotKneeling"]
             },
             desc: null,
             descString: ["", `${selfPlaceholder}挺胸收腹，努力绷紧小腿，站直了身体.`],
@@ -522,8 +525,7 @@ export class ActivityModule extends BaseModule implements _module {
                 TargetSelf: ["ItemLegs"],
                 MaxProgress: 20,
                 MaxProgressSelf: 20,
-                Prerequisite: ["Kneeling"],
-                Reverse: true
+                Prerequisite: ["NotKneeling"]
             },
             desc: null,
             descString: ["", `${selfPlaceholder}努力的绷紧膝盖，尽可能站的更直.`],
@@ -617,6 +619,14 @@ export class ActivityModule extends BaseModule implements _module {
 
                 return this.Judgment.Kneeling(acting);
             }
+        },
+        NotKneeling: {
+            Name: "NotKneeling",
+            Action: (args) => {
+                const acting = args[1] as Character | PlayerCharacter;
+
+                return this.Judgment.NotKneeling(acting);
+            }
         }
     }
     /**
@@ -632,6 +642,9 @@ export class ActivityModule extends BaseModule implements _module {
         },
         Kneeling: (acting: Character | PlayerCharacter): boolean => { // 是否跪着
             return (acting as PlayerCharacter).IsKneeling();
+        },
+        NotKneeling: (acting: Character | PlayerCharacter): boolean => { // 是否跪着
+            return !(acting as PlayerCharacter).IsKneeling();
         }
 
     }

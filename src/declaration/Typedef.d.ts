@@ -953,7 +953,7 @@ type ActivityNamePath = `Assets/Female3DCG/Activity/${ActivityName}.png`
  * 小酥添加的额外限定组
 */
 
-type ActivityPrerequisiteXiaoSu = "ItemHoodCovered" | "TargetItemHoodCovered" | "ItemNoseCovered" | "Kneeling";
+type ActivityPrerequisiteXiaoSu = "ItemHoodCovered" | "TargetItemHoodCovered" | "ItemNoseCovered" | "Kneeling" | "NotKneeling";
 
 type ActivityNameItem = "Inject" | "MasturbateItem" | "PenetrateItem" | "PourItem" | "RollItem" | "RubItem" | "ShockItem" | "SipItem" | "SpankItem" | "TickleItem" | "EatItem" | "Scratch" | "ThrowItem";
 
