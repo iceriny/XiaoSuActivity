@@ -58,7 +58,7 @@ export class CommandsModule extends BaseModule implements _module {
             Description: "显示 [小酥的活动模组] 所添加的全部动作列表.",
             Action: (args, msg, parsed) => {
                 let content = ''
-                GetModule<ActivityModule>("ChatroomModule").getAllAct().forEach((item) => {
+                GetModule<ActivityModule>("ActivityModule").getAllAct().forEach((item) => {
                     content += `<p style="font-weight: bold; margin: 0;">${item}</p>`
                 })
                 conDebug(`command: AL    content: ${content}`)
