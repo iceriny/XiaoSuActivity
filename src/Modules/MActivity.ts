@@ -437,7 +437,7 @@ export class ActivityModule extends BaseModule implements _module {
                 Prerequisite: ["UseMouth"]
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}憋着嘴巴，一副委屈的样子.`],
+            descString: ["", `${selfPlaceholder}瘪着嘴巴，一副委屈的样子.`],
             img: "PoliteKiss"
         },
         XSAct_坐直身体: {
