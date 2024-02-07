@@ -169,5 +169,6 @@ export function sendChangeLog() {
 		const styleForP = 'style="font-weight: bold; margin: 0;"'
 		content += `<div style="background-color: ${backgroundColor}; display: flex; flex-direction: column;"> <p ${styleForP}>版本: ${version}</p> <p ${styleForP}>类型: ${type}</p> <p ${styleForP}>描述: ${description}</p><p>----</p> <p ${styleForP}>改动: ${changesString}</p><p>========</p></div>`
 	}
+	content += "<p>==当前页面显示时间1分钟==</p>"
 	ChatRoomSendLocal(content, 60000);
 }
