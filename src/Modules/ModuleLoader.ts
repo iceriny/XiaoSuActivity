@@ -1,19 +1,22 @@
-import { BaseModule } from "./BaseModule";
+import { BaseModule, XS_ModuleName, FullModCount } from "./BaseModule";
 import { ChatroomModule } from "./MChatroom";
 import { CommandsModule } from "./MCommand";
 import { modules } from "./ModulesDict";
 import { ActivityModule } from "./MActivity";
+import { conDebug } from "utils";
 
 export class ModuleLoader {
     public static modules: { [key: string]: BaseModule } = modules;
     static mList: [BaseModule] | undefined;
+    public static modulesCount: number = 0;
+    public static CompleteLoadingSuccessful: boolean = false;
 
 
     /**
      * 加载模块   Loader对外入口.
      */
-    public static LoadModules(): void {
-        this.generateModule();
+    public static LoadModules(): number {
+        const moduleC = this.generateModule();
 
         // 如果模块列表存在
         if (typeof this.mList !== "undefined") {
@@ -23,8 +26,15 @@ export class ModuleLoader {
                 .forEach((m) => {
                     // 加载模块
                     m.Load();
+                    conDebug(`模块 ${m.moduleName} 加载完成`);
                 });
         }
+
+        if (moduleC == FullModCount){
+            this.CompleteLoadingSuccessful = true;
+            window.XSActivity_Loaded = true;
+        }
+        return moduleC
     }
 
 
@@ -39,12 +49,32 @@ export class ModuleLoader {
         } else {
             this.mList = [module];
         }
+
+        this.modulesCount++;
     }
 
-    private static generateModule(): void {
-        this.pushToModules(new ChatroomModule());
-        this.pushToModules(new CommandsModule());
-        this.pushToModules(new ActivityModule());
+    public static ModuleMap: { [mName in XS_ModuleName]: () => void } = {
+        Base: () => {
+            throw new Error("Base为模块的抽象类，请勿加载");
+        },
+        ActivityModule: () => {
+            this.pushToModules(new ActivityModule());
+        },
+        ChatroomModule: () => {
+            this.pushToModules(new ChatroomModule());
+        },
+        CommandsModule: () => {
+            this.pushToModules(new CommandsModule());
+        }
+    }
+
+
+    private static generateModule(): number {
+        for (const mN in ModuleLoader.ModuleMap) {
+            if (mN !== "Base" && this.modules[mN] === undefined) ModuleLoader.ModuleMap[mN as XS_ModuleName]();
+        }
+
+        return this.modulesCount;
     }
 
 }

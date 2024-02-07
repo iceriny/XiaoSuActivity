@@ -1,6 +1,7 @@
 import bcModSDKRef from "bondage-club-mod-sdk";
 import { modules } from "Modules/ModulesDict";
 import { BaseModule } from "Modules/BaseModule";
+import { CHANGELOG } from "changeLogData";
 
 
 // SDK
@@ -16,6 +17,7 @@ export enum ModuleCategory {
 	Global = 0,
 	Test = 1
 }
+
 
 type PatchHook = (args: any[], next: (args: any[]) => any) => any;
 export function hookFunction(target: string, priority: number, hook: PatchHook): () => void {
@@ -57,7 +59,7 @@ export function conDebug(msg: XSDebugMSG | string) {
 	console.debug(result);
 }
 
-export function GetModule(moduleName: string): BaseModule {
+export function GetModule(moduleName: string): BaseModule | undefined {
 	return modules[moduleName];
 }
 
@@ -75,9 +77,9 @@ function removeElementsByTimeRange(element: HTMLElement, time_limit: timeRange) 
 			const maxTimeDate = new Date(`2000-01-01 ${time_limit.maxTime}`);
 
 			// 判断是否跨越了 00:00
-            if (maxTimeDate < minTimeDate) {
-                maxTimeDate.setDate(maxTimeDate.getDate() + 1);
-            }
+			if (maxTimeDate < minTimeDate) {
+				maxTimeDate.setDate(maxTimeDate.getDate() + 1);
+			}
 
 			// 判断是否在时间范围内
 			if (currentTime < minTimeDate || currentTime > maxTimeDate) {
@@ -146,4 +148,25 @@ export function copyAndDownloadHtmlElement(element: HTMLElement | null, fileName
 
 	// 触发下载
 	link.click();
+}
+
+
+export function sendChangeLog() {
+	let content = '';
+	for (const c in CHANGELOG) {
+		const version = CHANGELOG[c].version;
+		const type = CHANGELOG[c].type;
+		const description = CHANGELOG[c].description;
+		const changes = CHANGELOG[c].changes;
+
+		let changesString = '<ul>';
+		for (const s of changes) {
+			changesString += `<li>${s}</li>`;
+		}
+		changesString += '</ul>';
+
+		const backgroundColor = version == XSActivity_VERSION ? "#FF62BA" : "#FFA4D8"
+		content += `<div style="background-color: ${backgroundColor}"><div>版本: ${version}</div> <div>类型: ${type}</div> <div>描述: ${description}</div> <div>改动: ${changesString}</div></div>`
+	}
+	ChatRoomSendLocal(content, 60000);
 }

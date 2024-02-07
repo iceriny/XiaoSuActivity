@@ -15,4 +15,6 @@
   - 正式版: https://iceriny.github.io/XiaoSuActivity/main/userLoad.user.js
   - 测试版: https://iceriny.github.io/XiaoSuActivity/dev/userLoad_dev.user.js
 - 书签:
-  - ```javascript:(()=>{fetch('https://iceriny.github.io/XiaoSuActivity/main/userLoad.user.js').then(r=>r.text()).then(r=>eval(r));})();```
+```code
+javascript:(()=>{fetch('https://iceriny.github.io/XiaoSuActivity/main/userLoad.user.js').then(r=>r.text()).then(r=>eval(r));})();
+```

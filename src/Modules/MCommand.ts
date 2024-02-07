@@ -1,12 +1,10 @@
-import { BaseModule } from "./BaseModule";
-import { conDebug, MSGType, GetModule, timeRange } from "utils";
+import { BaseModule, _module } from "./BaseModule";
+import { conDebug, MSGType, GetModule, timeRange, sendChangeLog } from "utils";
 import { ChatroomModule } from "./MChatroom";
 
 const timeRangeRegex: RegExp = /^(((0|1)\d|2[0-3]):[0-5]\d)-(((0|1)\d|2[0-3]):[0-5]\d)$/;
 
-export class CommandsModule extends BaseModule {
-    moduleName = "Commands";
-    priority = 20;
+export class CommandsModule extends BaseModule implements _module {
 
     commandsDict: { [CommandName: string]: ICommand } = {
         help: {
@@ -46,9 +44,34 @@ export class CommandsModule extends BaseModule {
                 }
 
             }
+        },
+        v: {
+            Tag: "v",
+            Description: "显示 [小酥的活动模组] 的版本信息.",
+            Action: (args, msg, parsed) => {
+                sendChangeLog();
+            }
         }
     }
 
+    public Load(): void {
+        CommandCombine(
+            {
+                Tag: "xsa",
+                Description: "显示 [小酥的活动模组] 的相关命令.",
+                Action: (args, msg, parsed) => {
+                    if (parsed.length > 0) this.CommandHandler(parsed);
+                    else this.DisplayHelp();
+                }
+            }
+        )
+
+        CommandsModule.Loaded = true;
+    }
+    public init(): void {
+        this.moduleName = "CommandsModule";
+        this.priority = 20;
+    }
 
 
     private getCommandParameters(parsed: string[]): string {
@@ -61,18 +84,6 @@ export class CommandsModule extends BaseModule {
         }
         return '';
     }
-    public Load(): void {
-        CommandCombine(
-            {
-                Tag: "xsa",
-                Description: "显示 [小酥的活动模组] 的相关命令.",
-                Action: (args, msg, parsed) => {
-                    if (parsed.length > 0) this.CommandHandler(parsed);
-                    else this.DisplayHelp();
-                }
-            }
-        )
-    }
 
     private DisplayHelp(msg: string | undefined = undefined): void {
         if (msg === undefined) {
@@ -80,6 +91,7 @@ export class CommandsModule extends BaseModule {
             for (const c in this.commandsDict) {
                 content += `/xsa ${c} ${this.commandsDict[c].Description}\n`;
             }
+            content += `小酥的活动模组 版本号: ${XSActivity_VERSION}\n`
             ChatRoomSendLocal(content, 10000);
         } else {
             ChatRoomSendLocal(msg, 10000)
