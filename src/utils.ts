@@ -167,7 +167,7 @@ export function sendChangeLog() {
 
 		const backgroundColor = version == XSActivity_VERSION && (!DEBUG && type === "主版本") ? "#764460" : "#442E3A"
 		const styleForP = 'style="font-weight: bold; margin: 0;"'
-		content += `<div style="background-color: ${backgroundColor}; display: flex; "> <p ${styleForP}>版本: ${version}</p> <p ${styleForP}>类型: ${type}</p> <p ${styleForP}>描述: ${description}</p> <p ${styleForP}>改动: ${changesString}</p></div>`
+		content += `<div style="background-color: ${backgroundColor}; display: flex; flex-direction: column;"> <p ${styleForP}>版本: ${version}</p> <p ${styleForP}>类型: ${type}</p> <p ${styleForP}>描述: ${description}</p> <p ${styleForP}>改动: ${changesString}</p></div>`
 	}
 	ChatRoomSendLocal(content, 60000);
 }
