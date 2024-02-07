@@ -53,8 +53,8 @@ export class CommandsModule extends BaseModule implements _module {
                 sendChangeLog();
             }
         },
-        ActList: {
-            Tag: "ActList",
+        act: {
+            Tag: "act",
             Description: "显示 [小酥的活动模组] 所添加的全部动作列表.",
             Action: (args, msg, parsed) => {
                 let content = ''
