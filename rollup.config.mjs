@@ -6,7 +6,6 @@ import terser from "@rollup/plugin-terser";
 import progress from 'rollup-plugin-progress';
 import packageJson from "./package.json" assert { type: "json" };
 import json from "@rollup/plugin-json";
-import changeLog from "changeLog.json" assert { type: "json" };
 
 export default {
   input: 'src/main.ts', // 入口文件路径
