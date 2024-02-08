@@ -107,11 +107,11 @@ export class ActivityModule extends BaseModule implements _module {
     LoadActivity(): void {
         conDebug("加载自定义活动");
         for (const aN in this.activityToAddDict) { // a 为活动名
-            conDebug({
-                type: MSGType.DebugLog,
-                name: "加载动作:",
-                content: aN
-            });
+            // conDebug({
+            //     type: MSGType.DebugLog,
+            //     name: "加载动作:",
+            //     content: aN
+            // });
             this.pushToActivity(this.activityToAddDict[aN as ActivityNameXiaoSu].act);
 
             this.activityDictAdd();
@@ -127,8 +127,9 @@ export class ActivityModule extends BaseModule implements _module {
                 // if (typeof Loaded_XSA_ActivityDictionary_Index0 !== "undefined" && !(d[0] in Loaded_XSA_ActivityDictionary_Index0)) ActivityDictionary?.push(d);
                 ActivityDictionary?.push(d);
             });
-            conDebug(`${aN}加载完成.`)
+            
         }
+        conDebug(`自定义活动加载完成.`)
     }
     //============================================================
     /**

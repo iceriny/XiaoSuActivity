@@ -4,6 +4,16 @@ import { BaseModule, _module } from "Modules/BaseModule";
 export class ChatroomModule extends BaseModule implements _module {
 
     public Load(): void {
+        this.hookListHandler();
+
+        ChatroomModule.Loaded = true;
+    }
+    public init(): void {
+        this.moduleName = "ChatroomModule";
+        this.priority = 30;
+    }
+
+    hookListHandler(): void {
         // hookFunction("ChatRoomSync", 30, (args, next) => {
         //     conDebug({
         //         name: 'ChatRoomSyncTest',
@@ -13,13 +23,25 @@ export class ChatroomModule extends BaseModule implements _module {
         //     // SendChat("我是! 小酥的小白鼠! 吱吱吱吱~~~");
         //     return next(args);
         // });
-        this.stammer("小 酥 必须 时刻 提醒自己 是 莹的私有物", 0.9)
 
-        ChatroomModule.Loaded = true;
-    }
-    public init(): void {
-        this.moduleName = "ChatroomModule";
-        this.priority = 30;
+        hookFunction("CommandParse", 0,
+        (args, next) =>{
+            conDebug({
+                name: 'CommandParseTest',
+                type: MSGType.DebugLog,
+                content: args
+            });
+            return next(args);
+        });
+        hookFunction("ServerSend", 0,
+        (args, next) =>{
+            conDebug({
+                name: 'ServerSendTest',
+                type: MSGType.DebugLog,
+                content: args
+            });
+            return next(args);
+        });
     }
 
 
