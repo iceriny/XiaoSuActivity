@@ -197,6 +197,8 @@ export function segmentForCH(str: string): string[] | null {
 		for (const segment of segmenterResult) {
 			results.push(segment.segment);
 		}
+
+		conDebug(`segmentForCH: ${results}`)
 		return results;
 	} else {
 		return null;

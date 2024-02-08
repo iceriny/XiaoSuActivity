@@ -26,11 +26,6 @@ export class ChatroomModule extends BaseModule implements _module {
 
         hookFunction("CommandParse", 0,
             (args, next) => {
-                conDebug({
-                    name: 'CommandParseTest',
-                    type: MSGType.DebugLog,
-                    content: args
-                });
                 let msg : string = args[0];
                 // 匹配`开头的命令
                 const match = msg.match(/^`([1-9])? (.*)/);
@@ -72,7 +67,7 @@ export class ChatroomModule extends BaseModule implements _module {
 
         // 如果segmentForCH没有返回内容，则使用源字符串通过空格分词
         const stringArray: string[] = segmentList ? segmentList : content.split(' ');
-        
+
         return this.stammerForList(stringArray, stammeringProbability);
     }
     /**
