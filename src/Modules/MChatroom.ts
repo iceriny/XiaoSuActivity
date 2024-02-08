@@ -28,8 +28,8 @@ export class ChatroomModule extends BaseModule implements _module {
             (args, next) => {
                 let msg : string = args[0];
                 // 匹配`开头的命令
-                const match = msg.match(/^`([1-9])? (.*)/);
-                if (match) msg = this.stammerHandler(match[2], parseInt(match[1]));
+                const match = msg.match(/^`([1-9])?( )? (.*)/);
+                if (match) msg = this.stammerHandler(match[3], parseInt(match[1]), match[2] ? false : true);
 
                 args[0] = msg;
                 return next(args);
@@ -55,7 +55,7 @@ export class ChatroomModule extends BaseModule implements _module {
     }
 
 
-    stammerHandler(content: string, tenfoldStammeringProbability: number): string {
+    stammerHandler(content: string, tenfoldStammeringProbability: number, isSegmentForCH: boolean): string {
         conDebug(`stammerHandler: content: ${content} tenfoldStammeringProbability: ${tenfoldStammeringProbability}`)
 
         // 处理结巴程度，默认结巴程度为5
@@ -63,7 +63,7 @@ export class ChatroomModule extends BaseModule implements _module {
         const stammeringProbability = tenfoldStammeringProbability / 10;
 
         // 使用segmentForCH进行分词，传入参数取消掉空白字符
-        const segmentList = segmentForCH(content.replace(/\s/g, ""));
+        const segmentList = isSegmentForCH ? segmentForCH(content.replace(/\s/g, "")) : undefined;
 
         // 如果segmentForCH没有返回内容，则使用源字符串通过空格分词
         const stringArray: string[] = segmentList ? segmentList : content.split(' ');
