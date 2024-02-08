@@ -17,7 +17,7 @@ export class ChatroomModule extends BaseModule implements _module {
         // hookFunction("ChatRoomSync", 30, (args, next) => {
         //     conDebug({
         //         name: 'ChatRoomSyncTest',
-        //         type: MSGType.DebugLog,
+        //         type: MSGType.DebugLog, 
         //         content: args
         //     });
         //     // SendChat("我是! 小酥的小白鼠! 吱吱吱吱~~~");
@@ -25,23 +25,29 @@ export class ChatroomModule extends BaseModule implements _module {
         // });
 
         hookFunction("CommandParse", 0,
-        (args, next) =>{
-            conDebug({
-                name: 'CommandParseTest',
-                type: MSGType.DebugLog,
-                content: args
+            (args, next) => {
+                conDebug({
+                    name: 'CommandParseTest',
+                    type: MSGType.DebugLog,
+                    content: args
+                });
+                let msg : string = args[0];
+                // 匹配`开头的命令
+                const match = msg.match(/^`([1-9]) (.*)/);
+                if (match) msg = this.stammerHandler(match[2], parseInt(match[1]));
+
+                args[0] = msg;
+                return next(args);
             });
-            return next(args);
-        });
-        hookFunction("ServerSend", 0,
-        (args, next) =>{
-            conDebug({
-                name: 'ServerSendTest',
-                type: MSGType.DebugLog,
-                content: args
-            });
-            return next(args);
-        });
+        // hookFunction("ServerSend", 0,
+        //     (args, next) => {
+        //         conDebug({
+        //             name: 'ServerSendTest',
+        //             type: MSGType.DebugLog,
+        //             content: args
+        //         });
+        //         return next(args);
+        //     });
     }
 
 
@@ -53,19 +59,25 @@ export class ChatroomModule extends BaseModule implements _module {
         copyAndDownloadHtmlElement(mainElement, exportName, time_limit)
     }
 
+
+    stammerHandler(content: string, tenfoldStammeringProbability: number = 5): string {
+        const stammeringProbability = tenfoldStammeringProbability / 10;
+        const stringArray: string[] = content.split(' ');
+        return this.stammerForList(stringArray, stammeringProbability);
+    }
     /**
      * 根据空格 自动处理结巴效果
      * @param message 传入的信息
      * @returns 处理后的文本
      */
-    stammer(message: string, stammeringProbability: number = 0.5): string {
-        const stringArray: string[] = message.split(' ');
+    stammerForList(messageList: string[], stammeringProbability: number): string {
+        //const stringArray: string[] = message.split(' ');
         let result = '';
 
         // 遍历单词数组
-        for (let i = 0; i < stringArray.length; i++) {
+        for (let i = 0; i < messageList.length; i++) {
             // 将当前单词加入结果字符串
-            const currentWord: string = stringArray[i];
+            const currentWord: string = messageList[i];
             result += currentWord;
 
             // 随机决定是否添加结巴效果
@@ -74,7 +86,7 @@ export class ChatroomModule extends BaseModule implements _module {
             }
 
             // 添加-分隔符，除了最后一个单词外
-            if (i < stringArray.length - 1 && Math.random() < stammeringProbability) {
+            if (i < messageList.length - 1 && Math.random() < stammeringProbability) {
                 result += '-';
             }
         }

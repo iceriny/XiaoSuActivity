@@ -65,6 +65,13 @@ export class CommandsModule extends BaseModule implements _module {
 
                 ChatRoomSendLocal(content, 20000)
             }
+        },
+        jieba: {
+            Tag: "jieba",
+            Description: "显示 自动结巴效果 的命令帮助.",
+            Action: (args, msg, parsed) => {
+                ChatRoomSendLocal("输入: 「 `[空格] 」开头的话将以口吃结巴的形式发出.\n句子中的空格将为结巴效果概率生效的地方.\n该命令有一个可选参数:\n如果以「 `[1-9] 」的形式作为开头，数字代表结巴程度，越高将越口吃.\n例如:\n` [要说 的 话]\n处理之后的效果就可能是:  「 要说...-的-的话... 」=>注意空格的位置.\n带参数的命令方法:\n`3 [要说 的 话]\n此处的3就是结巴等级，代表着每处句子中的空格位置的词段都将有30%的概率发生结巴.上面的话就意味着发生了3等级的结巴效果.")
+            }
         }
     }
 
