@@ -60,7 +60,8 @@ export class ChatroomModule extends BaseModule implements _module {
     }
 
 
-    stammerHandler(content: string, tenfoldStammeringProbability: number = 5): string {
+    stammerHandler(content: string, tenfoldStammeringProbability: number): string {
+        if (tenfoldStammeringProbability === null || tenfoldStammeringProbability == undefined) tenfoldStammeringProbability = 5;
         const stammeringProbability = tenfoldStammeringProbability / 10;
         const stringArray: string[] = content.split(' ');
         return this.stammerForList(stringArray, stammeringProbability);
