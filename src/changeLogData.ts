@@ -50,6 +50,6 @@ export let CHANGELOG: ChangeLogObj[] = [
         version: "0.1.1",
         description: "添加了新的动作.",
         type: ChangeType.main,
-        changes: ["添加了额外的17个动作","添加 AL 命令 显示添加的全部动作"]
+        changes: ["添加了额外的17个动作","添加 /xsa act 命令 显示添加的全部动作", "完成功能自动口吃处理命令:(` + message) --请输入 /xsa jieba 查看帮助"]
     }
 ]
