@@ -189,18 +189,17 @@ export function sendChangeLog() {
 
 
 export function segmentForCH(str: string): string[] | null {
-	conDebug(`segmentForCH:---=>>  window.Intl: ${window.Intl} window.Intl.Segmenter: ${window.Intl.Segmenter}  window.GAME_LAN: ${window.GAME_LANG}`)
 	conDebug({
 		name: "segmentForCHTest",
 		type: MSGType.DebugLog,
 		content:{
 			Intl: window.Intl? true : false,
 			Segmenter: window.Intl.Segmenter? true : false,
-			GAME_LANG: window.GAME_LANG
+			GAME_LANG: TranslationLanguage.toLowerCase()
 		}
 	})
 	// 检查浏览器是否支持 Intl.Segmenter
-	if (window.Intl && window.Intl.Segmenter && window.GAME_LANG === "cn") {
+	if (window.Intl && window.Intl.Segmenter && TranslationLanguage.toLowerCase() === "cn") {
 		const segmenter = new Intl.Segmenter('zh', { granularity: 'word' }); // 创建分词器实例
 		const segmenterResult = segmenter.segment(str); // 对文本进行分词
 		const results : string[] = []

@@ -7,5 +7,4 @@ interface Window {
 	XSActivity_VERSION?: string;
 	BROWSER_NAME?: string;
 	BROWSER_VERSION?: number;
-	GAME_LANG?: string;
 }

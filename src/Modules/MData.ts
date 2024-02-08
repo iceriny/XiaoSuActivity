@@ -9,10 +9,6 @@ export class DataModule extends BaseModule implements _module {
     static browserVersionRegex = /(chrome|firefox|safari|opera|edge|msie|trident(?=\/))\/?\s*(\d+)/i;
     // 使用正则表达式匹配浏览器版本信息
     static match = this.userAgentString.match(this.browserVersionRegex);
-    /**
-     * 游戏当前语言代码
-     */
-    static lang = TranslationLanguage.toLowerCase();
 
     /**
      * 浏览器名称
@@ -26,18 +22,11 @@ export class DataModule extends BaseModule implements _module {
     public Load(): void {
         this.moduleName = "DataModule";
         this.priority = 0;
-        window.GAME_LANG = DataModule.lang;
     }
     public init(): void {
         window.BROWSER_NAME = DataModule.browserName;
         window.BROWSER_VERSION = DataModule.browserVersion;
         conDebug("MData: init");
 
-    }
-
-    public static getLangCode(): string {
-        this.lang = TranslationLanguage.toLowerCase();
-        window.GAME_LANG = this.lang;
-        return this.lang;
     }
 }
