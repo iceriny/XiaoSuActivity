@@ -59,7 +59,7 @@ export class ChatroomModule extends BaseModule implements _module {
         conDebug(`stammerHandler: content: ${content} tenfoldStammeringProbability: ${tenfoldStammeringProbability}`)
 
         // 处理结巴程度，默认结巴程度为5
-        if (Number.isNaN(tenfoldStammeringProbability)) tenfoldStammeringProbability = 5;
+        if (Number.isNaN(tenfoldStammeringProbability)) tenfoldStammeringProbability = 3;
         const stammeringProbability = tenfoldStammeringProbability / 10;
 
         // 使用segmentForCH进行分词，传入参数取消掉空白字符
