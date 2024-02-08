@@ -87,9 +87,12 @@ export class ChatroomModule extends BaseModule implements _module {
                 result += this.addStammerEffect(currentWord);
             }
 
-            // 添加-分隔符，除了最后一个单词外
-            if (i < messageList.length - 1 && Math.random() < stammeringProbability) {
+            // 添加-分隔符，最后一个单词后添加 「 ... 」
+            if (i < messageList.length - 1) {
+                if (Math.random() < stammeringProbability)
                 result += '-';
+            } else {
+                result += '...';
             }
         }
 
