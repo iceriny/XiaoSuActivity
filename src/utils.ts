@@ -190,6 +190,15 @@ export function sendChangeLog() {
 
 export function segmentForCH(str: string): string[] | null {
 	conDebug(`segmentForCH:---=>>  window.Intl: ${window.Intl} window.Intl.Segmenter: ${window.Intl.Segmenter}  window.GAME_LAN: ${window.GAME_LANG}`)
+	conDebug({
+		name: "segmentForCHTest",
+		type: MSGType.DebugLog,
+		content:{
+			Intl: window.Intl? true : false,
+			Segmenter: window.Intl.Segmenter? true : false,
+			GAME_LANG: window.GAME_LANG
+		}
+	})
 	// 检查浏览器是否支持 Intl.Segmenter
 	if (window.Intl && window.Intl.Segmenter && window.GAME_LANG === "cn") {
 		const segmenter = new Intl.Segmenter('zh', { granularity: 'word' }); // 创建分词器实例
