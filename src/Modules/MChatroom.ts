@@ -33,7 +33,7 @@ export class ChatroomModule extends BaseModule implements _module {
                 });
                 let msg : string = args[0];
                 // 匹配`开头的命令
-                const match = msg.match(/^`([1-9]) (.*)/);
+                const match = msg.match(/^`([1-9])? (.*)/);
                 if (match) msg = this.stammerHandler(match[2], parseInt(match[1]));
 
                 args[0] = msg;
