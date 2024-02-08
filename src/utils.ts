@@ -186,3 +186,19 @@ export function sendChangeLog() {
 	content += "<p>==当前页面显示时间1分钟==</p>"
 	ChatRoomSendLocal(content, 60000);
 }
+
+
+export function segmentForCH(str: string): string[] | null {
+	// 检查浏览器是否支持 Intl.Segmenter
+	if (window.Intl && window.Intl.Segmenter && window.GAME_LANG === "cn") {
+		const segmenter = new Intl.Segmenter('zh', { granularity: 'word' }); // 创建分词器实例
+		const segmenterResult = segmenter.segment(str); // 对文本进行分词
+		const results : string[] = []
+		for (const segment of segmenterResult) {
+			results.push(segment.segment);
+		}
+		return results;
+	} else {
+		return null;
+	}
+}

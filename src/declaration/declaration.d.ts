@@ -5,4 +5,7 @@ declare const DEBUG: boolean;
 interface Window {
 	XSActivity_Loaded?: boolean;
 	XSActivity_VERSION?: string;
+	BROWSER_NAME?: string;
+	BROWSER_VERSION?: number;
+	GAME_LANG?: string;
 }

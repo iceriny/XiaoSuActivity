@@ -6,7 +6,7 @@ export interface _module {
     init(): void;
     Load(): void;
 }
-export type XS_ModuleName ="Base" | "ActivityModule" | "ChatroomModule" | "CommandsModule";
+export type XS_ModuleName ="Base" | "ActivityModule" | "ChatroomModule" | "CommandsModule" | "DataModule";
 export const FullModCount = 3;
 
 export abstract class BaseModule implements _module {

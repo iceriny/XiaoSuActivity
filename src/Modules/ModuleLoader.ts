@@ -4,6 +4,7 @@ import { CommandsModule } from "./MCommand";
 import { modules } from "./ModulesDict";
 import { ActivityModule } from "./MActivity";
 import { conDebug } from "utils";
+import { DataModule } from "./MData";
 
 export class ModuleLoader {
     public static modules: { [key: string]: BaseModule } = modules;
@@ -65,7 +66,10 @@ export class ModuleLoader {
         },
         CommandsModule: () => {
             this.pushToModules(new CommandsModule());
-        }
+        },
+        DataModule: () => {
+            this.pushToModules(new DataModule());
+        },
     }
 
 

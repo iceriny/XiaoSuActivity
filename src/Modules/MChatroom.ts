@@ -1,4 +1,4 @@
-import { conDebug, hookFunction, SendChat, MSGType, copyAndDownloadHtmlElement, timeRange } from "utils";
+import { conDebug, hookFunction, segmentForCH, MSGType, copyAndDownloadHtmlElement, timeRange } from "utils";
 import { BaseModule, _module } from "Modules/BaseModule";
 
 export class ChatroomModule extends BaseModule implements _module {
@@ -62,9 +62,17 @@ export class ChatroomModule extends BaseModule implements _module {
 
     stammerHandler(content: string, tenfoldStammeringProbability: number): string {
         conDebug(`stammerHandler: content: ${content} tenfoldStammeringProbability: ${tenfoldStammeringProbability}`)
+
+        // 处理结巴程度，默认结巴程度为5
         if (Number.isNaN(tenfoldStammeringProbability)) tenfoldStammeringProbability = 5;
         const stammeringProbability = tenfoldStammeringProbability / 10;
-        const stringArray: string[] = content.split(' ');
+
+        // 使用segmentForCH进行分词，传入参数取消掉空白字符
+        const segmentList = segmentForCH(content.replace(/\s/g, ""));
+
+        // 如果segmentForCH没有返回内容，则使用源字符串通过空格分词
+        const stringArray: string[] = segmentList ? segmentList : content.split(' ');
+        
         return this.stammerForList(stringArray, stammeringProbability);
     }
     /**
