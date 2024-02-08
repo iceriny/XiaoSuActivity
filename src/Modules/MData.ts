@@ -26,12 +26,18 @@ export class DataModule extends BaseModule implements _module {
     public Load(): void {
         this.moduleName = "DataModule";
         this.priority = 0;
+        window.GAME_LANG = DataModule.lang;
     }
     public init(): void {
         window.BROWSER_NAME = DataModule.browserName;
         window.BROWSER_VERSION = DataModule.browserVersion;
-        window.GAME_LANG = DataModule.lang;
         conDebug("MData: init");
 
+    }
+
+    public static getLangCode(): string {
+        this.lang = TranslationLanguage.toLowerCase();
+        window.GAME_LANG = this.lang;
+        return this.lang;
     }
 }
