@@ -106,6 +106,7 @@ export class ActivityModule extends BaseModule {
      */
     LoadActivity(): void {
         conDebug("加载自定义活动");
+        let actLength = 0;
         for (const aN in this.activityToAddDict) { // a 为活动名
             // conDebug({
             //     type: MSGType.DebugLog,
@@ -127,9 +128,9 @@ export class ActivityModule extends BaseModule {
                 // if (typeof Loaded_XSA_ActivityDictionary_Index0 !== "undefined" && !(d[0] in Loaded_XSA_ActivityDictionary_Index0)) ActivityDictionary?.push(d);
                 ActivityDictionary?.push(d);
             });
-
+            actLength += 1;
         }
-        conDebug(`自定义活动加载完成.`)
+        conDebug(`自定义活动加载完成.动作数: ${actLength}`)
     }
     //============================================================
     /**
