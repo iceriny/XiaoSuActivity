@@ -1,4 +1,4 @@
-import { BaseModule, _module } from "./BaseModule";
+import { BaseModule } from "./BaseModule";
 import { conDebug, hookFunction, MSGType } from "utils";
 
 /*
@@ -11,7 +11,7 @@ interface prerequisite {
 
 const selfPlaceholder = "SourceCharacter";
 const targetPlaceholder = "TargetCharacter";
-export class ActivityModule extends BaseModule implements _module {
+export class ActivityModule extends BaseModule {
 
 
     public init(): void {
@@ -91,7 +91,7 @@ export class ActivityModule extends BaseModule implements _module {
 
 
 
-        ActivityModule.Loaded = true;
+        this.Loaded = true;
     }
 
     // hook:
@@ -127,7 +127,7 @@ export class ActivityModule extends BaseModule implements _module {
                 // if (typeof Loaded_XSA_ActivityDictionary_Index0 !== "undefined" && !(d[0] in Loaded_XSA_ActivityDictionary_Index0)) ActivityDictionary?.push(d);
                 ActivityDictionary?.push(d);
             });
-            
+
         }
         conDebug(`自定义活动加载完成.`)
     }
@@ -170,9 +170,10 @@ export class ActivityModule extends BaseModule implements _module {
      * @param activity 将要载入的活动对象
      */
     private pushToActivity(activity: Activity) {
-
-        ActivityFemale3DCG.push(activity);
-        ActivityFemale3DCGOrdering.push(activity.Name);
+        //if (ActivityFemale3DCG.indexOf(activity) && ActivityFemale3DCGOrdering.indexOf(activity.Name)) {
+            ActivityFemale3DCG.push(activity);
+            ActivityFemale3DCGOrdering.push(activity.Name);
+        //}
     }
 
     //============================================================
@@ -658,7 +659,7 @@ export class ActivityModule extends BaseModule implements _module {
             result.push(suffix); // 输出：XXXX
         }
         conDebug({
-            content:result,
+            content: result,
             name: "ActivityNameXiaosu_onlyName",
             type: MSGType.DebugLog
         });

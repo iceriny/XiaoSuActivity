@@ -1,12 +1,12 @@
 import { conDebug, hookFunction, segmentForCH, MSGType, copyAndDownloadHtmlElement, timeRange } from "utils";
-import { BaseModule, _module } from "Modules/BaseModule";
+import { BaseModule } from "Modules/BaseModule";
 
-export class ChatroomModule extends BaseModule implements _module {
+export class ChatroomModule extends BaseModule {
 
     public Load(): void {
         this.hookListHandler();
 
-        ChatroomModule.Loaded = true;
+        this.Loaded = true;
     }
     public init(): void {
         this.moduleName = "ChatroomModule";

@@ -31,13 +31,21 @@ export class ModuleLoader {
                 });
         }
 
-        if (moduleC == FullModCount){
+        if (this.CheckModulesLoaded(moduleC)) {
             this.CompleteLoadingSuccessful = true;
             window.XSActivity_Loaded = true;
         }
         return moduleC
     }
 
+    public static CheckModulesLoaded(moduleCount: number): boolean {
+        if (moduleCount != FullModCount) return false;
+        if (ModuleLoader.mList === undefined) return false;
+        for (const m of ModuleLoader.mList) {
+            if (!m.Loaded) return false;
+        }
+        return true;
+    }// 该方法在加载模块完成之后调用，确保mList中的所有模块都已加载。
 
     /**
      * 将模块添加到模块数组中

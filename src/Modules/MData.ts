@@ -1,7 +1,7 @@
-import { BaseModule, _module } from "./BaseModule";
+import { BaseModule } from "./BaseModule";
 import { conDebug } from "utils";
 
-export class DataModule extends BaseModule implements _module {
+export class DataModule extends BaseModule{
 
     // 获取用户代理字符串
     static userAgentString = navigator.userAgent;
@@ -20,13 +20,14 @@ export class DataModule extends BaseModule implements _module {
     static browserVersion = this.match ? parseInt(this.match[2]) : -1;
 
     public Load(): void {
-        this.moduleName = "DataModule";
-        this.priority = 0;
+
+        this.Loaded = true;
     }
     public init(): void {
+        this.moduleName = "DataModule";
+        this.priority = 0;
+
         window.BROWSER_NAME = DataModule.browserName;
         window.BROWSER_VERSION = DataModule.browserVersion;
-        conDebug("MData: init");
-
     }
 }

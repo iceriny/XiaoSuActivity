@@ -1,11 +1,11 @@
-import { BaseModule, _module } from "./BaseModule";
+import { BaseModule } from "./BaseModule";
 import { conDebug, MSGType, GetModule, timeRange, sendChangeLog } from "utils";
 import { ChatroomModule } from "./MChatroom";
 import { ActivityModule } from "./MActivity";
 
 const timeRangeRegex: RegExp = /^(((0|1)\d|2[0-3]):[0-5]\d)-(((0|1)\d|2[0-3]):[0-5]\d)$/;
 
-export class CommandsModule extends BaseModule implements _module {
+export class CommandsModule extends BaseModule {
 
     commandsDict: { [CommandName: string]: ICommand } = {
         help: {
@@ -89,7 +89,7 @@ export class CommandsModule extends BaseModule implements _module {
             }
         )
 
-        CommandsModule.Loaded = true;
+        this.Loaded = true;
     }
     public init(): void {
         this.moduleName = "CommandsModule";

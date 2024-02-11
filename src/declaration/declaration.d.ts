@@ -1,5 +1,3 @@
-declare module 'segmentit';
-
 declare const XSActivity_VERSION: string;
 declare const DEBUG: boolean;
 interface Window {
