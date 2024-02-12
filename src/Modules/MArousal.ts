@@ -21,7 +21,7 @@ export class ArousalModule extends BaseModule {
 
 
     hookListHandler(): void {
-        // 处理边缘计数计算 并且每十秒增加抵抗高潮难度
+        // 处理边缘计数计算 并且每20秒 增加一层 抵抗高潮难度
         hookFunction("TimerProcess", this.priority, (args, next) => {
             const currentTime = CommonTime();
 
