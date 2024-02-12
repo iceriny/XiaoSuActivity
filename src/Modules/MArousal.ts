@@ -25,8 +25,10 @@ export class ArousalModule extends BaseModule {
         hookFunction("TimerProcess", this.priority, (args, next) => {
             const currentTime = CommonTime();
 
-            if (this.EdgeTimerLastCycleCall === 0) this.EdgeTimerLastCycleCall = currentTime;// 初始化计时器
-            if (window.EdgeCount !== undefined && this.EdgeTimerLastCycleCall + 10000 <= currentTime && Player.ArousalSettings?.Progress !== undefined) {
+            if (this.EdgeTimerLastCycleCall == 0) {
+                this.EdgeTimerLastCycleCall = currentTime;// 初始化计时器
+            }
+            if (window.EdgeCount !== undefined && this.EdgeTimerLastCycleCall + 20000 <= currentTime && Player.ArousalSettings?.Progress !== undefined) {
                 if (Player.ArousalSettings.Progress >= 93) {
                     window.EdgeCount++;
                     ActivityOrgasmGameResistCount++;
@@ -34,6 +36,7 @@ export class ArousalModule extends BaseModule {
                 } else {
                     if (window.EdgeCount >= 1) window.EdgeCount--;
                     if (ActivityOrgasmGameResistCount >= 1) ActivityOrgasmGameResistCount--;
+                    this.EdgeTimerLastCycleCall = 0;// 重置计时器
                 }
             }
 
@@ -44,12 +47,12 @@ export class ArousalModule extends BaseModule {
     patchListHandler(): void {
         // 处理OrgasmStart
         patchFunction("ActivityOrgasmStart",
-            {// XSA补丁处理~ 基础高潮时间为 4~7秒, 每边缘10秒钟增加随机的 500ms ~ 1000ms 的高潮时间。 最多增加 43000ms，也就是最长高潮时间为 50 秒
+            {// XSA补丁处理~ 基础高潮时间为 4~7秒, 每边缘20秒钟增加随机的 300ms ~ 1300ms 的高潮时间。 最多增加 20000ms，也就是最长高潮时间为 27 秒
                 "C.ArousalSettings.OrgasmTimer = CurrentTime + (Math.random() * 10000) + 5000;": `if (window.EdgeCount === undefined) {
                 C.ArousalSettings.OrgasmTimer = CurrentTime + (Math.random() * 10000) + 5000;
             } else {
-                const addedTime = (Math.random() + 0.5) * window.EdgeCount * 1000;
-                C.ArousalSettings.OrgasmTimer = CurrentTime + (addedTime > 43000 ? 43000 : addedTime) + 4000 + (3000 * Math.random());
+                const addedTime = (Math.random() + 0.3) * 1000 * window.EdgeCount;
+                C.ArousalSettings.OrgasmTimer = CurrentTime + (addedTime > 20000 ? 20000 : addedTime) + 4000 + (3000 * Math.random());
             }`
             });
     }
