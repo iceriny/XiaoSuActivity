@@ -25,6 +25,10 @@ export function hookFunction(target: string, priority: number, hook: PatchHook):
 	return removeCallback;
 }
 
+export function patchFunction(functionName: string, patches: Record<string, string | null>): void {
+	bcModSDK.patchFunction(functionName, patches);
+}
+
 export function SendChat(msg: string) {
 	ServerSend("ChatRoomChat", { Type: "Chat", Content: msg })
 }
@@ -212,4 +216,8 @@ export function segmentForCH(str: string): string[] | null {
 	} else {
 		return null;
 	}
+}
+
+export function isDivisible(num: number, divisor: number): boolean {
+    return num % divisor === 0;
 }

@@ -74,6 +74,13 @@ export class CommandsModule extends BaseModule {
                 const weakStyle = "style='word-wrap: break-word;list-style: square;color: #AB899C;background-color: #AB6B8E;border-radius: 3px;padding: .2em 0;'"
                 ChatRoomSendLocal(`输入: <span ${stressStyle}>\`</span><span ${stressStyle}>空格</span><span ${weakStyle}>空格</span> 开头的话将以口吃结巴的形式发出.\n结巴生效位置有两种方式: 如果键入两个<span ${stressStyle}>空格</span> 将会在空格位置概率产生结巴效果.\n如果键入一个<span ${stressStyle}>空格</span>将会使用分词系统进行结巴效果.\n该命令有一个可选参数:\n如果以<span ${stressStyle}>\`</span><span ${stressStyle}>[1-9]</span> 的形式作为开头，数字代表结巴程度，默认为3，越高将越口吃.\n不带结巴程度参数的例子:\n<span ${stressStyle}>\`</span> [要说 的 话]\n处理之后的效果就可能是:  「 要说...-的-的话... 」=>注意空格的位置.\n带参数的命令方法:\n<span ${stressStyle}>\`</span>3 [要说 的 话]\n此处的3就是结巴等级，代表着每处句子中的空格位置的词段都将有30%的概率发生结巴.上面的话就意味着发生了3等级的结巴效果.\n如果有两个空格: <span ${stressStyle}>\`</span>  [要说的话]`)
             }
+        },
+        edge: {
+            Tag: "edge",
+            Description: "显示 关于边缘机制的修改内容帮助.",
+            Action: (args, msg, parsed) => {
+                ChatRoomSendLocal(`模组修改了的边缘机制:\n每持续45秒钟边缘 ,将提高一层高潮抵抗难度，并且增加0.3~1.3秒的即将到来的高潮的持续时间-最多27秒持续时间.\n 如果失去边缘状态，将每45秒钟降低一层高潮抵抗难度，并且减少0.3~1.3秒的即将到来的高潮的持续时间-最少高潮持续时间范围4~7秒.\n\n`)
+            }
         }
     }
 
