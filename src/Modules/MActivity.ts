@@ -103,17 +103,16 @@ export class ActivityModule extends BaseModule {
                 type: MSGType.DebugLog,
                 content: data
             });
-            // const actName = data.Dictionary[3]?.ActivityName as string;
-            // const TargetCharacter = data.Dictionary[3]?.TargetCharacter as number;
-
-            // if (data.Type == "Activity"){
-            //     if (actName == "Tickle" && Number.isNaN(TargetCharacter) && TargetCharacter == Player?.MemberNumber){// 瘙痒动作且目标为自己
-            //         if (Player.ArousalSettings?.OrgasmStage == 1){// 如果当前正在抵抗则添加难度并重新开始抵抗游戏
-            //             ActivityOrgasmGameResistCount++;
-            //             ActivityOrgasmGameGenerate(0);
-            //         }
-            //     }
-            // }
+            if (data.Type == "Activity"){
+                const actName = data.Dictionary[3]?.ActivityName as string;
+                const TargetCharacter = data.Dictionary[3]?.TargetCharacter as number;
+                if (actName == "Tickle" && Number.isNaN(TargetCharacter) && TargetCharacter == Player?.MemberNumber){// 瘙痒动作且目标为自己
+                    if (Player.ArousalSettings?.OrgasmStage == 1){// 如果当前正在抵抗则添加难度并重新开始抵抗游戏
+                        ActivityOrgasmGameResistCount++;
+                        ActivityOrgasmGameGenerate(0);
+                    }
+                }
+            }
                 return next(args);
         });
     }
