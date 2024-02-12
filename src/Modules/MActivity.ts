@@ -108,8 +108,8 @@ export class ActivityModule extends BaseModule {
                 const TargetCharacter = data.Dictionary[3]?.TargetCharacter as number;
                 if (actName == "Tickle" && Number.isNaN(TargetCharacter) && TargetCharacter == Player?.MemberNumber){// 瘙痒动作且目标为自己
                     if (Player.ArousalSettings?.OrgasmStage == 1){// 如果当前正在抵抗则添加难度并重新开始抵抗游戏
+                        ActivityOrgasmStop(Player, 99.8);
                         ActivityOrgasmGameResistCount++;
-                        ActivityOrgasmGameGenerate(0);
                     }
                 }
             }
