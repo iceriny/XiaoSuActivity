@@ -1,10 +1,11 @@
-import { BaseModule, XS_ModuleName, FullModCount } from "./BaseModule";
+import { conDebug } from "utils";
+import { BaseModule, FullModCount, XS_ModuleName } from "./BaseModule";
+import { ActivityModule } from "./MActivity";
 import { ChatroomModule } from "./MChatroom";
 import { CommandsModule } from "./MCommand";
-import { modules } from "./ModulesDict";
-import { ActivityModule } from "./MActivity";
-import { conDebug } from "utils";
 import { DataModule } from "./MData";
+import { ArousalModule } from "./MArousal";
+import { modules } from "./ModulesDict";
 
 export class ModuleLoader {
     public static modules: { [key: string]: BaseModule } = modules;
@@ -79,7 +80,7 @@ export class ModuleLoader {
             this.pushToModules(new DataModule());
         },
         ArousalModule: () => {
-            this.pushToModules(new ActivityModule());
+            this.pushToModules(new ArousalModule());
         }
     }
 
