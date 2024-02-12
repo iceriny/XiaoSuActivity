@@ -26,9 +26,7 @@ export class ArousalModule extends BaseModule {
             const currentTime = CommonTime();
             if (window.EdgeCount !== undefined && this.EdgeTimerLastCycleCall + 10000 <= currentTime && Player.ArousalSettings?.Progress !== undefined && Player.ArousalSettings.Progress >= 93) {
                 window.EdgeCount++;
-                if (isDivisible(window.EdgeCount, 10)){
-                    ActivityOrgasmGameResistCount++;
-                }
+                ActivityOrgasmGameResistCount++;
                 this.EdgeTimerLastCycleCall = currentTime;
             }
             next(args);
