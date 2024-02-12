@@ -78,6 +78,9 @@ export class ModuleLoader {
         DataModule: () => {
             this.pushToModules(new DataModule());
         },
+        ArousalModule: () => {
+            this.pushToModules(new ActivityModule());
+        }
     }
 
 

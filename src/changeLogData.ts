@@ -51,5 +51,11 @@ export let CHANGELOG: ChangeLogObj[] = [
         description: "添加了新的动作.",
         type: ChangeType.main,
         changes: ["添加了额外的17个动作","添加 /xsa act 命令 显示添加的全部动作", "完成功能自动口吃处理命令:(` + message) --请输入 /xsa jieba 查看帮助"]
+    },
+    {
+        version: "0.1.2",
+        description: "添加修改高潮逻辑.",
+        type: ChangeType.dev,
+        changes: ["修复一些bug","修复了若干错别字","修改边缘影响，现在每10秒钟边缘将提高一层高潮抵抗难度，并且提高即将到来的高潮的持续时间"]
     }
 ]

@@ -388,7 +388,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ["TargetZoneNaked", "MoveHead"]
             },
             desc: null,
-            descString: [`${selfPlaceholder}汪着眼睛恳求的看着${targetPlaceholder}的眼睛.`, ""],
+            descString: [`${selfPlaceholder}汪着眼睛恳求的看着${targetPlaceholder}.`, ""],
             img: "RestHead"
         },
         XSAct_内八夹腿: {
@@ -414,7 +414,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ["UseMouth"]
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}有些不满的噘起嘴吧.`],
+            descString: ["", `${selfPlaceholder}有些不满的噘起嘴巴.`],
             img: "PoliteKiss"
         },
         XSAct_抿住嘴巴: {

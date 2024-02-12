@@ -1,6 +1,6 @@
 
-export type XS_ModuleName ="Base" | "ActivityModule" | "ChatroomModule" | "CommandsModule" | "DataModule";
-export const FullModCount = 4;
+export type XS_ModuleName ="Base" | "ActivityModule" | "ChatroomModule" | "CommandsModule" | "DataModule" | "ArousalModule";
+export const FullModCount = 5;
 
 export abstract class BaseModule {
     moduleName: XS_ModuleName = "Base";
