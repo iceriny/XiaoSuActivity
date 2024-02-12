@@ -40,7 +40,17 @@ export class ArousalModule extends BaseModule {
                 }
             }
 
-            next(args);
+            return next(args);
+        });
+
+        //ChatRoomMessage参数测试
+        hookFunction("ChatRoomMessage", this.priority, (args, next) => {
+            conDebug({
+                name:"ChatRoomMessage的参数data对象 测试里面是什么",
+                type: MSGType.DebugLog,
+                content:args[0]
+            });
+            return next(args);
         });
     }
 
