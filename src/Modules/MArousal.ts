@@ -24,7 +24,7 @@ export class ArousalModule extends BaseModule {
         // 处理边缘计数计算
         hookFunction("TimerProcess",this.priority, (args, next) =>{
             const currentTime = CommonTime();
-            if (window.EdgeCount !== undefined && this.EdgeTimerLastCycleCall + 10000 <= currentTime && Player.IsEdged()) {
+            if (window.EdgeCount !== undefined && this.EdgeTimerLastCycleCall + 10000 <= currentTime && Player.ArousalSettings?.Progress !== undefined && Player.ArousalSettings.Progress >= 93) {
                 window.EdgeCount++;
                 if (isDivisible(window.EdgeCount, 10)){
                     ActivityOrgasmGameResistCount++;
