@@ -10,7 +10,7 @@ export class ArousalModule extends BaseModule {
 
     public Load(): void {
         window.EdgeCount = 0;
-        // this.hookListHandler();
+        this.hookListHandler();
         this.patchListHandler();
 
         this.Loaded = true;
