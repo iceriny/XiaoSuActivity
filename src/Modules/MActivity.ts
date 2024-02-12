@@ -20,7 +20,15 @@ export class ActivityModule extends BaseModule {
     }
     public Load(): void {
         this.LoadActivity();
+        this.hookListHandler();
+        this.Loaded = true;
+    }
 
+    // hook:
+
+
+
+    hookListHandler(): void {
         /**
          * 处理没有装本插件的玩家接受到的消息
          * 原理为使用hookFunction来拦截ServerSend函数的执行,并判断消息中是否包含自定义活动的关键词,如果包含则执行自定义操作
@@ -83,21 +91,27 @@ export class ActivityModule extends BaseModule {
                 args[0] = resultName;
                 return next(args);
             }
-
-
             return next(args);
         });
 
 
+        //接受的消息
+        hookFunction("ChatRoomMessage", this.priority, (args, next) => {
+            const data = args[0];
+            const actName = data.Dictionary[3]?.ActivityName as string;
+            const TargetCharacter = data.Dictionary[3]?.TargetCharacter as number;
 
-
-        this.Loaded = true;
+            if (data.Type == "Activity"){
+                if (actName == "Tickle" && Number.isNaN(TargetCharacter) && TargetCharacter == Player?.MemberNumber){// 瘙痒动作且目标为自己
+                    if (Player.ArousalSettings?.OrgasmStage == 1){// 如果当前正在抵抗则添加难度并重新开始抵抗游戏
+                        ActivityOrgasmGameResistCount++;
+                        ActivityOrgasmGameGenerate(0);
+                    }
+                }
+            }
+                return next(args);
+        });
     }
-
-    // hook:
-
-
-
 
     //============================================================
 
@@ -172,8 +186,8 @@ export class ActivityModule extends BaseModule {
      */
     private pushToActivity(activity: Activity) {
         //if (ActivityFemale3DCG.indexOf(activity) && ActivityFemale3DCGOrdering.indexOf(activity.Name)) {
-            ActivityFemale3DCG.push(activity);
-            ActivityFemale3DCGOrdering.push(activity.Name);
+        ActivityFemale3DCG.push(activity);
+        ActivityFemale3DCGOrdering.push(activity.Name);
         //}
     }
 
