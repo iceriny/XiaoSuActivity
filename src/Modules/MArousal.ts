@@ -21,9 +21,10 @@ export class ArousalModule extends BaseModule {
 
 
     hookListHandler(): void {
-        // 处理边缘计数计算
+        // 处理边缘计数计算 并且每十秒增加抵抗高潮难度
         hookFunction("TimerProcess",this.priority, (args, next) =>{
             const currentTime = CommonTime();
+            if (this.EdgeTimerLastCycleCall === 0) this.EdgeTimerLastCycleCall = currentTime;// 初始化计时器
             if (window.EdgeCount !== undefined && this.EdgeTimerLastCycleCall + 10000 <= currentTime && Player.ArousalSettings?.Progress !== undefined && Player.ArousalSettings.Progress >= 93) {
                 window.EdgeCount++;
                 ActivityOrgasmGameResistCount++;
