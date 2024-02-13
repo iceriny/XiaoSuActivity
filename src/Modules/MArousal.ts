@@ -62,13 +62,13 @@ export class ArousalModule extends BaseModule {
                 const inputElement: HTMLTextAreaElement | null = document.getElementById("InputChat") as HTMLTextAreaElement;
                 const orgasmStage = Player.ArousalSettings?.OrgasmStage;
                 if (orgasmStage == 2 || orgasmStage == 1) {
-                    if (inputElement && !inputElement.readOnly) inputElement.readOnly = true;
+                    this.setFormElementsForAbsentState(inputElement, true);
                     if (Player.ArousalSettings?.OrgasmStage == 1) {
                         SendActivity(this.getEndureDesc, Player.MemberNumber);
                     }
                     this.OrgasmTimerLastCycleCall = currentTime;
                 } else {
-                    if (inputElement && inputElement.readOnly) inputElement.readOnly = false;
+                    this.setFormElementsForAbsentState(inputElement, false);
                 }
                 this.OrgasmTimerLastCycleCall = currentTime;
             }
@@ -76,7 +76,37 @@ export class ArousalModule extends BaseModule {
             return next(args);
         });
 
+        hookFunction("ChatRoomSync", 30, (args, next) => {
+            if (CurrentScreen != "ChatRoom") return next(args);
+            const inputElement: HTMLTextAreaElement | null = document.getElementById("InputChat") as HTMLTextAreaElement;
+            this.inputDefaultStyle = {
+                backgroundColor: inputElement.style.backgroundColor,
+                borderColor: inputElement.style.borderColor,
+                borderRadius: inputElement.style.borderRadius
+            };
+            return next(args);
+        });
+    }
 
+    inputDefaultStyle: { backgroundColor: string, borderColor: string, borderRadius: string } | undefined = undefined;
+
+    setFormElementsForAbsentState(formElements: HTMLTextAreaElement | null, isAbsent: boolean): void {
+        if (!formElements || !this.inputDefaultStyle) return;
+        if (isAbsent) {
+            if (!formElements.readOnly) {
+                formElements.readOnly = true;
+                formElements.style.backgroundColor = "#8d6f83";
+                formElements.style.borderColor = "#ea44a9";
+                formElements.style.borderRadius = "5px";
+            }
+        } else {
+            if (formElements.readOnly) {
+                formElements.readOnly = false;
+                formElements.style.backgroundColor = this.inputDefaultStyle.backgroundColor;
+                formElements.style.borderColor = this.inputDefaultStyle.borderColor;
+                formElements.style.borderRadius = this.inputDefaultStyle.borderRadius;
+            }
+        }
     }
 
     patchListHandler(): void {
