@@ -1,5 +1,6 @@
 import { BaseModule } from "./BaseModule";
-import { conDebug, hookFunction, MSGType, patchFunction, isDivisible, SendActivity } from "utils";
+import { conDebug, hookFunction, MSGType, patchFunction, GetModule, SendActivity } from "utils";
+// import { TimerProcessInjector } from "./MTimerProcessInjector";
 
 
 export class ArousalModule extends BaseModule {
@@ -17,6 +18,7 @@ export class ArousalModule extends BaseModule {
     }
 
     EdgeTimerLastCycleCall: number = 0;
+    OrgasmTimerLastCycleCall: number = 0;
 
     private descriptionOfEnduranceActivities = [
         `{source}脚趾一蜷一缩，难耐的交织.`,
@@ -44,25 +46,31 @@ export class ArousalModule extends BaseModule {
                 if (Player.ArousalSettings.Progress >= 93) {
                     window.EdgeCount++;
                     ActivityOrgasmGameResistCount++;
-                    this.EdgeTimerLastCycleCall = currentTime;
                 } else {
                     if (window.EdgeCount >= 1) window.EdgeCount--;
                     if (ActivityOrgasmGameResistCount >= 1) ActivityOrgasmGameResistCount--;
-                    this.EdgeTimerLastCycleCall = 0;// 重置计时器
                 }
+                this.EdgeTimerLastCycleCall = currentTime;
             }
 
-            if (CurrentScreen == "ChatRoom") {
+
+            // ============ // 每1.5秒检查是否高潮或在抵抗  如果高潮则禁用inputChat 如果在抵抗则发送一次抵抗反应
+            if (this.OrgasmTimerLastCycleCall == 0) {
+                this.OrgasmTimerLastCycleCall = currentTime;
+            }
+            if (CurrentScreen == "ChatRoom" && Player.MemberNumber !== undefined && this.OrgasmTimerLastCycleCall + 1500 <= currentTime) {
                 const inputElement: HTMLTextAreaElement | null = document.getElementById("InputChat") as HTMLTextAreaElement;
-                if (Player.ArousalSettings?.OrgasmStage == 2) {
+                const orgasmStage = Player.ArousalSettings?.OrgasmStage;
+                if (orgasmStage == 2 || orgasmStage == 1) {
                     if (inputElement && !inputElement.readOnly) inputElement.readOnly = true;
+                    if (Player.ArousalSettings?.OrgasmStage == 1) {
+                        SendActivity(this.getEndureDesc, Player.MemberNumber);
+                    }
+                    this.OrgasmTimerLastCycleCall = currentTime;
                 } else {
                     if (inputElement && inputElement.readOnly) inputElement.readOnly = false;
-                    if (Player.ArousalSettings?.OrgasmStage == 1) {
-                        SendActivity(this.getEndureDesc, Player.MemberNumber ?? -1);
-                    }
                 }
-
+                this.OrgasmTimerLastCycleCall = currentTime;
             }
 
             return next(args);
@@ -82,7 +90,7 @@ export class ArousalModule extends BaseModule {
                 const addedTime = (Math.random() + 0.3) * 1000 * window.EdgeCount;
                 C.ArousalSettings.OrgasmTimer = CurrentTime + (addedTime > 20000 ? 20000 : addedTime) + 4000 + (3000 * Math.random());
             }`,
-                //
+                // 高潮时将抵抗难度减半而非变为0
                 "ActivityOrgasmGameResistCount = 0;":
                     "ActivityOrgasmGameResistCount = Math.round(ActivityOrgasmGameResistCount / 2);"
             });
