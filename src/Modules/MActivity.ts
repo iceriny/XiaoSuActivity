@@ -107,7 +107,23 @@ export class ActivityModule extends BaseModule {
                 const actName = data.Dictionary[3]?.ActivityName as string;
                 const TargetCharacter = data.Dictionary[1]?.TargetCharacter as number;
                 if (actName == "Tickle" && Number.isNaN(TargetCharacter) && TargetCharacter == Player?.MemberNumber){// 瘙痒动作且目标为自己
+                    conDebug({
+                        type: MSGType.DebugLog,
+                        name: "检测到自己为目标的瘙痒动作",
+                        content: {
+                            高潮阶段:Player.ArousalSettings?.OrgasmStage,
+                            抵抗难度:ActivityOrgasmGameResistCount
+                        }
+                    });
                     if (Player.ArousalSettings?.OrgasmStage == 1){// 如果当前正在抵抗则添加难度并重新开始抵抗游戏
+                        conDebug({
+                            type: MSGType.DebugLog,
+                            name: "捕捉到抵抗场景，开始截断抵抗 增加难度 并重新触发",
+                            content: {
+                                高潮阶段:Player.ArousalSettings?.OrgasmStage,
+                                抵抗难度:ActivityOrgasmGameResistCount
+                            }
+                        });
                         ActivityOrgasmGameResistCount++;
                         SendActivity(`{target}紧闭双眼尽力抵抗着高潮，但被{source}的瘙痒干扰，从嘴巴里泄露出一声压抑的呻吟，差点没有忍住.`)
                         ActivityOrgasmStop(Player, 99.8);
