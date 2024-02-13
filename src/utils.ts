@@ -38,9 +38,9 @@ export function SendChat(msg: string) {
  * @param sourceCharacter 动作的来源 id
  * @param targetCharacter 动作的目标 id
  */
-export function SendActivity(msg: string, sourceCharacter?: number, targetCharacter?: number) {
+export function SendActivity(msg: string, sourceCharacter: number, targetCharacter?: number) {
 
-	const sourceCharacterObj: Character | undefined = sourceCharacter ? ChatRoomCharacter.find(c => c.MemberNumber == sourceCharacter) : undefined,
+	const sourceCharacterObj: Character | undefined =  ChatRoomCharacter.find(c => c.MemberNumber == sourceCharacter),
 		targetCharacterObj: Character | undefined = targetCharacter ? ChatRoomCharacter.find(c => c.MemberNumber == targetCharacter) : undefined;
 
 	if (sourceCharacterObj === undefined && targetCharacterObj === undefined) return;
@@ -51,7 +51,8 @@ export function SendActivity(msg: string, sourceCharacter?: number, targetCharac
 		{ Tag: "XSA_ActMessage", Text: msg.replaceAll("{source}", sourceCharacterNickname).replaceAll("{target}", targetCharacterNickname) }
 	]
 
-	if (sourceCharacter !== undefined) resultDict.push({ SourceCharacter: sourceCharacter });
+
+	resultDict.push({ SourceCharacter: sourceCharacter });
 	if (targetCharacter !== undefined) resultDict.push({ TargetCharacter: targetCharacter });
 	conDebug({
 		type: MSGType.Workflow_Log,
@@ -60,6 +61,7 @@ export function SendActivity(msg: string, sourceCharacter?: number, targetCharac
 			Type: "Activity", Content: "XSA_ActMessage", Dictionary: resultDict, Sender: sourceCharacter
 		}
 	});
+
 	ServerSend("ChatRoomChat", {
 		Type: "Activity", Content: "XSA_ActMessage", Dictionary: resultDict, Sender: sourceCharacter
 	});

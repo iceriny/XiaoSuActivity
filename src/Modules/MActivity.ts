@@ -105,6 +105,7 @@ export class ActivityModule extends BaseModule {
             });
             if (data.Type == "Activity"){
                 const actName = data.Dictionary[3]?.ActivityName as string;
+                const SourceCharacter = data.Dictionary[0]?.SourceCharacter as number;
                 const TargetCharacter = data.Dictionary[1]?.TargetCharacter as number;
                 if (actName == "Tickle" && !Number.isNaN(TargetCharacter) && TargetCharacter == Player?.MemberNumber){// 瘙痒动作且目标为自己
                     conDebug({
@@ -125,7 +126,7 @@ export class ActivityModule extends BaseModule {
                             }
                         });
                         ActivityOrgasmGameResistCount++;
-                        SendActivity(`{target}紧闭双眼尽力抵抗着高潮，但被{source}的瘙痒干扰，从嘴巴里泄露出一声压抑的呻吟，差点没有忍住.`)
+                        SendActivity(`{target}紧闭双眼尽力抵抗着高潮，但被{source}的瘙痒干扰，从嘴巴里泄露出一声压抑的呻吟，差点没有忍住.`, SourceCharacter, TargetCharacter )
                         ActivityOrgasmStop(Player, 100);
                         ActivityOrgasmPrepare(Player);
                     }
