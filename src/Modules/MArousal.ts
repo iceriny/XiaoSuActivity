@@ -78,14 +78,12 @@ export class ArousalModule extends BaseModule {
 
         hookFunction("ChatRoomCreateElement", 30, (args, next) => {
             const result = next(args);
-            if (CurrentScreen == "ChatRoom") {
-                const inputElement: HTMLTextAreaElement | null = document.getElementById("InputChat") as HTMLTextAreaElement;
+            const inputElement: HTMLTextAreaElement | null = document.getElementById("InputChat") as HTMLTextAreaElement;
                 this.inputDefaultStyle = {
                     backgroundColor: inputElement.style.backgroundColor,
                     borderColor: inputElement.style.borderColor,
                     borderRadius: inputElement.style.borderRadius
                 };
-            };
             return result;
         });
     }
