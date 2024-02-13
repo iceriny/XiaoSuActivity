@@ -40,12 +40,15 @@ export function SendChat(msg: string) {
  */
 export function SendActivity(msg: string, sourceCharacter?: number, targetCharacter?: number) {
 
-	const sourceCharacterObj = ChatRoomCharacter.find(c => c.MemberNumber == sourceCharacter)
-	const targetCharacterObj = ChatRoomCharacter.find(c => c.MemberNumber == targetCharacter)
-	if (sourceCharacterObj === undefined || targetCharacterObj === undefined) return;
+	const sourceCharacterObj: Character | undefined = sourceCharacter ? ChatRoomCharacter.find(c => c.MemberNumber == sourceCharacter) : undefined,
+		targetCharacterObj: Character | undefined = targetCharacter ? ChatRoomCharacter.find(c => c.MemberNumber == targetCharacter) : undefined;
 
+	if (sourceCharacterObj === undefined && targetCharacterObj === undefined) return;
+
+	const sourceCharacterNickname = sourceCharacterObj ? CharacterNickname(sourceCharacterObj) : "",
+		targetCharacterNickname = targetCharacterObj ? CharacterNickname(targetCharacterObj) : "";
 	const resultDict: ChatMessageDictionary = [
-		{ Tag: "XSA_ActMessage", Text: msg.replaceAll("{source}", CharacterNickname(sourceCharacterObj)).replaceAll("{target}", CharacterNickname(targetCharacterObj)) }
+		{ Tag: "XSA_ActMessage", Text: msg.replaceAll("{source}", sourceCharacterNickname).replaceAll("{target}", targetCharacterNickname) }
 	]
 
 	if (sourceCharacter !== undefined) resultDict.push({ SourceCharacter: sourceCharacter });
@@ -63,29 +66,29 @@ export function SendActivity(msg: string, sourceCharacter?: number, targetCharac
 }
 /* 发送的数据包对象的实例
 {
-    "Sender": 150217,
-    "Content": "ChatOther-ItemTorso-Tickle",
-    "Type": "Activity",
-    "Dictionary": [
-        {
-            "SourceCharacter": 150217
-        },
-        {
-            "TargetCharacter": 155979
-        },
-        {
-            "Tag": "FocusAssetGroup",
-            "FocusGroupName": "ItemTorso"
-        },
-        {
-            "ActivityName": "Tickle"
-        },
-        {
-            "Tag": "fbc_nonce",
-            "Text": 9
-        }
-    ],
-    "MBCHC_ID": 44
+	"Sender": 150217,
+	"Content": "ChatOther-ItemTorso-Tickle",
+	"Type": "Activity",
+	"Dictionary": [
+		{
+			"SourceCharacter": 150217
+		},
+		{
+			"TargetCharacter": 155979
+		},
+		{
+			"Tag": "FocusAssetGroup",
+			"FocusGroupName": "ItemTorso"
+		},
+		{
+			"ActivityName": "Tickle"
+		},
+		{
+			"Tag": "fbc_nonce",
+			"Text": 9
+		}
+	],
+	"MBCHC_ID": 44
 }
 */
 
