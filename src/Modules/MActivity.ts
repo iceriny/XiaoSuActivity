@@ -95,7 +95,7 @@ export class ActivityModule extends BaseModule {
         });
 
 
-        //接受的消息
+
         hookFunction("ChatRoomMessage", this.priority, (args, next) => {
             const data = args[0];
             conDebug({
@@ -110,8 +110,8 @@ export class ActivityModule extends BaseModule {
                     if (Player.ArousalSettings?.OrgasmStage == 1){// 如果当前正在抵抗则添加难度并重新开始抵抗游戏
                         ActivityOrgasmGameResistCount++;
                         SendActivity(`{target}紧闭双眼尽力抵抗着高潮，但被{source}的瘙痒干扰，从嘴巴里泄露出一声压抑的呻吟，差点没有忍住.`)
-                        if (!!Player.ArousalSettings) Player.ArousalSettings.OrgasmTimer = 0;
-                        ActivityOrgasmPrepare(Player);
+                        ActivityOrgasmStop(Player, 99.8);
+                        ActivityOrgasmStart(Player);
                     }
                 }
             }
