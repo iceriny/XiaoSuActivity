@@ -76,19 +76,6 @@ export class ArousalModule extends BaseModule {
             return next(args);
         });
 
-        hookFunction("ChatRoomSync", 0, (args, next) => {
-            const result = next(args);
-            const inputElement: HTMLTextAreaElement | null = document.getElementById("InputChat") as HTMLTextAreaElement | null;
-            if (inputElement){
-                this.inputDefaultStyle = {
-                    backgroundColor: inputElement.style.backgroundColor,
-                    borderColor: inputElement.style.borderColor,
-                    borderRadius: inputElement.style.borderRadius
-                };
-            }
-            
-            return result;
-        });
     }
 
     inputDefaultStyle: { backgroundColor: string, borderColor: string, borderRadius: string } | undefined = undefined;
@@ -97,6 +84,13 @@ export class ArousalModule extends BaseModule {
         if (!formElements) return;
         if (isAbsent) {
             if (!formElements.readOnly) {
+                if (!this.inputDefaultStyle) {
+                    this.inputDefaultStyle = {
+                        backgroundColor: formElements.style.backgroundColor,
+                        borderColor: formElements.style.borderColor,
+                        borderRadius: formElements.style.borderRadius
+                    };
+                }
                 formElements.readOnly = true;
                 formElements.style.backgroundColor = "#8d6f83";
                 formElements.style.borderColor = "#ea44a9";
