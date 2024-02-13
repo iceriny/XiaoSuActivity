@@ -5,6 +5,7 @@ import { ChatroomModule } from "./MChatroom";
 import { CommandsModule } from "./MCommand";
 import { DataModule } from "./MData";
 import { ArousalModule } from "./MArousal";
+// import { TimerProcessInjector } from "./MTimerProcessInjector";
 import { modules } from "./ModulesDict";
 
 export class ModuleLoader {

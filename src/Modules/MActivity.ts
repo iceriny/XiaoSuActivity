@@ -1,5 +1,5 @@
 import { BaseModule } from "./BaseModule";
-import { conDebug, hookFunction, MSGType } from "utils";
+import { conDebug, hookFunction, MSGType, SendActivity } from "utils";
 
 /*
  * 动作的限定条件信息对象
@@ -20,7 +20,15 @@ export class ActivityModule extends BaseModule {
     }
     public Load(): void {
         this.LoadActivity();
+        this.hookListHandler();
+        this.Loaded = true;
+    }
 
+    // hook:
+
+
+
+    hookListHandler(): void {
         /**
          * 处理没有装本插件的玩家接受到的消息
          * 原理为使用hookFunction来拦截ServerSend函数的执行,并判断消息中是否包含自定义活动的关键词,如果包含则执行自定义操作
@@ -83,21 +91,50 @@ export class ActivityModule extends BaseModule {
                 args[0] = resultName;
                 return next(args);
             }
-
-
             return next(args);
         });
 
 
 
-
-        this.Loaded = true;
+        hookFunction("ChatRoomMessage", this.priority, (args, next) => {
+            const data = args[0];
+            conDebug({
+                name: "ChatRoomMessage",
+                type: MSGType.DebugLog,
+                content: data
+            });
+            if (data.Type == "Activity"){
+                const actName = data.Dictionary[3]?.ActivityName as string;
+                const SourceCharacter = data.Dictionary[0]?.SourceCharacter as number;
+                const TargetCharacter = data.Dictionary[1]?.TargetCharacter as number;
+                if (actName == "Tickle" && !Number.isNaN(TargetCharacter) && TargetCharacter == Player?.MemberNumber){// 瘙痒动作且目标为自己
+                    conDebug({
+                        type: MSGType.DebugLog,
+                        name: "检测到自己为目标的瘙痒动作",
+                        content: {
+                            高潮阶段:Player.ArousalSettings?.OrgasmStage,
+                            抵抗难度:ActivityOrgasmGameResistCount
+                        }
+                    });
+                    if (Player.ArousalSettings?.OrgasmStage == 1){// 如果当前正在抵抗则添加难度并重新开始抵抗游戏
+                        conDebug({
+                            type: MSGType.DebugLog,
+                            name: "捕捉到抵抗场景，开始截断抵抗 增加难度 并重新触发",
+                            content: {
+                                高潮阶段:Player.ArousalSettings?.OrgasmStage,
+                                抵抗难度:ActivityOrgasmGameResistCount
+                            }
+                        });
+                        ActivityOrgasmGameResistCount++;
+                        SendActivity(`{target}紧闭双眼尽力抵抗着高潮，但被{source}的瘙痒干扰，从嘴巴里泄露出一声压抑的呻吟，不止是否还能忍住.`, SourceCharacter, TargetCharacter )
+                        ActivityOrgasmStop(Player, 100);
+                        ActivityOrgasmPrepare(Player);
+                    }
+                }
+            }
+                return next(args);
+        });
     }
-
-    // hook:
-
-
-
 
     //============================================================
 
@@ -172,8 +209,8 @@ export class ActivityModule extends BaseModule {
      */
     private pushToActivity(activity: Activity) {
         //if (ActivityFemale3DCG.indexOf(activity) && ActivityFemale3DCGOrdering.indexOf(activity.Name)) {
-            ActivityFemale3DCG.push(activity);
-            ActivityFemale3DCGOrdering.push(activity.Name);
+        ActivityFemale3DCG.push(activity);
+        ActivityFemale3DCGOrdering.push(activity.Name);
         //}
     }
 

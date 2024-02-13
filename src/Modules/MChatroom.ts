@@ -1,4 +1,4 @@
-import { conDebug, hookFunction, segmentForCH, MSGType, copyAndDownloadHtmlElement, timeRange } from "utils";
+import { conDebug, hookFunction, segmentForCH, MSGType, copyAndDownloadHtmlElement, timeRange, SendActivity } from "utils";
 import { BaseModule } from "Modules/BaseModule";
 
 export class ChatroomModule extends BaseModule {
@@ -15,34 +15,29 @@ export class ChatroomModule extends BaseModule {
 
     hookListHandler(): void {
         // hookFunction("ChatRoomSync", 30, (args, next) => {
-        //     conDebug({
-        //         name: 'ChatRoomSyncTest',
-        //         type: MSGType.DebugLog, 
-        //         content: args
-        //     });
-        //     // SendChat("我是! 小酥的小白鼠! 吱吱吱吱~~~");
         //     return next(args);
         // });
 
         hookFunction("CommandParse", 0,
             (args, next) => {
-                let msg : string = args[0];
+                let msg: string = args[0];
                 // 匹配`开头的命令
-                const match = msg.match(/^`([1-9])?( )? (.*)/);
-                if (match) msg = this.stammerHandler(match[3], parseInt(match[1]), match[2] ? false : true);
+                const match = msg.match(/^`([1-9])?(m)?( )? (.*)/);
+                if (match) {
+                    msg = match[2] != "m" ? this.stammerHandler(match[4], parseInt(match[1]), match[3] ? false : true, false) :
+                        this.stammerHandler(match[4], parseInt(match[1]), match[3] ? false : true, true);
+                }
+
+                // 匹配[ | + 空格 ]的颜文字命令
+                // const kaomojiMatch = msg.match(/^\|/);
+                // if (kaomojiMatch){
+
+                //     return;
+                // }
 
                 args[0] = msg;
                 return next(args);
             });
-        // hookFunction("ServerSend", 0,
-        //     (args, next) => {
-        //         conDebug({
-        //             name: 'ServerSendTest',
-        //             type: MSGType.DebugLog,
-        //             content: args
-        //         });
-        //         return next(args);
-        //     });
     }
 
 
@@ -54,8 +49,15 @@ export class ChatroomModule extends BaseModule {
         copyAndDownloadHtmlElement(mainElement, exportName, time_limit)
     }
 
-
-    stammerHandler(content: string, tenfoldStammeringProbability: number, isSegmentForCH: boolean): string {
+    /**
+     * 
+     * @param content 将要处理的句子内容
+     * @param tenfoldStammeringProbability 结巴程度 [1 - 9]
+     * @param isSegmentForCH 是否使用中文分词效果
+     * @param haveMoan 是否呻吟
+     * @returns 最终处理后的句子
+     */
+    stammerHandler(content: string, tenfoldStammeringProbability: number, isSegmentForCH: boolean, haveMoan: boolean): string {
         conDebug(`stammerHandler: content: ${content} tenfoldStammeringProbability: ${tenfoldStammeringProbability}`)
 
         // 处理结巴程度，默认结巴程度为5
@@ -68,14 +70,29 @@ export class ChatroomModule extends BaseModule {
         // 如果segmentForCH没有返回内容，则使用源字符串通过空格分词
         const stringArray: string[] = segmentList ? segmentList : content.split(' ');
 
-        return this.stammerForList(stringArray, stammeringProbability);
+        return this.stammerForList(stringArray, stammeringProbability, haveMoan);
     }
+
+    moan: string[] = [
+        " 嗯~❤..",
+        " 昂~❤哈啊..",
+        " --唔~呜..",
+        " 姆嗯~❤...",
+        " --嘶-啊~",
+        " 唔..❤啊~",
+        " --❤嘶哈~",
+        " ❤呀~",
+        " ❤...呀嗯..",
+        " ❤.哦~嗯~."
+    ];
     /**
-     * 根据空格 自动处理结巴效果
-     * @param message 传入的信息
-     * @returns 处理后的文本
+     * 将分词后的句子添加效果并返回完整句子.
+     * @param messageList 经过分词后的字符串列表
+     * @param stammeringProbability 结巴程度 [0.1~0.9]
+     * @param haveMoan 是否呻吟
+     * @returns 返回处理后的完整句子.
      */
-    stammerForList(messageList: string[], stammeringProbability: number): string {
+    private stammerForList(messageList: string[], stammeringProbability: number, haveMoan: boolean): string {
         //const stringArray: string[] = message.split(' ');
         let result = '';
 
@@ -88,12 +105,17 @@ export class ChatroomModule extends BaseModule {
             // 随机决定是否添加结巴效果
             if (Math.random() < stammeringProbability) { // 假设添加结巴效果的概率为50%
                 result += this.addStammerEffect(currentWord);
+            };
+
+            // 根据当前玩家的兴奋程度决定是否添加呻吟
+            if (haveMoan && Player.ArousalSettings?.Progress && 100 * Math.random() <= Player.ArousalSettings?.Progress) {
+                result += this.moan[Math.floor(Math.random() * this.moan.length)];
             }
 
             // 添加-分隔符，最后一个单词后添加 「 ... 」
             if (i < messageList.length - 1) {
                 if (Math.random() < stammeringProbability)
-                result += '-';
+                    result += '-';
             } else {
                 result += '...';
             }
@@ -125,4 +147,11 @@ export class ChatroomModule extends BaseModule {
         }
         return result;
     }
+
+
+    // private kaomojiHandler(message: string): string {
+    //     switch (message) {
+    //         case "happy":
+    //     }
+    // }
 }
