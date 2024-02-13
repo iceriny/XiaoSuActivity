@@ -50,6 +50,13 @@ export function SendActivity(msg: string, sourceCharacter?: number, targetCharac
 
 	if (sourceCharacter !== undefined) resultDict.push({ SourceCharacter: sourceCharacter });
 	if (targetCharacter !== undefined) resultDict.push({ TargetCharacter: targetCharacter });
+	conDebug({
+		type: MSGType.Workflow_Log,
+		name: "SendActivity()",
+		content: {
+			Type: "Activity", Content: "XSA_ActMessage", Dictionary: resultDict, Sender: sourceCharacter
+		}
+	});
 	ServerSend("ChatRoomChat", {
 		Type: "Activity", Content: "XSA_ActMessage", Dictionary: resultDict, Sender: sourceCharacter
 	});
