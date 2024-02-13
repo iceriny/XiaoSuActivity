@@ -76,7 +76,8 @@ export class ArousalModule extends BaseModule {
             return next(args);
         });
 
-        hookFunction("ChatRoomSync", 30, (args, next) => {
+        hookFunction("ChatRoomCreateElement", 30, (args, next) => {
+            const result = next(args);
             if (CurrentScreen == "ChatRoom") {
                 const inputElement: HTMLTextAreaElement | null = document.getElementById("InputChat") as HTMLTextAreaElement;
                 this.inputDefaultStyle = {
@@ -85,14 +86,14 @@ export class ArousalModule extends BaseModule {
                     borderRadius: inputElement.style.borderRadius
                 };
             };
-            return next(args);
+            return result;
         });
     }
 
     inputDefaultStyle: { backgroundColor: string, borderColor: string, borderRadius: string } | undefined = undefined;
 
     setFormElementsForAbsentState(formElements: HTMLTextAreaElement | null, isAbsent: boolean): void {
-        if (!formElements || !this.inputDefaultStyle) return;
+        if (!formElements) return;
         if (isAbsent) {
             if (!formElements.readOnly) {
                 formElements.readOnly = true;
@@ -103,9 +104,11 @@ export class ArousalModule extends BaseModule {
         } else {
             if (formElements.readOnly) {
                 formElements.readOnly = false;
-                formElements.style.backgroundColor = this.inputDefaultStyle.backgroundColor;
-                formElements.style.borderColor = this.inputDefaultStyle.borderColor;
-                formElements.style.borderRadius = this.inputDefaultStyle.borderRadius;
+                if (this.inputDefaultStyle) {
+                    formElements.style.backgroundColor = this.inputDefaultStyle.backgroundColor;
+                    formElements.style.borderColor = this.inputDefaultStyle.borderColor;
+                    formElements.style.borderRadius = this.inputDefaultStyle.borderRadius;
+                }
             }
         }
     }
