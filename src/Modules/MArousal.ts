@@ -76,9 +76,9 @@ export class ArousalModule extends BaseModule {
             return next(args);
         });
 
-        hookFunction("ElementCreateTextArea", this.priority, (args, next) => {
+        hookFunction("ChatRoomSync", this.priority, (args, next) => {
             const result = next(args);
-            if (args[0] == "InputChat") {
+            if (CurrentScreen == "ChatRoom") {
                 const inputElement: HTMLTextAreaElement | null = document.getElementById("InputChat") as HTMLTextAreaElement;
                 this.inputDefaultStyle = {
                     backgroundColor: inputElement.style.backgroundColor,
