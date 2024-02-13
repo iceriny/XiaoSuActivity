@@ -77,12 +77,13 @@ export class ArousalModule extends BaseModule {
         });
 
         hookFunction("ChatRoomSync", 30, (args, next) => {
-            if (CurrentScreen != "ChatRoom") return next(args);
-            const inputElement: HTMLTextAreaElement | null = document.getElementById("InputChat") as HTMLTextAreaElement;
-            this.inputDefaultStyle = {
-                backgroundColor: inputElement.style.backgroundColor,
-                borderColor: inputElement.style.borderColor,
-                borderRadius: inputElement.style.borderRadius
+            if (CurrentScreen == "ChatRoom") {
+                const inputElement: HTMLTextAreaElement | null = document.getElementById("InputChat") as HTMLTextAreaElement;
+                this.inputDefaultStyle = {
+                    backgroundColor: inputElement.style.backgroundColor,
+                    borderColor: inputElement.style.borderColor,
+                    borderRadius: inputElement.style.borderRadius
+                };
             };
             return next(args);
         });
