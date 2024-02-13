@@ -1514,8 +1514,13 @@ interface Character {
 interface ExtensionSettings {
 	[key: string]: any;
 }
-
+interface XSASettingData{
+    version: string;
+	settings: ExtensionSettings;
+	data: ExtensionSettings;
+}
 interface PlayerCharacter extends Character {
+	XSASettings?: XSASettingData;
 	// PreferenceInitPlayer() must be updated with defaults, when adding a new setting
 	ChatSettings?: {
 		ColorActions: boolean;

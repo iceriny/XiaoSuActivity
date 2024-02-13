@@ -1,5 +1,5 @@
 import { BaseModule } from "./BaseModule";
-import { conDebug, hookFunction, MSGType } from "utils";
+import { conDebug, hookFunction, MSGType, SendActivity } from "utils";
 
 /*
  * 动作的限定条件信息对象
@@ -108,8 +108,9 @@ export class ActivityModule extends BaseModule {
                 const TargetCharacter = data.Dictionary[3]?.TargetCharacter as number;
                 if (actName == "Tickle" && Number.isNaN(TargetCharacter) && TargetCharacter == Player?.MemberNumber){// 瘙痒动作且目标为自己
                     if (Player.ArousalSettings?.OrgasmStage == 1){// 如果当前正在抵抗则添加难度并重新开始抵抗游戏
-                        ActivityOrgasmStop(Player, 99.8);
                         ActivityOrgasmGameResistCount++;
+                        SendActivity(`{target}紧闭双眼尽力抵抗着高潮，但被{source}的瘙痒干扰，从嘴巴里泄露出一生压抑的呻吟，差点没有忍住.`)
+                        ActivityOrgasmPrepare(Player);
                     }
                 }
             }

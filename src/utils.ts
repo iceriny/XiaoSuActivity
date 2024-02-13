@@ -32,7 +32,55 @@ export function patchFunction(functionName: string, patches: Record<string, stri
 export function SendChat(msg: string) {
 	ServerSend("ChatRoomChat", { Type: "Chat", Content: msg })
 }
+/**
+ * 发送动作消息
+ * @param msg 动作消息的内容
+ * @param sourceCharacter 动作的来源 id
+ * @param targetCharacter 动作的目标 id
+ */
+export function SendActivity(msg: string, sourceCharacter?: number, targetCharacter?: number) {
 
+	const sourceCharacterObj = ChatRoomCharacter.find(c => c.MemberNumber == sourceCharacter)
+	const targetCharacterObj = ChatRoomCharacter.find(c => c.MemberNumber == targetCharacter)
+	if (sourceCharacterObj === undefined || targetCharacterObj === undefined) return;
+
+	const resultDict: ChatMessageDictionary = [
+		{ Tag: "XSA_ActMessage", Text: msg.replaceAll("{source}", CharacterNickname(sourceCharacterObj)).replaceAll("{target}", CharacterNickname(targetCharacterObj)) }
+	]
+
+	if (sourceCharacter !== undefined) resultDict.push({ SourceCharacter: sourceCharacter });
+	if (targetCharacter !== undefined) resultDict.push({ TargetCharacter: targetCharacter });
+	ServerSend("ChatRoomChat", {
+		Type: "Activity", Content: "XSA_ActMessage", Dictionary: resultDict, Sender: sourceCharacter
+	});
+}
+/* 发送的数据包对象的实例
+{
+    "Sender": 150217,
+    "Content": "ChatOther-ItemTorso-Tickle",
+    "Type": "Activity",
+    "Dictionary": [
+        {
+            "SourceCharacter": 150217
+        },
+        {
+            "TargetCharacter": 155979
+        },
+        {
+            "Tag": "FocusAssetGroup",
+            "FocusGroupName": "ItemTorso"
+        },
+        {
+            "ActivityName": "Tickle"
+        },
+        {
+            "Tag": "fbc_nonce",
+            "Text": 9
+        }
+    ],
+    "MBCHC_ID": 44
+}
+*/
 
 // Utils
 interface XSDebugMSG {
@@ -196,9 +244,9 @@ export function segmentForCH(str: string): string[] | null {
 	conDebug({
 		name: "segmentForCHTest",
 		type: MSGType.DebugLog,
-		content:{
-			Intl: window.Intl? true : false,
-			Segmenter: window.Intl.Segmenter? true : false,
+		content: {
+			Intl: window.Intl ? true : false,
+			Segmenter: window.Intl.Segmenter ? true : false,
 			GAME_LANG: TranslationLanguage.toLowerCase()
 		}
 	})
@@ -206,7 +254,7 @@ export function segmentForCH(str: string): string[] | null {
 	if (window.Intl && window.Intl.Segmenter && TranslationLanguage.toLowerCase() === "cn") {
 		const segmenter = new Intl.Segmenter('zh', { granularity: 'word' }); // 创建分词器实例
 		const segmenterResult = segmenter.segment(str); // 对文本进行分词
-		const results : string[] = []
+		const results: string[] = []
 		for (const segment of segmenterResult) {
 			results.push(segment.segment);
 		}
@@ -219,5 +267,5 @@ export function segmentForCH(str: string): string[] | null {
 }
 
 export function isDivisible(num: number, divisor: number): boolean {
-    return num % divisor === 0;
+	return num % divisor === 0;
 }
