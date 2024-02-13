@@ -106,7 +106,7 @@ export class ActivityModule extends BaseModule {
             if (data.Type == "Activity"){
                 const actName = data.Dictionary[3]?.ActivityName as string;
                 const TargetCharacter = data.Dictionary[1]?.TargetCharacter as number;
-                if (actName == "Tickle" && Number.isNaN(TargetCharacter) && TargetCharacter == Player?.MemberNumber){// 瘙痒动作且目标为自己
+                if (actName == "Tickle" && !Number.isNaN(TargetCharacter) && TargetCharacter == Player?.MemberNumber){// 瘙痒动作且目标为自己
                     conDebug({
                         type: MSGType.DebugLog,
                         name: "检测到自己为目标的瘙痒动作",
