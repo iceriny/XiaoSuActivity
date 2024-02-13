@@ -48,13 +48,15 @@ export class ArousalModule extends BaseModule {
         // 处理OrgasmStart
         patchFunction("ActivityOrgasmStart",
             {// XSA补丁处理~ 基础高潮时间为 4~7秒, 每边缘45秒钟增加随机的 300ms ~ 1300ms 的高潮时间。 最多增加 20000ms，也就是最长高潮时间为 27 秒
-                "C.ArousalSettings.OrgasmTimer = CurrentTime + (Math.random() * 10000) + 5000;": `if (window.EdgeCount === undefined) {
+                "C.ArousalSettings.OrgasmTimer = CurrentTime + (Math.random() * 10000) + 5000;":
+                `if (window.EdgeCount === undefined) {
                 C.ArousalSettings.OrgasmTimer = CurrentTime + (Math.random() * 10000) + 5000;
             } else {
                 const addedTime = (Math.random() + 0.3) * 1000 * window.EdgeCount;
                 C.ArousalSettings.OrgasmTimer = CurrentTime + (addedTime > 20000 ? 20000 : addedTime) + 4000 + (3000 * Math.random());
             }`
             });
+
     }
 }
 
