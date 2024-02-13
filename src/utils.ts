@@ -48,7 +48,7 @@ export function SendActivity(msg: string, sourceCharacter: number, targetCharact
 	const sourceCharacterNickname = sourceCharacterObj ? CharacterNickname(sourceCharacterObj) : "",
 		targetCharacterNickname = targetCharacterObj ? CharacterNickname(targetCharacterObj) : "";
 	const resultDict: ChatMessageDictionary = [
-		{ Tag: "XSA_ActMessage", Text: msg.replaceAll("{source}", sourceCharacterNickname).replaceAll("{target}", targetCharacterNickname) }
+		{ Tag: "MISSING ACTIVITY DESCRIPTION FOR KEYWORD XSA_ActMessage", Text: msg.replaceAll("{source}", sourceCharacterNickname).replaceAll("{target}", targetCharacterNickname) }
 	]
 
 
@@ -63,7 +63,7 @@ export function SendActivity(msg: string, sourceCharacter: number, targetCharact
 	});
 
 	ServerSend("ChatRoomChat", {
-		Type: "Activity", Content: "MISSING ACTIVITY DESCRIPTION FOR KEYWORD XSA_ActMessage", Dictionary: resultDict, Sender: sourceCharacter
+		Type: "Activity", Content: "XSA_ActMessage", Dictionary: resultDict, Sender: sourceCharacter
 	});
 }
 /* 发送的数据包对象的实例
