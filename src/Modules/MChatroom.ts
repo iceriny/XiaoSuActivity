@@ -1,4 +1,4 @@
-import { conDebug, hookFunction, segmentForCH, MSGType, copyAndDownloadHtmlElement, timeRange, SendActivity, SendChat } from "utils";
+import { conDebug, hookFunction, segmentForCH, MSGType, copyAndDownloadHtmlElement, timeRange, scrollToBottom, SendChat } from "utils";
 import { BaseModule } from "Modules/BaseModule";
 
 const buildKaomojiMenuCSShref = DEBUG ? "https://iceriny.github.io/XiaoSuActivity/dev/kaomojiMenu.css" : "https://iceriny.github.io/XiaoSuActivity/main/kaomojiMenu.css";
@@ -171,6 +171,7 @@ export class ChatroomModule extends BaseModule {
         if (kaomojiMenu) {
             const textAreaChatLog = document.getElementById('TextAreaChatLog')
             textAreaChatLog?.appendChild(kaomojiMenu);
+            scrollToBottom(textAreaChatLog!);
             setTimeout(() => {
                 kaomojiMenu.remove();
             }, 10000);

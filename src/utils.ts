@@ -281,3 +281,13 @@ export function segmentForCH(str: string): string[] | null {
 export function isDivisible(num: number, divisor: number): boolean {
 	return num % divisor === 0;
 }
+
+
+// 将滚动条滚动到底部
+export function scrollToBottom(element: HTMLElement) {
+    const maxScrollTop = element.scrollHeight - element.clientHeight;
+    element.scrollTo({
+        top: maxScrollTop,
+        behavior: 'smooth'  // 可选：实现平滑滚动效果
+    });
+}
