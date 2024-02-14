@@ -159,8 +159,14 @@ export class ChatroomModule extends BaseModule {
 
 
     private static kaomojiHandler(message: string): void {
-        const kaomojiMenuOuterHTML = this.buildKaomojiMenu(message)?.outerHTML;
-        if (kaomojiMenuOuterHTML) ChatRoomSendLocal(kaomojiMenuOuterHTML, 10000)
+        const kaomojiMenu = this.buildKaomojiMenu(message);
+        if (kaomojiMenu) {
+            const textAreaChatLog = document.getElementById('TextAreaChatLog')
+            textAreaChatLog?.appendChild(kaomojiMenu);
+            setTimeout(() => {
+                kaomojiMenu.remove();
+            }, 5000);
+        }
     }
     private static kaomojiSet: { [groupName: string]: string[] } = {
         happy: ["(•̀ᴗ• )"],
