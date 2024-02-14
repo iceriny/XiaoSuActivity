@@ -11,14 +11,15 @@ import { modules } from "./ModulesDict";
 export class ModuleLoader {
     public static modules: { [key: string]: BaseModule } = modules;
     static mList: [BaseModule] | undefined;
-    public static modulesCount: number = 0;
+    public static modulesLoadCount: number = 0;
+    public static modulesInitCount: number = 0;
     public static CompleteLoadingSuccessful: boolean = false;
 
     /**
      * 初始化模块 对外初始化入口
      */
     public static InitModules(): number {
-        const moduleC = this.generateModule();
+        const generateModuleCount = this.generateModule();
 
         // 如果模块列表存在
         if (typeof this.mList !== "undefined") {
@@ -28,11 +29,12 @@ export class ModuleLoader {
                 .forEach((m) => {
                     // 初始化模块
                     m.Init();
-                    conDebug(`模块 ${m.moduleName} 初始化完成完成`);
+                    conDebug(`模块 ${m.moduleName} 尝试初始化完成`);
+                    this.modulesInitCount++;
                 });
         }
 
-        return moduleC;
+        return this.modulesInitCount;
     }
     
     /**
@@ -47,23 +49,24 @@ export class ModuleLoader {
                     // 加载模块
                     m.Load();
                     conDebug(`模块 ${m.moduleName} 已尝试加载`);
+                    this.modulesLoadCount++;
                 });
         }
 
-        if (this.CheckModulesLoaded(this.modulesCount)) {
+        if (this.CheckModulesLoaded()) {
             this.CompleteLoadingSuccessful = true;
             window.XSActivity_Loaded = true;
         } else {
             this.CompleteLoadingSuccessful = false;
             window.XSActivity_Loaded = false;
         }
-        return this.modulesCount;
+        return this.modulesLoadCount;
     }
 
 
-    public static CheckModulesLoaded(moduleCount: number): boolean {
-        if (moduleCount != FullModCount) {
-            conDebug(`模块加载失败，模块数量为${moduleCount}，应为${FullModCount}`);
+    public static CheckModulesLoaded(): boolean {
+        if (this.modulesLoadCount != FullModCount || this.modulesInitCount != this.modulesLoadCount) {
+            conDebug(`模块加载失败，模块数量不匹配，初始化数量为${this.modulesInitCount}模块加载数量为${this.modulesLoadCount}，应为${FullModCount}`);
             return false;
         }
         if (ModuleLoader.mList === undefined) {
@@ -120,11 +123,15 @@ export class ModuleLoader {
 
 
     private static generateModule(): number {
+        let generateModuleCount: number = 0;
         for (const mN in ModuleLoader.ModuleMap) {
-            if (mN !== "Base" && this.modules[mN] === undefined) ModuleLoader.ModuleMap[mN as XS_ModuleName]();
+            if (mN !== "Base" && this.modules[mN] === undefined) {
+                ModuleLoader.ModuleMap[mN as XS_ModuleName]();
+                generateModuleCount++;
+            }
         }
 
-        return this.modulesCount;
+        return generateModuleCount;
     }
 
 }
