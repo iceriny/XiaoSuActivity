@@ -1,7 +1,7 @@
 import { conDebug, hookFunction, segmentForCH, MSGType, copyAndDownloadHtmlElement, timeRange, scrollToBottom, SendChat } from "utils";
 import { BaseModule } from "Modules/BaseModule";
 
-const buildKaomojiMenuCSShref = DEBUG ? "https://iceriny.github.io/XiaoSuActivity/dev/kaomojiMenu.css" : "https://iceriny.github.io/XiaoSuActivity/main/kaomojiMenu.css";
+const buildKaomojiMenuCSShref = DEBUG ? "https://iceriny.github.io/XiaoSuActivity/dev/XSActivityStyle.css" : "https://iceriny.github.io/XiaoSuActivity/main/XSActivityStyle.css";
 export class ChatroomModule extends BaseModule {
 
     public Load(): void {
@@ -189,6 +189,23 @@ export class ChatroomModule extends BaseModule {
         cf: ["( -'`-)", "(=′ー`)", "( -'`-; )", "(・-・*)", "( ｀д′)", "(￣m￣）", "( ╯▽╰)"],
         nt: ["(ˉ▽￣～) 切~~", "(￣w￣)ノ", "( ￣ー￣)", "(‾◡◝)", "(￣_,￣ )", "( ﹁ ﹁ ) ~→", "<(￣ ﹌ ￣)@m"]
     }
+    /** 
+     *  (￣w￣)ノ(￣v￣)ノ(￣l￣)ノ ψ(*｀ー´)ψ  ψ(￣皿￣)ノ
+     */
+    /** 
+     * （இ௰இ）(｡◕ฺˇε ˇ◕ฺ｡） !!!∑(ﾟДﾟノ)ノ  ✌︎( ᐛ )✌︎  o-o(=•ェ•=)m  <(￣︶￣)↗[GO!]   ｡◔‸◔｡   ˃ʍ˂  ヾ(ノ' ﹃' )ノ
+     ꉂ-ꉂ(ˊᗜˋ*)  (●°u°●)​ 」，(｀・ω・´）(●'◡'●) ，(*・ω・)ﾉ， ༼ つ ◕_◕ ༽つ，(๑•̀ㅂ•́)و✧*，(੭*ˊᵕˋ)੭*ଘ*，ヽ(✿ﾟ▽ﾟ)ノ (°ー°〃)  ，  (⊙﹏⊙)，   Σ( ° △ °|||)︴，ヾ(￣▽￣)Bye~Bye~，(⊙ˍ⊙)，|･ω･｀)，⚆_⚆，(´▽｀)
+    ⁄(⁄ ⁄•⁄ω⁄•⁄ ⁄)⁄，(●—●)， (｡･∀･)ﾉﾞ，/ᐠ｡ꞈ｡ᐟ\，┬─┬ ノ('-'ノ)， ┸━━┸)>口<)，(-.-)..zzZZ，( ᗜ ˰ ᗜ ) ,(〃'▽'〃)
+    ꒰ ˶• ༝ •˶꒱，(\   (\ („• ֊ •„)*，*(\   (\ฅ(• - •)ฅ*，ฅ( ̳• ◡ • ̳)ฅ。(¦3[▓▓],,Hi~ o(*￣▽￣*)ブ，(๑˙ー˙๑)，，（｡ò ∀ ó｡）
+    (｡･ω･｡)ﾉ♡，(｡◝ᴗ◜｡)，ψ(｀∇´)ψ，(ง ˙o˙)ว，(◍ ´꒳` ◍)，(๑╹ヮ╹๑)ﾉ，(๑•̀ω•́)ノ，(∠・ω< )⌒★
+    ヾ(❀╹◡╹)ﾉ~， (๑>؂<๑）1(◎｀・ω・´)人(´・ω・｀*)   =͟͟͞͞(꒪ᗜ꒪ ‧̣̥̇)  (˵¯͒〰¯͒˵)  ✧∇✧   (◉ω◉υ)⁼³₌₃   | ᐕ)⁾⁾
+     */
+
+    /**
+     * 
+     * @param key 
+     * @returns 
+     */
     private static buildKaomojiMenu(key: string): HTMLDivElement | undefined {
         const kaomojiList: string[] = key == "all" ? Object.values(this.kaomojiSet).flatMap((v) => v) : this.kaomojiSet[key]
         if (kaomojiList.length > 0) {
