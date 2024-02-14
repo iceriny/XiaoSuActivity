@@ -41,7 +41,8 @@ export class ChatroomModule extends BaseModule {
                 const kaomojiMatch = msg.match(/^\|(.*)/);
                 if (kaomojiMatch) {
                     ChatroomModule.kaomojiHandler(kaomojiMatch[1]);
-                    document.getElementById('InputChat')!.innerHTML = "";
+                    const inputElement: HTMLInputElement = document.getElementById('InputChat') as HTMLInputElement;
+                    inputElement.value = "";
                     return;
                 }
 
