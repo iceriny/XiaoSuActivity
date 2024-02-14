@@ -40,7 +40,7 @@ export class ChatroomModule extends BaseModule {
                 // 匹配[ | + 空格 ]的颜文字命令
                 const kaomojiMatch = msg.match(/^\|(.*)/);
                 if (kaomojiMatch) {
-                    if (Object.keys(ChatroomModule.kaomojiSet).includes(kaomojiMatch[1])) {
+                    if (Object.keys(ChatroomModule.kaomojiSet).includes(kaomojiMatch[1]) || kaomojiMatch[1] == "all") {
                         ChatroomModule.kaomojiHandler(kaomojiMatch[1]);
                         const inputElement: HTMLInputElement = document.getElementById('InputChat') as HTMLInputElement;
                         inputElement.value = "";
