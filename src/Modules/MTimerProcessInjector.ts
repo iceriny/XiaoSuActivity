@@ -59,7 +59,7 @@ export class TimerProcessInjector extends BaseModule {
         hookFunction("TimerProcess", 100, (args, next) => {
             const currentTime = CommonTime();
             for (const c of this.processInjectionSequence) {
-                conDebug(`[TimerProcessInjector] ${c.name} is Running...`);
+                //conDebug(`[TimerProcessInjector] ${c.name} is Running...`);
 
                 // 初始化计时器
                 if (this.TimerLastCycleCallSet[c.name] == -1) this.TimerLastCycleCallSet[c.name] == currentTime;
@@ -70,7 +70,7 @@ export class TimerProcessInjector extends BaseModule {
                     this.TimerLastCycleCallSet[c.name] = currentTime;
                 }
                 
-                conDebug(`[TimerProcessInjector] ${c.name} is Done.`);
+                //conDebug(`[TimerProcessInjector] ${c.name} is Done.`);
             }
 
             return next(args);

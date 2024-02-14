@@ -46,7 +46,7 @@ export class ModuleLoader {
                 .forEach((m) => {
                     // 加载模块
                     m.Load();
-                    conDebug(`模块 ${m.moduleName} 加载完成`);
+                    conDebug(`模块 ${m.moduleName} 已尝试加载`);
                 });
         }
 
@@ -62,11 +62,21 @@ export class ModuleLoader {
 
 
     public static CheckModulesLoaded(moduleCount: number): boolean {
-        if (moduleCount != FullModCount) return false;
-        if (ModuleLoader.mList === undefined) return false;
-        for (const m of ModuleLoader.mList) {
-            if (!m.Loaded) return false;
+        if (moduleCount != FullModCount) {
+            conDebug(`模块加载失败，模块数量为${moduleCount}，应为${FullModCount}`);
+            return false;
         }
+        if (ModuleLoader.mList === undefined) {
+            conDebug(`模块加载失败，模块列表未初始化`);
+            return false;
+        }
+        for (const m of ModuleLoader.mList) {
+            if (!m.Loaded) {
+                conDebug(`模块加载失败，模块 ${m.moduleName} 未加载完成`);
+                return false;
+            }
+        }
+        conDebug(`模块加载完成`);
         return true;
     }// 该方法在加载模块完成之后调用，确保mList中的所有模块都已加载。
 
