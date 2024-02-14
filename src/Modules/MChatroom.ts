@@ -173,7 +173,7 @@ export class ChatroomModule extends BaseModule {
             textAreaChatLog?.appendChild(kaomojiMenu);
             scrollToBottom(textAreaChatLog!);
             setTimeout(() => {
-                kaomojiMenu.remove();
+                kaomojiMenu?.remove();
             }, 10000);
         }
     }
@@ -213,6 +213,7 @@ export class ChatroomModule extends BaseModule {
                 if (key !== "help") {
                     kaomojiElement.addEventListener('click', () => {
                         SendChat(kaomojiElement.innerHTML)
+                        kaomojiElement.remove();
                     });
                 }
                 kaomojiContainer.appendChild(kaomojiElement);
