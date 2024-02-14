@@ -27,6 +27,9 @@ jobs:
     - name: Copy userLoad.user.js to dist
       run: cp userLoad.user.js dist/
 
+    - name: Copy css to dist
+      run: cp css/* dist/
+
     - name: Deploy mian to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:

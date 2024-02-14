@@ -1,6 +1,7 @@
-import { conDebug, hookFunction, segmentForCH, MSGType, copyAndDownloadHtmlElement, timeRange, SendActivity } from "utils";
+import { conDebug, hookFunction, segmentForCH, MSGType, copyAndDownloadHtmlElement, timeRange, SendActivity, SendChat } from "utils";
 import { BaseModule } from "Modules/BaseModule";
 
+const buildKaomojiMenuCSShref = "https://iceriny.github.io/XiaoSuActivity/main/kaomojiMenu.css";
 export class ChatroomModule extends BaseModule {
 
     public Load(): void {
@@ -8,9 +9,17 @@ export class ChatroomModule extends BaseModule {
 
         this.Loaded = true;
     }
-    public init(): void {
+    public Init(): void {
         this.moduleName = "ChatroomModule";
         this.priority = 30;
+
+        const linkElement = document.createElement("link");
+        linkElement.rel = "stylesheet";
+        linkElement.type = "text/css";
+        linkElement.href = buildKaomojiMenuCSShref;
+
+        // 将 link 元素插入到 head 标签中
+        document.head.appendChild(linkElement);
     }
 
     hookListHandler(): void {
@@ -29,11 +38,13 @@ export class ChatroomModule extends BaseModule {
                 }
 
                 // 匹配[ | + 空格 ]的颜文字命令
-                // const kaomojiMatch = msg.match(/^\|/);
-                // if (kaomojiMatch){
-
-                //     return;
-                // }
+                const kaomojiMatch = msg.match(/^\|(.*)/);
+                if (kaomojiMatch) {
+                    ChatroomModule.kaomojiHandler(kaomojiMatch[1]);
+                    const inputChatElement = document.getElementById('InputChat');
+                    inputChatElement!.innerHTML = "";
+                    return;
+                }
 
                 args[0] = msg;
                 return next(args);
@@ -149,9 +160,58 @@ export class ChatroomModule extends BaseModule {
     }
 
 
-    // private kaomojiHandler(message: string): string {
-    //     switch (message) {
-    //         case "happy":
-    //     }
-    // }
+    private static kaomojiHandler(message: string): void {
+        const kaomojiMenu = this.buildKaomojiMenu(message);
+        if (kaomojiMenu) {
+            const textAreaChatLog = document.getElementById('TextAreaChatLog')
+            textAreaChatLog?.appendChild(kaomojiMenu);
+            setTimeout(() => {
+                kaomojiMenu.remove();
+            }, 10000);
+        }
+    }
+    private static kaomojiSet: { [groupName: string]: string[] } = {
+        help: ["all ==> 全部表情", "hp ==> 开心", "sd ==> 伤心", "sy ==> 害羞", "ar ==> 生气", "ap ==> 惊讶", "cf ==> 困惑", "nt ==> 搞怪顽皮"],
+        hp: ["(￣w￣)ノ", "(≧∇≦)ﾉ", "o(^▽^)o", "(￣︶￣)↗", "o(*￣▽￣*)o", "(p≧w≦q)", "ㄟ(≧◇≦)ㄏ", "(/≧▽≦)/", "(　ﾟ∀ﾟ) ﾉ♡",
+            "o(*￣︶￣*)o", "(๑¯∀¯๑)", "(≧∀≦)ゞ", "φ(≧ω≦*)♪", "╰(*°▽°*)╯", "(*^▽^*)", "(๑•̀ㅂ•́)و✧", "(o゜▽゜)o☆[BINGO!]", "(^▽^ )", "<(*￣▽￣*)/", "┌|*´∀｀|┘", "♪(´∇`*)"],
+        sd: ["テ_デ", "□_□", "┭┮﹏┭┮", "╥﹏╥...", "o(TヘTo)", "〒▽〒", "ε(┬┬﹏┬┬)3", "(;´༎ຶД༎ຶ`)", "(ノへ`、)", "（-_-。）", "(ノへ￣、)"],
+        sy: ["|ω・）", "|･ω･｀)", "◕ฺ‿◕ฺ✿ฺ)", "つ﹏⊂", "(* /ω＼*)", "o(*////▽////*)q", "(*/ω＼*)", "(′▽`〃)", "(✿◡‿◡)", "(/▽＼)", "(๑´ㅂ`๑)", "(◡ᴗ◡✿)"],
+        ar: ["(σ｀д′)σ", "＼(゜ロ＼)(／ロ゜)／", "<(－︿－)>", "(ー`´ー)", "（｀へ´）", "(-__-)=@))> o<)", "(///￣皿￣)○～", "┻━┻︵╰(‵□′)╯︵┻━┻", "→)╥﹏╥)", "抽!!(￣ε(#￣)☆╰╮(￣▽￣///)", "(￣ε(#￣)☆╰╮o(￣皿￣///)",
+            "(* ￣︿￣)", "（＃￣～￣＃）", "(⊙x⊙;)", "o(*≧▽≦)ツ┏━┓", "(ノω<。)ノ))☆.。", "(〃＞目＜)", "( σ'ω')σ", "o(′益`)o", "(〃＞目＜)", "o(≧口≦)o", "Ｏ(≧口≦)Ｏ", "...(*￣０￣)ノ[等等我…]", "（≧0≦）"],
+        sp: ["’(°ー°〃)", "(ーー゛)", "(○´･д･)ﾉ", "wow~ ⊙o⊙", "~(￣0￣)/", "Σ(｀д′*ノ)ノ", "Σ(っ °Д °;)っ", "(⊙ˍ⊙)", "w(ﾟДﾟ)w", "ｍ(o・ω・o)ｍ", "⊙▽⊙"],
+        cf: ["( -'`-)", "(=′ー`)", "( -'`-; )", "(・-・*)", "( ｀д′)", "(￣m￣）", "( ╯▽╰)"],
+        nt: ["(ˉ▽￣～) 切~~", "(￣w￣)ノ", "( ￣ー￣)", "(‾◡◝)", "(￣_,￣ )", "( ﹁ ﹁ ) ~→", "<(￣ ﹌ ￣)@m"]
+    }
+    private static buildKaomojiMenu(key: string): HTMLDivElement | undefined {
+        const kaomojiList: string[] = key == "all" ? Object.values(this.kaomojiSet).flatMap((v) => v) : this.kaomojiSet[key]
+        if (kaomojiList.length > 0) {
+            const menu: HTMLDivElement = document.createElement('div');
+            const menuTitle: HTMLDivElement = document.createElement('div');
+            const kaomojiContainer: HTMLDivElement = document.createElement('div');
+
+            const kaomojiClassName: string = 'kaomoji';
+
+            menu.appendChild(menuTitle);
+            menu.appendChild(kaomojiContainer);
+
+            menu.className = 'kaomoji-menu';
+            kaomojiContainer.className = 'kaomoji-container';
+
+            menuTitle.innerText = key;
+
+            for (const kaomoji of kaomojiList) {
+                const kaomojiElement: HTMLDivElement = document.createElement('div');
+                kaomojiElement.className = kaomojiClassName;
+                kaomojiElement.innerText = kaomoji;
+                if (key !== "help") {
+                    kaomojiElement.addEventListener('click', () => {
+                        SendChat(kaomojiElement.innerHTML)
+                    });
+                }
+                kaomojiContainer.appendChild(kaomojiElement);
+            }
+
+            return menu;
+        } else return undefined;
+    }
 }

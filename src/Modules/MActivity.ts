@@ -14,7 +14,7 @@ const targetPlaceholder = "TargetCharacter";
 export class ActivityModule extends BaseModule {
 
 
-    public init(): void {
+    public Init(): void {
         this.moduleName = "ActivityModule";
         this.priority = 50;
     }
