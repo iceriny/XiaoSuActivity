@@ -1,4 +1,5 @@
 .kaomoji-menu {
+    font-size: small;
     display: flex;
     flex-direction: column;
     justify-content: center;
