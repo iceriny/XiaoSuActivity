@@ -1,7 +1,7 @@
 import { conDebug, hookFunction, segmentForCH, MSGType, copyAndDownloadHtmlElement, timeRange, SendActivity, SendChat } from "utils";
 import { BaseModule } from "Modules/BaseModule";
 
-const buildKaomojiMenuCSShref = "https://iceriny.github.io/XiaoSuActivity/main/kaomoji.css";
+const buildKaomojiMenuCSShref = "https://iceriny.github.io/XiaoSuActivity/main/kaomojiMenu.css";
 export class ChatroomModule extends BaseModule {
 
     public Load(): void {
