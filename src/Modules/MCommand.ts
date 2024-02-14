@@ -88,6 +88,16 @@ export class CommandsModule extends BaseModule {
             Action: (args, msg, parsed) => {
                 ChatRoomSendLocal(`当角色抵抗高潮时被挠痒，则重新开始抵抗并且增加一层难度\n当高潮或抵抗高潮时禁用输入框.`)
             }
+        },
+        kaomoji: {
+            Tag: "kaomoji",
+            Description: "显示 快速颜文字 的使用说明.",
+            Action: (args, msg, parsed) => {
+                const stressStyle = "style='word-wrap: break-word;list-style: square;color: #FFCEE9;background-color: #AB6B8E;border-radius: 3px;padding: .2em .6em;margin: .2em .6em;'"
+                const weakStyle = "style='word-wrap: break-word;list-style: square;color: #B0809B;background-color: #AB6B8E;border-radius: 3px;padding: .2em .6em;margin: .2em .6em;'"
+                ChatRoomSendLocal(`输入<span ${stressStyle}>|</span><span ${weakStyle}>参数</span>显示颜文字面板，点击面板上的表情直接将其发送，面板将显示10秒钟后自动消失。\n 当前的参数有:\n <span ${stressStyle}>help</span>显示所有的参数作用。\n <span ${stressStyle}>all</span>显示全部表情包。\n <span ${stressStyle}>hp</span>显示开心的颜文字包。\n <span ${stressStyle}>sd</span>显示伤心的颜文字包。\n <span ${stressStyle}>sy</span>显示害羞的颜文字包。\n <span ${stressStyle}>ar</span>显示生气的颜文字包。\n <span ${stressStyle}>sp</span>显示惊讶的颜文字包。\n <span ${stressStyle}>cf</span>显示疑惑的颜文字包。\n <span ${stressStyle}>nt</span>显示顽皮搞怪的颜文字包。
+                `)
+            }
         }
     }
 

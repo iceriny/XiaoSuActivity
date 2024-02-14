@@ -61,7 +61,13 @@ export let CHANGELOG: ChangeLogObj[] = [
     {
         version: "0.1.3",
         description: "添加修改边缘逻辑以及高潮效果.添加打断抵抗高潮的瘙痒动作.",
-        type: ChangeType.dev,
+        type: ChangeType.main,
         changes: ["当角色抵抗高潮时被挠痒，则重新开始抵抗并且增加一层难度","当高潮或抵抗高潮时禁用输入框.", " ` 命令修改，现在可以在 ` 后或者 数字后跟一个字母 m ，这将在结巴位置添加呻吟效果."]
+    },
+    {
+        version: "0.1.4",
+        description: "添加颜文字快速发送功能!",
+        type: ChangeType.dev,
+        changes: ["添加快速发送颜文字的功能，以下为简单介绍，详细介绍请输入:/xsa kaomoji 查看。\n使用=> |+[参数]  打开颜文字选择面板，| 为回车上面的按键，需要用 Shift+\\ 键打出 请输入 |help 查看全部参数", "调整忍耐高潮时每1.5秒有30%概率发送忍耐反应", "高潮后的高潮抵抗难度只降低一半而非原来的降低为0."]
     }
 ]

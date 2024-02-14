@@ -41,6 +41,8 @@ export class ChatroomModule extends BaseModule {
                 const kaomojiMatch = msg.match(/^\|(.*)/);
                 if (kaomojiMatch) {
                     ChatroomModule.kaomojiHandler(kaomojiMatch[1]);
+                    const inputChatElement = document.getElementById('InputChat');
+                    inputChatElement!.innerHTML = "";
                     return;
                 }
 
@@ -165,21 +167,23 @@ export class ChatroomModule extends BaseModule {
             textAreaChatLog?.appendChild(kaomojiMenu);
             setTimeout(() => {
                 kaomojiMenu.remove();
-            }, 5000);
+            }, 10000);
         }
     }
     private static kaomojiSet: { [groupName: string]: string[] } = {
-        happy: ["(•̀ᴗ• )"],
-        sad: [],
-        shy: [],
-        angry: [],
-        surprised: [],
-        confused: [],
-        excited: [],
-        naughty: []
+        help: ["all ==> 全部表情", "hp ==> 开心", "sd ==> 伤心", "sy ==> 害羞", "ar ==> 生气", "ap ==> 惊讶", "cf ==> 困惑", "nt ==> 搞怪顽皮"],
+        hp: ["(￣w￣)ノ", "(≧∇≦)ﾉ", "o(^▽^)o", "(￣︶￣)↗", "o(*￣▽￣*)o", "(p≧w≦q)", "ㄟ(≧◇≦)ㄏ", "(/≧▽≦)/", "(　ﾟ∀ﾟ) ﾉ♡",
+            "o(*￣︶￣*)o", "(๑¯∀¯๑)", "(≧∀≦)ゞ", "φ(≧ω≦*)♪", "╰(*°▽°*)╯", "(*^▽^*)", "(๑•̀ㅂ•́)و✧", "(o゜▽゜)o☆[BINGO!]", "(^▽^ )", "<(*￣▽￣*)/", "┌|*´∀｀|┘", "♪(´∇`*)"],
+        sd: ["テ_デ", "□_□", "┭┮﹏┭┮", "╥﹏╥...", "o(TヘTo)", "〒▽〒", "ε(┬┬﹏┬┬)3", "(;´༎ຶД༎ຶ`)", "(ノへ`、)", "（-_-。）", "(ノへ￣、)"],
+        sy: ["|ω・）", "|･ω･｀)", "◕ฺ‿◕ฺ✿ฺ)", "つ﹏⊂", "(* /ω＼*)", "o(*////▽////*)q", "(*/ω＼*)", "(′▽`〃)", "(✿◡‿◡)", "(/▽＼)", "(๑´ㅂ`๑)", "(◡ᴗ◡✿)"],
+        ar: ["(σ｀д′)σ", "＼(゜ロ＼)(／ロ゜)／", "<(－︿－)>", "(ー`´ー)", "（｀へ´）", "(-__-)=@))> o<)", "(///￣皿￣)○～", "┻━┻︵╰(‵□′)╯︵┻━┻", "→)╥﹏╥)", "抽!!(￣ε(#￣)☆╰╮(￣▽￣///)", "(￣ε(#￣)☆╰╮o(￣皿￣///)",
+            "(* ￣︿￣)", "（＃￣～￣＃）", "(⊙x⊙;)", "o(*≧▽≦)ツ┏━┓", "(ノω<。)ノ))☆.。", "(〃＞目＜)", "( σ'ω')σ", "o(′益`)o", "(〃＞目＜)", "o(≧口≦)o", "Ｏ(≧口≦)Ｏ", "...(*￣０￣)ノ[等等我…]", "（≧0≦）"],
+        sp: ["’(°ー°〃)", "(ーー゛)", "(○´･д･)ﾉ", "wow~ ⊙o⊙", "~(￣0￣)/", "Σ(｀д′*ノ)ノ", "Σ(っ °Д °;)っ", "(⊙ˍ⊙)", "w(ﾟДﾟ)w", "ｍ(o・ω・o)ｍ", "⊙▽⊙"],
+        cf: ["( -'`-)", "(=′ー`)", "( -'`-; )", "(・-・*)", "( ｀д′)", "(￣m￣）", "( ╯▽╰)"],
+        nt: ["(ˉ▽￣～) 切~~", "(￣w￣)ノ", "( ￣ー￣)", "(‾◡◝)", "(￣_,￣ )", "( ﹁ ﹁ ) ~→", "<(￣ ﹌ ￣)@m"]
     }
     private static buildKaomojiMenu(key: string): HTMLDivElement | undefined {
-        const kaomojiList: string[] = this.kaomojiSet[key];
+        const kaomojiList: string[] = key == "all" ? Object.values(this.kaomojiSet).flatMap((v) => v) : this.kaomojiSet[key]
         if (kaomojiList.length > 0) {
             const menu: HTMLDivElement = document.createElement('div');
             const menuTitle: HTMLDivElement = document.createElement('div');
@@ -193,15 +197,17 @@ export class ChatroomModule extends BaseModule {
             menu.className = 'kaomoji-menu';
             kaomojiContainer.className = 'kaomoji-container';
 
-
+            menuTitle.innerText = key;
 
             for (const kaomoji of kaomojiList) {
                 const kaomojiElement: HTMLDivElement = document.createElement('div');
                 kaomojiElement.className = kaomojiClassName;
                 kaomojiElement.innerText = kaomoji;
-                kaomojiElement.addEventListener('click', () => {
-                    SendChat(kaomojiElement.innerHTML)
-                });
+                if (key !== "help") {
+                    kaomojiElement.addEventListener('click', () => {
+                        SendChat(kaomojiElement.innerHTML)
+                    });
+                }
                 kaomojiContainer.appendChild(kaomojiElement);
             }
 
