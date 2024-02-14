@@ -84,7 +84,7 @@ export class CommandsModule extends BaseModule {
         },
         orgasm: {
             Tag: "orgasm",
-            Description: "显示 关于催眠机制的修改内容帮助.",
+            Description: "显示 关于高潮机制的修改内容帮助.",
             Action: (args, msg, parsed) => {
                 ChatRoomSendLocal(`当角色抵抗高潮时被挠痒，则重新开始抵抗并且增加一层难度\n当高潮或抵抗高潮时禁用输入框.`)
             }
