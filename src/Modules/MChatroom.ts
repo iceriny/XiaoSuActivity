@@ -1,7 +1,7 @@
 import { conDebug, hookFunction, segmentForCH, MSGType, copyAndDownloadHtmlElement, timeRange, SendActivity, SendChat } from "utils";
 import { BaseModule } from "Modules/BaseModule";
 
-const buildKaomojiMenuCSShref = "https://iceriny.github.io/XiaoSuActivity/main/kaomojiMenu.css";
+const buildKaomojiMenuCSShref = DEBUG ? "https://iceriny.github.io/XiaoSuActivity/dev/kaomojiMenu.css" : "https://iceriny.github.io/XiaoSuActivity/main/kaomojiMenu.css";
 export class ChatroomModule extends BaseModule {
 
     public Load(): void {
@@ -40,9 +40,15 @@ export class ChatroomModule extends BaseModule {
                 // 匹配[ | + 空格 ]的颜文字命令
                 const kaomojiMatch = msg.match(/^\|(.*)/);
                 if (kaomojiMatch) {
-                    ChatroomModule.kaomojiHandler(kaomojiMatch[1]);
-                    const inputChatElement = document.getElementById('InputChat');
-                    inputChatElement!.innerHTML = "";
+                    if (Object.keys(ChatroomModule.kaomojiSet).includes(kaomojiMatch[1]) || kaomojiMatch[1] == "all") {
+                        ChatroomModule.kaomojiHandler(kaomojiMatch[1]);
+                        const inputElement: HTMLInputElement = document.getElementById('InputChat') as HTMLInputElement;
+                        inputElement.value = "";
+                    } else {
+                        ChatRoomSendLocal("该颜文字表情包不存在，请重新输入或输入 |help 查看参数", 5000)
+                        const inputElement: HTMLInputElement = document.getElementById('InputChat') as HTMLInputElement;
+                        inputElement.value = "|";
+                    }
                     return;
                 }
 

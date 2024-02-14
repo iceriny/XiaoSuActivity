@@ -1,10 +1,10 @@
 .kaomoji-menu {
+    font-size: small;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     background-color: rgba(200, 175, 189, 0.7);
-    width: 50vw;
     border-radius: 0.5em;
     margin: 1.5em;
     padding: 1em;
@@ -24,5 +24,4 @@
     border-color: rgba(0, 0, 0, 0.3);
     border-radius: 5px;
     background-color: rgba(138, 138, 138, 0.02);
-    transition: font-size 0.3s;
 }
