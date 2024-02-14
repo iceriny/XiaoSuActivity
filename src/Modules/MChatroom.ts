@@ -1,6 +1,7 @@
-import { conDebug, hookFunction, segmentForCH, MSGType, copyAndDownloadHtmlElement, timeRange, SendActivity } from "utils";
+import { conDebug, hookFunction, segmentForCH, MSGType, copyAndDownloadHtmlElement, timeRange, SendActivity, SendChat } from "utils";
 import { BaseModule } from "Modules/BaseModule";
 
+const buildKaomojiMenuCSShref = "https://iceriny.github.io/XiaoSuActivity/main/kaomoji.css";
 export class ChatroomModule extends BaseModule {
 
     public Load(): void {
@@ -11,6 +12,14 @@ export class ChatroomModule extends BaseModule {
     public Init(): void {
         this.moduleName = "ChatroomModule";
         this.priority = 30;
+
+        const linkElement = document.createElement("link");
+        linkElement.rel = "stylesheet";
+        linkElement.type = "text/css";
+        linkElement.href = buildKaomojiMenuCSShref;
+
+        // 将 link 元素插入到 head 标签中
+        document.head.appendChild(linkElement);
     }
 
     hookListHandler(): void {
@@ -29,11 +38,11 @@ export class ChatroomModule extends BaseModule {
                 }
 
                 // 匹配[ | + 空格 ]的颜文字命令
-                // const kaomojiMatch = msg.match(/^\|/);
-                // if (kaomojiMatch){
-
-                //     return;
-                // }
+                const kaomojiMatch = msg.match(/^\|(.*)/);
+                if (kaomojiMatch) {
+                    ChatroomModule.kaomojiHandler(kaomojiMatch[1]);
+                    return;
+                }
 
                 args[0] = msg;
                 return next(args);
@@ -149,9 +158,48 @@ export class ChatroomModule extends BaseModule {
     }
 
 
-    // private kaomojiHandler(message: string): string {
-    //     switch (message) {
-    //         case "happy":
-    //     }
-    // }
+    private static kaomojiHandler(message: string): void {
+        const kaomojiMenuOuterHTML = this.buildKaomojiMenu(message)?.outerHTML;
+        if (kaomojiMenuOuterHTML) ChatRoomSendLocal(kaomojiMenuOuterHTML, 10000)
+    }
+    private static kaomojiSet: { [groupName: string]: string[] } = {
+        happy: ["(•̀ᴗ• )"],
+        sad: [],
+        shy: [],
+        angry: [],
+        surprised: [],
+        confused: [],
+        excited: [],
+        naughty: []
+    }
+    private static buildKaomojiMenu(key: string): HTMLDivElement | undefined {
+        const kaomojiList: string[] = this.kaomojiSet[key];
+        if (kaomojiList.length > 0) {
+            const menu: HTMLDivElement = document.createElement('div');
+            const menuTitle: HTMLDivElement = document.createElement('div');
+            const kaomojiContainer: HTMLDivElement = document.createElement('div');
+
+            const kaomojiClassName: string = 'kaomoji';
+
+            menu.appendChild(menuTitle);
+            menu.appendChild(kaomojiContainer);
+
+            menu.className = 'kaomoji-menu';
+            kaomojiContainer.className = 'kaomoji-container';
+
+
+
+            for (const kaomoji of kaomojiList) {
+                const kaomojiElement: HTMLDivElement = document.createElement('div');
+                kaomojiElement.className = kaomojiClassName;
+                kaomojiElement.innerText = kaomoji;
+                kaomojiElement.addEventListener('click', () => {
+                    SendChat(kaomojiElement.innerHTML)
+                });
+                kaomojiContainer.appendChild(kaomojiElement);
+            }
+
+            return menu;
+        } else return undefined;
+    }
 }

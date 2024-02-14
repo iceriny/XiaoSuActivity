@@ -24,7 +24,7 @@ export class ArousalModule extends BaseModule {
                     }
                 }
             },
-            {// 每1.5秒检查是否高潮或在抵抗  如果高潮则禁用inputChat 如果在抵抗则发送一次抵抗反应
+            {// 每1.5秒检查是否高潮或在抵抗  如果高潮则禁用inputChat 如果在抵抗则每1.5秒有30%概率发送一次抵抗反应
                 name: "OrgasmTimerLastCycleCall",
                 priority: 1,
                 preconditions: () => CurrentScreen == "ChatRoom" && Player.MemberNumber !== undefined,
@@ -35,7 +35,7 @@ export class ArousalModule extends BaseModule {
                     if (orgasmStage == 2 || orgasmStage == 1) {
                         this.setFormElementsForAbsentState(inputElement, true);
                         if (Player.ArousalSettings?.OrgasmStage == 1) {
-                            SendActivity(this.getEndureDesc, Player.MemberNumber!);
+                            if (Math.random() < 0.3) SendActivity(this.getEndureDesc, Player.MemberNumber!);
                         }
                     } else {
                         this.setFormElementsForAbsentState(inputElement, false);
