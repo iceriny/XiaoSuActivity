@@ -1,7 +1,7 @@
 import { conDebug, hookFunction, segmentForCH, MSGType, copyAndDownloadHtmlElement, timeRange, SendActivity, SendChat } from "utils";
 import { BaseModule } from "Modules/BaseModule";
 
-const buildKaomojiMenuCSShref = "https://iceriny.github.io/XiaoSuActivity/main/kaomojiMenu.css";
+const buildKaomojiMenuCSShref = DEBUG ? "https://iceriny.github.io/XiaoSuActivity/dev/kaomojiMenu.css" : "https://iceriny.github.io/XiaoSuActivity/main/kaomojiMenu.css";
 export class ChatroomModule extends BaseModule {
 
     public Load(): void {
@@ -41,8 +41,7 @@ export class ChatroomModule extends BaseModule {
                 const kaomojiMatch = msg.match(/^\|(.*)/);
                 if (kaomojiMatch) {
                     ChatroomModule.kaomojiHandler(kaomojiMatch[1]);
-                    const inputChatElement = document.getElementById('InputChat');
-                    inputChatElement!.innerHTML = "";
+                    document.getElementById('InputChat')!.innerHTML = "";
                     return;
                 }
 
