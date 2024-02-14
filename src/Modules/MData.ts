@@ -23,7 +23,7 @@ export class DataModule extends BaseModule{
 
         this.Loaded = true;
     }
-    public init(): void {
+    public Init(): void {
         this.moduleName = "DataModule";
         this.priority = 0;
 

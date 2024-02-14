@@ -1,17 +1,52 @@
 import { BaseModule } from "./BaseModule";
 import { conDebug, hookFunction, MSGType, patchFunction, GetModule, SendActivity } from "utils";
-// import { TimerProcessInjector } from "./MTimerProcessInjector";
+import { TimerProcessInjector } from "./MTimerProcessInjector";
 
 
 export class ArousalModule extends BaseModule {
-    public init(): void {
+    public Init(): void {
         this.moduleName = "ArousalModule";
         this.priority = 60;
+
+        TimerProcessInjector.setProcessInjectionSequence = [
+            {// 处理边缘计数计算 并且每45秒 增加一层 抵抗高潮难度  如果高潮则禁用inputChat
+                name: "EdgeTimerLastCycleCall",
+                priority: 0,
+                preconditions: window.EdgeCount !== undefined && Player.ArousalSettings?.Progress !== undefined,
+                timeInterval: 45000,
+                code: () => {
+                    if (Player.ArousalSettings!.Progress >= 93) {
+                        window.EdgeCount!++;
+                        ActivityOrgasmGameResistCount++;
+                    } else {
+                        if (window.EdgeCount! >= 1) window.EdgeCount!--;
+                        if (ActivityOrgasmGameResistCount >= 1) ActivityOrgasmGameResistCount--;
+                    }
+                }
+            },
+            {// 每1.5秒检查是否高潮或在抵抗  如果高潮则禁用inputChat 如果在抵抗则发送一次抵抗反应
+                name: "OrgasmTimerLastCycleCall",
+                priority: 1,
+                preconditions: CurrentScreen == "ChatRoom" && Player.MemberNumber !== undefined,
+                timeInterval: 1500,
+                code: () => {
+                    const inputElement: HTMLTextAreaElement | null = document.getElementById("InputChat") as HTMLTextAreaElement;
+                    const orgasmStage = Player.ArousalSettings?.OrgasmStage;
+                    if (orgasmStage == 2 || orgasmStage == 1) {
+                        this.setFormElementsForAbsentState(inputElement, true);
+                        if (Player.ArousalSettings?.OrgasmStage == 1) {
+                            SendActivity(this.getEndureDesc, Player.MemberNumber!);
+                        }
+                    } else {
+                        this.setFormElementsForAbsentState(inputElement, false);
+                    }
+                }
+            }
+        ];
     }
 
     public Load(): void {
         window.EdgeCount = 0;
-        this.hookListHandler();
         this.patchListHandler();
 
         this.Loaded = true;
@@ -34,52 +69,18 @@ export class ArousalModule extends BaseModule {
         return this.descriptionOfEnduranceActivities[Math.floor(Math.random() * this.descriptionOfEnduranceActivities.length)];
     }
 
-    hookListHandler(): void {
-        // 处理边缘计数计算 并且每45秒 增加一层 抵抗高潮难度  如果高潮则禁用inputChat
-        hookFunction("TimerProcess", this.priority, (args, next) => {
-            const currentTime = CommonTime();
-
-            if (this.EdgeTimerLastCycleCall == 0) {
-                this.EdgeTimerLastCycleCall = currentTime;// 初始化计时器
-            }
-            if (window.EdgeCount !== undefined && this.EdgeTimerLastCycleCall + 45000 <= currentTime && Player.ArousalSettings?.Progress !== undefined) {
-                if (Player.ArousalSettings.Progress >= 93) {
-                    window.EdgeCount++;
-                    ActivityOrgasmGameResistCount++;
-                } else {
-                    if (window.EdgeCount >= 1) window.EdgeCount--;
-                    if (ActivityOrgasmGameResistCount >= 1) ActivityOrgasmGameResistCount--;
-                }
-                this.EdgeTimerLastCycleCall = currentTime;
-            }
 
 
-            // ============ // 每1.5秒检查是否高潮或在抵抗  如果高潮则禁用inputChat 如果在抵抗则发送一次抵抗反应
-            if (this.OrgasmTimerLastCycleCall == 0) {
-                this.OrgasmTimerLastCycleCall = currentTime;
-            }
-            if (CurrentScreen == "ChatRoom" && Player.MemberNumber !== undefined && this.OrgasmTimerLastCycleCall + 1500 <= currentTime) {
-                const inputElement: HTMLTextAreaElement | null = document.getElementById("InputChat") as HTMLTextAreaElement;
-                const orgasmStage = Player.ArousalSettings?.OrgasmStage;
-                if (orgasmStage == 2 || orgasmStage == 1) {
-                    this.setFormElementsForAbsentState(inputElement, true);
-                    if (Player.ArousalSettings?.OrgasmStage == 1) {
-                        SendActivity(this.getEndureDesc, Player.MemberNumber);
-                    }
-                    this.OrgasmTimerLastCycleCall = currentTime;
-                } else {
-                    this.setFormElementsForAbsentState(inputElement, false);
-                }
-                this.OrgasmTimerLastCycleCall = currentTime;
-            }
-
-            return next(args);
-        });
-
-    }
-
+    /** 默认的输入框样式 */
     inputDefaultStyle: { backgroundColor: string, borderColor: string, borderRadius: string } | undefined = undefined;
 
+    /**
+     * 获取{@link HTMLTextAreaElement}的默认样式，根据{@param isAbsent}决定是否禁用或取消禁用
+}
+     * @param formElements 表单元素
+     * @param isAbsent 是否为失能状态
+     * @returns 无
+     */
     setFormElementsForAbsentState(formElements: HTMLTextAreaElement | null, isAbsent: boolean): void {
         if (!formElements) return;
         if (isAbsent) {

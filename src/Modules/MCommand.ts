@@ -105,7 +105,7 @@ export class CommandsModule extends BaseModule {
 
         this.Loaded = true;
     }
-    public init(): void {
+    public Init(): void {
         this.moduleName = "CommandsModule";
         this.priority = 20;
     }

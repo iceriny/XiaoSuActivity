@@ -8,7 +8,7 @@ export class ChatroomModule extends BaseModule {
 
         this.Loaded = true;
     }
-    public init(): void {
+    public Init(): void {
         this.moduleName = "ChatroomModule";
         this.priority = 30;
     }
