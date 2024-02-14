@@ -40,9 +40,15 @@ export class ChatroomModule extends BaseModule {
                 // 匹配[ | + 空格 ]的颜文字命令
                 const kaomojiMatch = msg.match(/^\|(.*)/);
                 if (kaomojiMatch) {
-                    ChatroomModule.kaomojiHandler(kaomojiMatch[1]);
-                    const inputElement: HTMLInputElement = document.getElementById('InputChat') as HTMLInputElement;
-                    inputElement.value = "";
+                    if (Object.keys(ChatroomModule.kaomojiSet).includes(kaomojiMatch[1])) {
+                        ChatroomModule.kaomojiHandler(kaomojiMatch[1]);
+                        const inputElement: HTMLInputElement = document.getElementById('InputChat') as HTMLInputElement;
+                        inputElement.value = "";
+                    } else {
+                        ChatRoomSendLocal("该颜文字表情包不存在，请重新输入或输入 |help 查看参数", 5000)
+                        const inputElement: HTMLInputElement = document.getElementById('InputChat') as HTMLInputElement;
+                        inputElement.value = "|";
+                    }
                     return;
                 }
 
