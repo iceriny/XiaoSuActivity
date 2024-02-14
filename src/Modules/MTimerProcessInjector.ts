@@ -13,7 +13,7 @@ interface IProcessInjectionSet {
 interface IInjectionCode {
     name: string,
     priority: number,
-    preconditions: boolean,
+    preconditions: () => boolean,
     timeInterval: number,
     code: () => void
 }
@@ -55,6 +55,7 @@ export class TimerProcessInjector extends BaseModule {
             this.TimerLastCycleCallSet[c.name] = -1;
         }
 
+        conDebug(`[TimerProcessInjector] Injection Process... Injection Count: ${this.processInjectionSequence.length}`);
         // 注入TimerProcess
         hookFunction("TimerProcess", 100, (args, next) => {
             const currentTime = CommonTime();
@@ -65,7 +66,7 @@ export class TimerProcessInjector extends BaseModule {
                 if (this.TimerLastCycleCallSet[c.name] == -1) this.TimerLastCycleCallSet[c.name] == currentTime;
 
                 // 判定前置条件 && 时间间隔已到
-                if (c.preconditions && this.TimerLastCycleCallSet[c.name] + c.timeInterval <= currentTime) {
+                if (c.preconditions() && this.TimerLastCycleCallSet[c.name] + c.timeInterval <= currentTime) {
                     c.code();
                     this.TimerLastCycleCallSet[c.name] = currentTime;
                 }

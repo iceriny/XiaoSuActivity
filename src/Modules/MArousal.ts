@@ -12,7 +12,7 @@ export class ArousalModule extends BaseModule {
             {// 处理边缘计数计算 并且每45秒 增加一层 抵抗高潮难度  如果高潮则禁用inputChat
                 name: "EdgeTimerLastCycleCall",
                 priority: 0,
-                preconditions: window.EdgeCount !== undefined && Player.ArousalSettings?.Progress !== undefined,
+                preconditions: () => window.EdgeCount !== undefined && Player.ArousalSettings?.Progress !== undefined,
                 timeInterval: 45000,
                 code: () => {
                     if (Player.ArousalSettings!.Progress >= 93) {
@@ -27,7 +27,7 @@ export class ArousalModule extends BaseModule {
             {// 每1.5秒检查是否高潮或在抵抗  如果高潮则禁用inputChat 如果在抵抗则发送一次抵抗反应
                 name: "OrgasmTimerLastCycleCall",
                 priority: 1,
-                preconditions: CurrentScreen == "ChatRoom" && Player.MemberNumber !== undefined,
+                preconditions: () => CurrentScreen == "ChatRoom" && Player.MemberNumber !== undefined,
                 timeInterval: 1500,
                 code: () => {
                     const inputElement: HTMLTextAreaElement | null = document.getElementById("InputChat") as HTMLTextAreaElement;
