@@ -79,6 +79,7 @@ export class ActivityModule extends BaseModule {
         hookFunction("DrawImageResize", 10, (args, next) => {
             const source = args[0];
 
+            if (typeof source !== "string") return next(args);
             // 使用 split 方法拆分字符串
             const parts = source.split('/');
             const fileName = parts[parts.length - 1];  // 获取文件名部分，即 "XSAct_XXX.png"
