@@ -210,10 +210,10 @@ export class ChatroomModule extends BaseModule {
         const kaomojiMenu = this.getKaomojiMenu(message);
         if (kaomojiMenu) {
             // const textAreaChatLog = document.getElementById('TextAreaChatLog')
-            kaomojiMenu.style.display = "block";
-            setTimeout(() => {
-                kaomojiMenu.style.display = "none";
-            }, 10000);
+            kaomojiMenu.style.display = "flex";
+            // setTimeout(() => {
+            //     kaomojiMenu.style.display = "none";
+            // }, 30000);
         }
     }
 
@@ -257,6 +257,7 @@ export class ChatroomModule extends BaseModule {
             button.style.left = this.InputElement.offsetLeft + "px";
         }
         this.KaomojiButton = button;
+        document.body.appendChild(button);
         return button;
     }
     /**
@@ -265,7 +266,7 @@ export class ChatroomModule extends BaseModule {
      * @returns 表情菜单的元素
      */
     private static getKaomojiMenu(key: string): HTMLDivElement | undefined {
-        const kaomojiList: string[] = key == "all" ? Object.values(this.kaomojiSet).shift()!.flatMap((v) => v) : this.kaomojiSet[key]
+        const kaomojiList: string[] = key == "all" ? Object.values(this.kaomojiSet)[1]!.flatMap((v) => v) : this.kaomojiSet[key]
         if (kaomojiList.length > 0) {
 
             // 获取表情菜单 如果不存在则创建
@@ -337,7 +338,7 @@ export class ChatroomModule extends BaseModule {
     private static buildKaomojiMenu() {
         // 创建表情菜单的div元素
         const menu: HTMLDivElement = document.createElement('div');
-        menu.style.display = 'block';//
+        menu.style.display = 'flex';//
 
         // 创建表情菜单标题的div元素
         const menuTitle: HTMLDivElement = document.createElement('div');
