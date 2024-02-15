@@ -46,6 +46,7 @@ export class ChatroomModule extends BaseModule {
 
         hookFunction("ChatRoomClearAllElements", this.priority, (args, next) => {
             ChatroomModule.removeKaomojiMenu();
+            ChatroomModule.InputElement = null;
             return next(args);
         });
 
@@ -266,7 +267,11 @@ export class ChatroomModule extends BaseModule {
         const button = document.createElement("button");
         button.className = "kaomoji-button";
         button.addEventListener("click", () => {
-            this.kaomojiHandler('all');
+            if (!this.KaomojiMenuObject.menu || this.KaomojiMenuObject.menu.style.display === "none"){
+                this.kaomojiHandler('all');
+            } else if (this.KaomojiMenuObject.menu.style.display !== "none"){
+                this.KaomojiMenuObject.menu.style.display = "none";
+            }
         });
         button.innerHTML = ":)";
 
@@ -284,42 +289,16 @@ export class ChatroomModule extends BaseModule {
      * @returns 表情菜单的元素
      */
     private static getKaomojiMenu(key: string): HTMLDivElement | undefined {
-        const kaomojiList: string[] = key == "all" ? Object.values(this.kaomojiSet)[1]!.flatMap((v) => v) : this.kaomojiSet[key]
-        if (kaomojiList.length > 0) {
+        // 获取表情菜单 如果不存在则创建
+        const { kaomojiContainer, menu }
+            : {kaomojiContainer: HTMLDivElement; menu: HTMLDivElement; }
+            = this.KaomojiMenuObject.menu
+                ? {kaomojiContainer: this.KaomojiMenuObject.container!, menu: this.KaomojiMenuObject.menu! }
+                : ChatroomModule.buildKaomojiMenu();
 
-            // 获取表情菜单 如果不存在则创建
-            const { menuTitle, kaomojiContainer, menu }
-                : { menuTitle: HTMLDivElement; kaomojiContainer: HTMLDivElement; menu: HTMLDivElement; }
-                = this.KaomojiMenuObject.menu
-                    ? { menuTitle: this.KaomojiMenuObject.title!, kaomojiContainer: this.KaomojiMenuObject.container!, menu: this.KaomojiMenuObject.menu! }
-                    : ChatroomModule.buildKaomojiMenu();
-
-            // 设置表情菜单内容
-            this.selectKaomojiTitle(kaomojiContainer, key);
-
-            // kaomojiContainer.innerHTML = '';
-            // menuTitle.innerText = key;
-            // const kaomojiClassName = 'kaomoji';
-
-            // for (const kaomoji of kaomojiList) {
-            //     const kaomojiElement: HTMLDivElement = document.createElement('div');
-            //     kaomojiElement.className = kaomojiClassName;
-            //     kaomojiElement.innerText = kaomoji;
-            //     if (key !== "help") {
-            //         kaomojiElement.addEventListener('click', (event) => {
-            //             this.kaomojiClick(event, kaomojiElement);
-            //         });
-            //         // 阻断该元素的右键点击和中间点击事件
-            //         kaomojiElement.addEventListener('contextmenu', (event) => event.preventDefault());
-            //         kaomojiElement.addEventListener('mousedown', (event) => {
-            //             if (event.button === 1) event.preventDefault();
-            //         })
-            //     }
-            //     kaomojiContainer.appendChild(kaomojiElement);
-            // }
-
-            return menu;
-        } else return undefined;
+        // 设置表情菜单内容
+        this.selectKaomojiTitle(kaomojiContainer, key);
+        return menu;
     }
 
     /**
@@ -445,11 +424,11 @@ export class ChatroomModule extends BaseModule {
 
         document.body.appendChild(menu);
         // 返回表情菜单标题、表情容器和表情菜单对象
-        return { menuTitle, kaomojiContainer, menu };
+        return {kaomojiContainer, menu };
     }
 
     private static selectKaomojiTitle(kaomojiContainer: HTMLDivElement, key: string): void {
-        const kaomojiList: string[] = key == "all" ? Object.values(this.kaomojiSet).shift()!.flatMap((v) => v) : this.kaomojiSet[key]
+        const kaomojiList: string[] = key == "all" ? this.getAllKaomoji() : this.kaomojiSet[key]
         // 设置表情菜单内容
         kaomojiContainer.innerHTML = '';
         const kaomojiClassName = 'kaomoji';
@@ -504,5 +483,16 @@ export class ChatroomModule extends BaseModule {
             this.KaomojiButton.style.display = '';
 
         }
+    }
+
+    private static getAllKaomoji():string[] {
+        const allKaomojiList: string[] = [];
+        for (const key in this.kaomojiSet){
+            if (key == 'help') break;
+            for (const kaomoji of this.kaomojiSet[key]) {
+                allKaomojiList.push(kaomoji);
+            }
+        }
+        return allKaomojiList;
     }
 }
