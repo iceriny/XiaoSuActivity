@@ -427,6 +427,11 @@ export class ChatroomModule extends BaseModule {
         return {kaomojiContainer, menu };
     }
 
+    /**
+     * 选择标题按钮时触发的方法
+     * @param kaomojiContainer 容纳表情的容器元素
+     * @param key 要显示表情的索引键
+     */
     private static selectKaomojiTitle(kaomojiContainer: HTMLDivElement, key: string): void {
         const kaomojiList: string[] = key == "all" ? this.getAllKaomoji() : this.kaomojiSet[key]
         // 设置表情菜单内容
@@ -451,6 +456,9 @@ export class ChatroomModule extends BaseModule {
         }
     }
 
+    /**
+     * 移除表情菜单
+     */
     private static removeKaomojiMenu() {
         if (this.KaomojiButton) {
             this.KaomojiButton.remove();
@@ -466,6 +474,9 @@ export class ChatroomModule extends BaseModule {
         }
     }
 
+    /**
+     * 隐藏表情菜单
+     */
     private static hideKaomojiMenu() {
         if (this.KaomojiMenuObject.menu) {
             this.KaomojiMenuObject.menu.style.display = "none";
@@ -475,6 +486,9 @@ export class ChatroomModule extends BaseModule {
         }
     }
 
+    /**
+     * 显示表情菜单
+     */
     private static showKaomojiMenu() {
         if (this.KaomojiMenuObject.menu) {
             this.KaomojiMenuObject.menu.style.display = 'flex';
@@ -485,10 +499,14 @@ export class ChatroomModule extends BaseModule {
         }
     }
 
+    /**
+     * 返回全部的表情
+     * @returns 全部的表情列表
+     */
     private static getAllKaomoji():string[] {
         const allKaomojiList: string[] = [];
         for (const key in this.kaomojiSet){
-            if (key == 'help') break;
+            if (key == 'help') continue;
             for (const kaomoji of this.kaomojiSet[key]) {
                 allKaomojiList.push(kaomoji);
             }
