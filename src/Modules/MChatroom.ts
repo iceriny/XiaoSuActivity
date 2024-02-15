@@ -268,6 +268,7 @@ export class ChatroomModule extends BaseModule {
         if (this.KaomojiButton) return this.KaomojiButton;
         const button = document.createElement("button");
         button.className = "kaomoji-button";
+        button.type = 'button';
         button.addEventListener("click", () => {
             if (!this.KaomojiMenuObject.menu || this.KaomojiMenuObject.menu.style.display === "none") {
                 this.kaomojiHandler('all');
