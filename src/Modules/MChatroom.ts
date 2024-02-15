@@ -44,6 +44,11 @@ export class ChatroomModule extends BaseModule {
             return result;
         });
 
+        hookFunction("ChatRoomResize", this.priority, (args, next) => {//
+            ChatroomModule.ResizeKaomojiButton();
+            return next(args);
+        });
+
         hookFunction("ChatRoomClearAllElements", this.priority, (args, next) => {
             ChatroomModule.removeKaomojiMenu();
             ChatroomModule.InputElement = null;
@@ -275,13 +280,17 @@ export class ChatroomModule extends BaseModule {
         });
         button.innerHTML = ":)";
 
-        if (this.InputElement) {
-            button.style.top = this.InputElement.offsetTop + this.InputElement.offsetHeight + 10 + "px";
-            button.style.left = this.InputElement.offsetLeft + "px";
-        }
+        this.ResizeKaomojiButton();
         this.KaomojiButton = button;
         document.body.appendChild(button);
         return button;
+    }
+
+    private static ResizeKaomojiButton(){
+        if (this.InputElement && this.KaomojiButton) {
+            this.KaomojiButton.style.top = this.InputElement.offsetTop + this.InputElement.offsetHeight + 10 + "px";
+            this.KaomojiButton.style.left = this.InputElement.offsetLeft + "px";
+        }
     }
     /**
      * 获取表情菜单
