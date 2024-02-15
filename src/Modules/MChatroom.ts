@@ -58,8 +58,7 @@ export class ChatroomModule extends BaseModule {
 
         hookFunction("ChatRoomShowElements", this.priority, (args, next) => {
             const result = next(args);
-            if(ChatroomModule.KaomojiMenuObject.menu?.style.display == 'none') return result;
-            else ChatroomModule.showKaomojiMenu();
+            ChatroomModule.showKaomojiMenu();
             return result;
         });
         hookFunction("ChatRoomHideElements", this.priority, (args, next) => {
@@ -227,6 +226,7 @@ export class ChatroomModule extends BaseModule {
         };
 
     static KaomojiButton: HTMLButtonElement | null = null;
+    static KaomojiShouldShow: boolean = false;
 
     /**
      * 处理颜文字表情系统
@@ -237,6 +237,7 @@ export class ChatroomModule extends BaseModule {
         if (kaomojiMenu) {
             // const textAreaChatLog = document.getElementById('TextAreaChatLog')
             kaomojiMenu.style.display = "flex";
+            this.KaomojiShouldShow = true;
             // setTimeout(() => {
             //     kaomojiMenu.style.display = "none";
             // }, 30000);
@@ -278,6 +279,7 @@ export class ChatroomModule extends BaseModule {
                 this.kaomojiHandler('all');
             } else if (this.KaomojiMenuObject.menu.style.display !== "none"){
                 this.KaomojiMenuObject.menu.style.display = "none";
+                this.KaomojiShouldShow = false;
             }
         });
         button.innerHTML = ":)";
@@ -386,6 +388,7 @@ export class ChatroomModule extends BaseModule {
         // 监听表情菜单标题关闭按钮的点击事件，点击时移除表情菜单
         menuTitleClose.addEventListener('click', () => {
             menu.style.display = 'none';
+            this.KaomojiShouldShow = false;
         });
 
         // 处理表情选择菜单
@@ -509,10 +512,10 @@ export class ChatroomModule extends BaseModule {
      * 显示表情菜单
      */
     private static showKaomojiMenu() {
-        if (this.KaomojiMenuObject.menu) {
+        if (this.KaomojiMenuObject.menu && this.KaomojiShouldShow == true) {
             this.KaomojiMenuObject.menu.style.display = 'flex';
         }
-        if (this.KaomojiButton) {
+        if (this.KaomojiButton && this.KaomojiShouldShow == true) {
             this.KaomojiButton.style.display = '';
 
         }
