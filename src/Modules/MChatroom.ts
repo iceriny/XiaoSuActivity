@@ -509,7 +509,7 @@ export class ChatroomModule extends BaseModule {
         if (this.KaomojiMenuObject.menu && this.KaomojiShouldShow == true) {
             this.KaomojiMenuObject.menu.style.display = 'flex';
         }
-        if (this.KaomojiButton && this.KaomojiShouldShow == true) {
+        if (this.KaomojiButton) {
             this.KaomojiButton.style.display = 'inline';
 
         }
