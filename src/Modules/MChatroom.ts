@@ -58,7 +58,8 @@ export class ChatroomModule extends BaseModule {
 
         hookFunction("ChatRoomShowElements", this.priority, (args, next) => {
             const result = next(args);
-            ChatroomModule.showKaomojiMenu();
+            if(ChatroomModule.KaomojiMenuObject.menu?.style.display == 'none') return result;
+            else ChatroomModule.showKaomojiMenu();
             return result;
         });
         hookFunction("ChatRoomHideElements", this.priority, (args, next) => {
@@ -235,7 +236,7 @@ export class ChatroomModule extends BaseModule {
         const kaomojiMenu = this.getKaomojiMenu(message);
         if (kaomojiMenu) {
             // const textAreaChatLog = document.getElementById('TextAreaChatLog')
-            kaomojiMenu.style.display = "none";
+            kaomojiMenu.style.display = "flex";
             // setTimeout(() => {
             //     kaomojiMenu.style.display = "none";
             // }, 30000);
