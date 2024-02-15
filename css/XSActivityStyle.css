@@ -1,17 +1,69 @@
+/* kaomoji-menu */
 .kaomoji-menu {
+    position: absolute;
+    right: 5%;
+    bottom: 15%;
+    width: 40%;
+    max-height: 40%;
     font-size: small;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: rgba(200, 175, 189, 0.7);
+    background-color: rgba(200, 175, 189, 0.95);
     border-radius: 0.5em;
     margin: 1.5em;
     padding: 1em;
+    box-shadow: 0 0 5em 0.5em rgba(0, 0, 0, 0.164);
+}
+
+.kaomoji-menu .kaomoji-title {
+    display: flex;
+    font-size: large;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 0.5em;
+    border-radius: 0.5em;
+    padding: 0.3em;
+    background-color: rgba(191, 154, 175, 0.95);
+    box-shadow: 0 0 0.5em 0.1em rgba(0, 0, 0, 0.208);
+}
+
+.kaomoji-menu .kaomoji-title-text {
+    display: inline;
+    width: calc(4em);
+    text-align: center;
+    margin-left: 1%;
+    cursor: pointer;
+    margin: 0;
+    padding: 0.3em;
+    border-radius: 0.3em;
+
+    transition: all 0.3s ease;
+}
+.kaomoji-menu .kaomoji-title-text:hover {
+    background-color: rgba(175, 128, 155, 0.95);
+}
+.kaomoji-menu .kaomoji-title-text-active {
+    background-color: rgba(175, 128, 137, 0.95);
+}
+
+
+.kaomoji-menu .kaomoji-title-close {
+    display: inline;
+    text-align: center;
+    margin-right: .5%;
+    width: 2em;
+    cursor: pointer;
+}
+
+.kaomoji-menu .kaomoji-title-close:hover {
+    color: rgba(0, 0, 0, 0.7);
 }
 
 .kaomoji-menu .kaomoji-container {
     display: flex;
+    overflow-y: auto;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
@@ -24,11 +76,53 @@
     border-color: rgba(0, 0, 0, 0.3);
     border-radius: 5px;
     background-color: rgba(138, 138, 138, 0.02);
-    transition: margin background-color 0.2s;
+    transition: all 0.3s ease;
 }
 
 .kaomoji-menu .kaomoji-container .kaomoji:hover {
-    margin: 1px;
+    margin: 9px;
     cursor: pointer;
     background-color: rgba(138, 138, 138, 0.35);
+}
+
+
+
+/* 滚动条 */
+.kaomoji-menu .kaomoji-container::-webkit-scrollbar {
+    width: 0.5vw;
+    height: 0.5vh;
+}
+
+/* 滚动条-轨道 */
+.kaomoji-menu .kaomoji-container::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.2);
+    border-radius: 8px;
+}
+
+.kaomoji-menu .kaomoji-container::-webkit-scrollbar-track:hover {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.4);
+}
+
+
+
+/* 滚动条-滑块 */
+.kaomoji-menu .kaomoji-container::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background: #e4e4e4;
+    -webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.25);
+}
+
+.kaomoji-menu .kaomoji-container::-webkit-scrollbar-thumb:hover {
+    background: #b3b3b3;
+}
+
+.kaomoji-button {
+    position: absolute;
+    width: 1em;
+    height: 1em;
+    font-size: small;
+    align-items: center;
+    background-color: rgba(200, 175, 189, 0.95);
+    border-radius: 1em;
+    padding: 1em;
 }

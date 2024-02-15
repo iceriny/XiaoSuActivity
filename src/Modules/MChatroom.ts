@@ -1,9 +1,10 @@
-import { conDebug, hookFunction, segmentForCH, MSGType, copyAndDownloadHtmlElement, timeRange, scrollToBottom, SendChat } from "utils";
+import { conDebug, hookFunction, segmentForCH, MSGType, copyAndDownloadHtmlElement, timeRange, SendEmote, SendChat } from "utils";
 import { BaseModule } from "Modules/BaseModule";
 
 const buildKaomojiMenuCSShref = DEBUG ? "https://iceriny.github.io/XiaoSuActivity/dev/XSActivityStyle.css" : "https://iceriny.github.io/XiaoSuActivity/main/XSActivityStyle.css";
 export class ChatroomModule extends BaseModule {
 
+    // VVVV==========初始化与加载函数==========VVVV //
     public Load(): void {
         this.hookListHandler();
 
@@ -22,10 +23,26 @@ export class ChatroomModule extends BaseModule {
         document.head.appendChild(linkElement);
     }
 
+
+    static InputElement: HTMLInputElement | null = null;
+
+    /**
+     * hook函数列表处理
+     */
     hookListHandler(): void {
-        // hookFunction("ChatRoomSync", 30, (args, next) => {
+        // hookFunction("ChatRoomSync", this.priority, (args, next) => {
         //     return next(args);
         // });
+
+        hookFunction("ChatRoomLoad", this.priority, (args, next) => {
+            const result = next(args);
+            if (!ChatroomModule.InputElement) {
+                ChatroomModule.InputElement = document.getElementById('InputChat') as HTMLInputElement;
+            }
+            ChatroomModule.buildKaomojiButton()
+
+            return result;
+        });
 
         hookFunction("CommandParse", 0,
             (args, next) => {
@@ -56,8 +73,11 @@ export class ChatroomModule extends BaseModule {
                 return next(args);
             });
     }
-
-
+    // VVVV==========聊天记录模块==========VVVV //
+    /**
+     * 导出聊天记录
+     * @param time_limit 时间范围
+     */
     ExportChat(time_limit: timeRange | null = null): void {
         const exportName: string | undefined = `${ChatRoomData?.Name}_${new Date().toLocaleString()}`;
 
@@ -66,6 +86,7 @@ export class ChatroomModule extends BaseModule {
         copyAndDownloadHtmlElement(mainElement, exportName, time_limit)
     }
 
+    // VVVV==========结巴模块==========VVVV //
     /**
      * 
      * @param content 将要处理的句子内容
@@ -90,6 +111,7 @@ export class ChatroomModule extends BaseModule {
         return this.stammerForList(stringArray, stammeringProbability, haveMoan);
     }
 
+    /** 呻吟词库 */
     moan: string[] = [
         " 嗯~❤..",
         " 昂~❤哈啊..",
@@ -165,18 +187,37 @@ export class ChatroomModule extends BaseModule {
         return result;
     }
 
+    // VVVV==========颜文字表情模块==========VVVV //
 
+    /** 表情菜单对象 */
+    static KaomojiMenuObject: {
+        menu: HTMLDivElement | null,
+        title: HTMLDivElement | null,
+        container: HTMLDivElement | null,
+    } = {
+            menu: null,
+            title: null,
+            container: null,
+        };
+
+    static KaomojiButton: HTMLButtonElement | null = null;
+
+    /**
+     * 处理颜文字表情系统
+     * @param message 传入的信息，一般是命令
+     */
     private static kaomojiHandler(message: string): void {
-        const kaomojiMenu = this.buildKaomojiMenu(message);
+        const kaomojiMenu = this.getKaomojiMenu(message);
         if (kaomojiMenu) {
-            const textAreaChatLog = document.getElementById('TextAreaChatLog')
-            textAreaChatLog?.appendChild(kaomojiMenu);
-            scrollToBottom(textAreaChatLog!);
+            // const textAreaChatLog = document.getElementById('TextAreaChatLog')
+            kaomojiMenu.style.display = "block";
             setTimeout(() => {
-                kaomojiMenu?.remove();
+                kaomojiMenu.style.display = "none";
             }, 10000);
         }
     }
+
+    /** 表情库 */
     private static kaomojiSet: { [groupName: string]: string[] } = {
         help: ["all ==> 全部表情", "hp ==> 开心", "sd ==> 伤心", "sy ==> 害羞", "ar ==> 生气", "ap ==> 惊讶", "cf ==> 困惑", "nt ==> 搞怪顽皮"],
         hp: ["(￣w￣)ノ", "(≧∇≦)ﾉ", "o(^▽^)o", "(￣︶￣)↗", "o(*￣▽￣*)o", "(p≧w≦q)", "ㄟ(≧◇≦)ㄏ", "(/≧▽≦)/", "(　ﾟ∀ﾟ) ﾉ♡",
@@ -201,42 +242,212 @@ export class ChatroomModule extends BaseModule {
     ヾ(❀╹◡╹)ﾉ~， (๑>؂<๑）1(◎｀・ω・´)人(´・ω・｀*)   =͟͟͞͞(꒪ᗜ꒪ ‧̣̥̇)  (˵¯͒〰¯͒˵)  ✧∇✧   (◉ω◉υ)⁼³₌₃   | ᐕ)⁾⁾
      */
 
+
+    private static buildKaomojiButton(): HTMLButtonElement {
+        if (this.KaomojiButton) return this.KaomojiButton;
+        const button = document.createElement("button");
+        button.className = "kaomoji-button";
+        button.addEventListener("click", () => {
+            this.kaomojiHandler('all');
+        });
+        button.innerHTML = ":)";
+
+        if (this.InputElement){
+            button.style.top = this.InputElement.offsetTop + this.InputElement.offsetHeight + 10 + "px";
+            button.style.left = this.InputElement.offsetLeft + "px";
+        }
+        this.KaomojiButton = button;
+        return button;
+    }
     /**
-     * 
-     * @param key 
-     * @returns 
+     * 获取表情菜单
+     * @param key 要获取表情菜单的索引
+     * @returns 表情菜单的元素
      */
-    private static buildKaomojiMenu(key: string): HTMLDivElement | undefined {
-        const kaomojiList: string[] = key == "all" ? Object.values(this.kaomojiSet).flatMap((v) => v) : this.kaomojiSet[key]
+    private static getKaomojiMenu(key: string): HTMLDivElement | undefined {
+        const kaomojiList: string[] = key == "all" ? Object.values(this.kaomojiSet).shift()!.flatMap((v) => v) : this.kaomojiSet[key]
         if (kaomojiList.length > 0) {
-            const menu: HTMLDivElement = document.createElement('div');
-            const menuTitle: HTMLDivElement = document.createElement('div');
-            const kaomojiContainer: HTMLDivElement = document.createElement('div');
 
-            const kaomojiClassName: string = 'kaomoji';
+            // 获取表情菜单 如果不存在则创建
+            const { menuTitle, kaomojiContainer, menu }
+                : { menuTitle: HTMLDivElement; kaomojiContainer: HTMLDivElement; menu: HTMLDivElement; }
+                = this.KaomojiMenuObject.menu
+                    ? { menuTitle: this.KaomojiMenuObject.title!, kaomojiContainer: this.KaomojiMenuObject.container!, menu: this.KaomojiMenuObject.menu! }
+                    : ChatroomModule.buildKaomojiMenu();         
 
-            menu.appendChild(menuTitle);
-            menu.appendChild(kaomojiContainer);
+            // 设置表情菜单内容
+            this.selectKaomojiTitle(kaomojiContainer, key);
 
-            menu.className = 'kaomoji-menu';
-            kaomojiContainer.className = 'kaomoji-container';
+            // kaomojiContainer.innerHTML = '';
+            // menuTitle.innerText = key;
+            // const kaomojiClassName = 'kaomoji';
 
-            menuTitle.innerText = key;
-
-            for (const kaomoji of kaomojiList) {
-                const kaomojiElement: HTMLDivElement = document.createElement('div');
-                kaomojiElement.className = kaomojiClassName;
-                kaomojiElement.innerText = kaomoji;
-                if (key !== "help") {
-                    kaomojiElement.addEventListener('click', () => {
-                        SendChat(kaomojiElement.innerHTML)
-                        kaomojiElement.remove();
-                    });
-                }
-                kaomojiContainer.appendChild(kaomojiElement);
-            }
+            // for (const kaomoji of kaomojiList) {
+            //     const kaomojiElement: HTMLDivElement = document.createElement('div');
+            //     kaomojiElement.className = kaomojiClassName;
+            //     kaomojiElement.innerText = kaomoji;
+            //     if (key !== "help") {
+            //         kaomojiElement.addEventListener('click', (event) => {
+            //             this.kaomojiClick(event, kaomojiElement);
+            //         });
+            //         // 阻断该元素的右键点击和中间点击事件
+            //         kaomojiElement.addEventListener('contextmenu', (event) => event.preventDefault());
+            //         kaomojiElement.addEventListener('mousedown', (event) => {
+            //             if (event.button === 1) event.preventDefault();
+            //         })
+            //     }
+            //     kaomojiContainer.appendChild(kaomojiElement);
+            // }
 
             return menu;
         } else return undefined;
+    }
+
+    /**
+     * 点击表情元素后的事件处理
+     */
+    private static kaomojiClick(event: MouseEvent, element: HTMLDivElement): void {
+        if (event.button === 0) { // 左键点击 将表情插入到输入框当前光标位置，如果不在焦点则插入到末尾
+
+            if (this.InputElement) {
+                // 获取光标位置
+                const cursorPosition = this.InputElement.selectionStart;
+                if (cursorPosition === null || cursorPosition == -1) {
+                    this.InputElement.value += element.innerHTML;
+                } else {
+                    // 插入字符串
+                    var value = this.InputElement.value;
+                    var newValue = value.substring(0, cursorPosition) + element.innerHTML + value.substring(cursorPosition);
+                    this.InputElement.value = newValue;
+                    // 将光标位置移到插入字符串后面
+                    var newCursorPosition = cursorPosition + element.innerHTML.length;
+                    this.InputElement.setSelectionRange(newCursorPosition, newCursorPosition);
+                }
+            }
+        } else if (event.button === 2) { // 右键点击直接使用*消息发送表情
+            SendEmote(element.innerHTML);
+        } else if (event.button === 1) { // 中键点击直接发送表情
+            SendChat(element.innerHTML);
+        }
+    }
+    /**
+     * 构建全新的无内容表情菜单
+     * @returns 全新的无内容表情菜单
+     */
+    private static buildKaomojiMenu() {
+        // 创建表情菜单的div元素
+        const menu: HTMLDivElement = document.createElement('div');
+
+        // 创建表情菜单标题的div元素
+        const menuTitle: HTMLDivElement = document.createElement('div');
+        // 创建表情菜单选择标题元素
+        const menuTitleTextSet: { [key: string]: HTMLDivElement } = {
+            全部: document.createElement('div'),
+            开心: document.createElement('div'),
+            难过: document.createElement('div'),
+            害羞: document.createElement('div'),
+            生气: document.createElement('div'),
+            惊讶: document.createElement('div'),
+            困惑: document.createElement('div'),
+            搞怪: document.createElement('div')
+        }
+
+
+        // 创建表情菜单标题关闭按钮的div元素
+        const menuTitleClose: HTMLDivElement = document.createElement('div');
+
+        // 创建表情容器的div元素
+        const kaomojiContainer: HTMLDivElement = document.createElement('div');
+
+        // 将表情菜单标题、表情容器和表情菜单添加到表情菜单div元素中
+        menu.appendChild(menuTitle);
+        menu.appendChild(kaomojiContainer);
+        menuTitle.appendChild(menuTitleClose);
+        menuTitleClose.innerHTML = "🔴";
+
+        // 设置表情菜单和表情菜单标题的类名
+        menu.className = 'kaomoji-menu';
+        menuTitle.className = 'kaomoji-title';
+        menuTitleClose.className = 'kaomoji-title-close';
+        kaomojiContainer.className = 'kaomoji-container';
+
+        // 监听表情菜单标题关闭按钮的点击事件，点击时移除表情菜单
+        menuTitleClose.addEventListener('click', () => {
+            menu?.remove();
+        });
+
+        // 处理表情选择菜单
+        for (const key in menuTitleTextSet) {
+            menuTitleTextSet[key].innerHTML = key;
+            menuTitleTextSet[key].className = 'kaomoji-title-text';
+            menuTitle.appendChild(menuTitleTextSet[key]);
+            menuTitleTextSet[key].addEventListener('click', () => {
+                menuTitleTextSet[key].classList.toggle('kaomoji-title-text-active');
+                for (const key2 in menuTitleTextSet) {
+                    if (key2 != key) {
+                        menuTitleTextSet[key2].classList.remove('kaomoji-title-text-active');
+                    }
+                }
+                let selectKey: string | null = null;
+                switch (key) {
+                    case '开心':
+                        selectKey = 'hp';
+                        break;
+                    case '难过':
+                        selectKey = 'sd';
+                        break;
+                    case '害羞':
+                        selectKey = 'sy';
+                        break;
+                    case '生气':
+                        selectKey = 'ar';
+                        break;
+                    case '惊讶':
+                        selectKey = 'sp';
+                        break;
+                    case '困惑':
+                        selectKey = 'cf';
+                        break;
+                    case '搞怪':
+                        selectKey = 'nt';
+                        break;
+                    default:
+                        selectKey = 'all';
+                        break;
+                }
+                this.selectKaomojiTitle(kaomojiContainer, selectKey)
+
+            })
+        }
+
+        // 将表情菜单标题、表情容器和表情菜单对象保存到静态属性中
+        this.KaomojiMenuObject = { title: menuTitle, container: kaomojiContainer, menu: menu };
+
+        // 返回表情菜单标题、表情容器和表情菜单对象
+        return { menuTitle, kaomojiContainer, menu };
+    }
+
+    private static selectKaomojiTitle(kaomojiContainer: HTMLDivElement, key: string): void {
+        const kaomojiList: string[] = key == "all" ? Object.values(this.kaomojiSet).shift()!.flatMap((v) => v) : this.kaomojiSet[key]
+        // 设置表情菜单内容
+        kaomojiContainer.innerHTML = '';
+        const kaomojiClassName = 'kaomoji';
+
+        for (const kaomoji of kaomojiList) {
+            const kaomojiElement: HTMLDivElement = document.createElement('div');
+            kaomojiElement.className = kaomojiClassName;
+            kaomojiElement.innerText = kaomoji;
+            if (key !== "help") {
+                kaomojiElement.addEventListener('click', (event) => {
+                    this.kaomojiClick(event, kaomojiElement);
+                });
+                // 阻断该元素的右键点击和中间点击事件
+                kaomojiElement.addEventListener('contextmenu', (event) => event.preventDefault());
+                kaomojiElement.addEventListener('mousedown', (event) => {
+                    if (event.button === 1) event.preventDefault();
+                })
+            }
+            kaomojiContainer.appendChild(kaomojiElement);
+        }
     }
 }
