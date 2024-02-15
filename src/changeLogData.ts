@@ -67,7 +67,13 @@ export let CHANGELOG: ChangeLogObj[] = [
     {
         version: "0.1.4",
         description: "添加颜文字快速发送功能!",
-        type: ChangeType.dev,
+        type: ChangeType.main,
         changes: ["添加快速发送颜文字的功能，以下为简单介绍，详细介绍请输入:/xsa kaomoji 查看。\n使用=> |+[参数]  打开颜文字选择面板，| 为回车上面的按键，需要用 Shift+\\ 键打出 请输入 |help 查看全部参数", "调整忍耐高潮时每1.5秒有30%概率发送忍耐反应", "高潮后的高潮抵抗难度只降低一半而非原来的降低为0.", "重构注入到动作循环的逻辑", "重构模组的初始化与加载逻辑"]
+    },
+    {
+        version: "0.1.5",
+        description: "颜文字发送功能大修!",
+        type: ChangeType.main,
+        changes: ["颜文字表情功能大修! 新版使用方法请输入/xsa kaomoji 查看!"]
     }
 ]
