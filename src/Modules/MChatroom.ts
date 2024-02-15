@@ -44,9 +44,10 @@ export class ChatroomModule extends BaseModule {
             return result;
         });
 
-        hookFunction("ChatRoomResize", this.priority, (args, next) => {//
+        hookFunction("ChatRoomResize", this.priority, (args, next) => {
+            const result = next(args);
             ChatroomModule.ResizeKaomojiButton();
-            return next(args);
+            return result;
         });
 
         hookFunction("ChatRoomClearAllElements", this.priority, (args, next) => {
