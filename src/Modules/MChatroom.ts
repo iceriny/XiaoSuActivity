@@ -234,14 +234,8 @@ export class ChatroomModule extends BaseModule {
      */
     private static kaomojiHandler(message: string): void {
         const kaomojiMenu = this.getKaomojiMenu(message);
-        if (kaomojiMenu) {
-            // const textAreaChatLog = document.getElementById('TextAreaChatLog')
-            kaomojiMenu.style.display = "flex";
-            this.KaomojiShouldShow = true;
-            // setTimeout(() => {
-            //     kaomojiMenu.style.display = "none";
-            // }, 30000);
-        }
+        kaomojiMenu!.style.display = "flex";
+        this.KaomojiShouldShow = true;
     }
 
     /** 表情库 */
@@ -275,9 +269,9 @@ export class ChatroomModule extends BaseModule {
         const button = document.createElement("button");
         button.className = "kaomoji-button";
         button.addEventListener("click", () => {
-            if (!this.KaomojiMenuObject.menu || this.KaomojiMenuObject.menu.style.display === "none"){
+            if (!this.KaomojiMenuObject.menu || this.KaomojiMenuObject.menu.style.display === "none") {
                 this.kaomojiHandler('all');
-            } else if (this.KaomojiMenuObject.menu.style.display !== "none"){
+            } else if (this.KaomojiMenuObject.menu.style.display !== "none") {
                 this.KaomojiMenuObject.menu.style.display = "none";
                 this.KaomojiShouldShow = false;
             }
@@ -290,7 +284,7 @@ export class ChatroomModule extends BaseModule {
         return button;
     }
 
-    private static ResizeKaomojiButton(){
+    private static ResizeKaomojiButton() {
         if (this.InputElement && this.KaomojiButton) {
             this.KaomojiButton.style.top = this.InputElement.offsetTop + this.InputElement.offsetHeight + 10 + "px";
             this.KaomojiButton.style.left = this.InputElement.offsetLeft + "px";
@@ -301,12 +295,12 @@ export class ChatroomModule extends BaseModule {
      * @param key 要获取表情菜单的索引
      * @returns 表情菜单的元素
      */
-    private static getKaomojiMenu(key: string): HTMLDivElement | undefined {
+    private static getKaomojiMenu(key: string): HTMLDivElement {
         // 获取表情菜单 如果不存在则创建
         const { kaomojiContainer, menu }
-            : {kaomojiContainer: HTMLDivElement; menu: HTMLDivElement; }
+            : { kaomojiContainer: HTMLDivElement; menu: HTMLDivElement; }
             = this.KaomojiMenuObject.menu
-                ? {kaomojiContainer: this.KaomojiMenuObject.container!, menu: this.KaomojiMenuObject.menu! }
+                ? { kaomojiContainer: this.KaomojiMenuObject.container!, menu: this.KaomojiMenuObject.menu! }
                 : ChatroomModule.buildKaomojiMenu();
 
         // 设置表情菜单内容
@@ -440,7 +434,7 @@ export class ChatroomModule extends BaseModule {
 
         document.body.appendChild(menu);
         // 返回表情菜单标题、表情容器和表情菜单对象
-        return {kaomojiContainer, menu };
+        return { kaomojiContainer, menu };
     }
 
     /**
@@ -516,7 +510,7 @@ export class ChatroomModule extends BaseModule {
             this.KaomojiMenuObject.menu.style.display = 'flex';
         }
         if (this.KaomojiButton && this.KaomojiShouldShow == true) {
-            this.KaomojiButton.style.display = '';
+            this.KaomojiButton.style.display = 'inline';
 
         }
     }
@@ -525,9 +519,9 @@ export class ChatroomModule extends BaseModule {
      * 返回全部的表情
      * @returns 全部的表情列表
      */
-    private static getAllKaomoji():string[] {
+    private static getAllKaomoji(): string[] {
         const allKaomojiList: string[] = [];
-        for (const key in this.kaomojiSet){
+        for (const key in this.kaomojiSet) {
             if (key == 'help') continue;
             for (const kaomoji of this.kaomojiSet[key]) {
                 allKaomojiList.push(kaomoji);
