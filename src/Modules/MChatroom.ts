@@ -44,6 +44,22 @@ export class ChatroomModule extends BaseModule {
             return result;
         });
 
+        hookFunction("ChatRoomClearAllElements", this.priority, (args, next) => {
+            ChatroomModule.removeKaomojiMenu();
+            return next(args);
+        });
+
+        hookFunction("ChatRoomShowElements", this.priority, (args, next) => {
+            const result = next(args);
+            ChatroomModule.showKaomojiMenu();
+            return result;
+        });
+        hookFunction("ChatRoomHideElements", this.priority, (args, next) => {
+            const result = next(args);
+            ChatroomModule.hideKaomojiMenu();
+            return result;
+        });
+
         hookFunction("CommandParse", 0,
             (args, next) => {
                 let msg: string = args[0];
@@ -73,6 +89,8 @@ export class ChatroomModule extends BaseModule {
                 return next(args);
             });
     }
+
+
     // VVVV==========聊天记录模块==========VVVV //
     /**
      * 导出聊天记录
@@ -252,7 +270,7 @@ export class ChatroomModule extends BaseModule {
         });
         button.innerHTML = ":)";
 
-        if (this.InputElement){
+        if (this.InputElement) {
             button.style.top = this.InputElement.offsetTop + this.InputElement.offsetHeight + 10 + "px";
             button.style.left = this.InputElement.offsetLeft + "px";
         }
@@ -274,7 +292,7 @@ export class ChatroomModule extends BaseModule {
                 : { menuTitle: HTMLDivElement; kaomojiContainer: HTMLDivElement; menu: HTMLDivElement; }
                 = this.KaomojiMenuObject.menu
                     ? { menuTitle: this.KaomojiMenuObject.title!, kaomojiContainer: this.KaomojiMenuObject.container!, menu: this.KaomojiMenuObject.menu! }
-                    : ChatroomModule.buildKaomojiMenu();         
+                    : ChatroomModule.buildKaomojiMenu();
 
             // 设置表情菜单内容
             this.selectKaomojiTitle(kaomojiContainer, key);
@@ -451,6 +469,40 @@ export class ChatroomModule extends BaseModule {
                 })
             }
             kaomojiContainer.appendChild(kaomojiElement);
+        }
+    }
+
+    private static removeKaomojiMenu() {
+        if (this.KaomojiButton) {
+            this.KaomojiButton.remove();
+            this.KaomojiButton = null;
+        }
+        if (this.KaomojiMenuObject.menu) {
+            this.KaomojiMenuObject.menu.remove();
+            this.KaomojiMenuObject = {
+                menu: null,
+                title: null,
+                container: null,
+            };
+        }
+    }
+
+    private static hideKaomojiMenu() {
+        if (this.KaomojiMenuObject.menu) {
+            this.KaomojiMenuObject.menu.style.display = "none";
+        }
+        if (this.KaomojiButton) {
+            this.KaomojiButton.style.display = "none";
+        }
+    }
+
+    private static showKaomojiMenu() {
+        if (this.KaomojiMenuObject.menu) {
+            this.KaomojiMenuObject.menu.style.display = 'flex';
+        }
+        if (this.KaomojiButton) {
+            this.KaomojiButton.style.display = '';
+
         }
     }
 }
