@@ -95,8 +95,10 @@ export class CommandsModule extends BaseModule {
             Action: (args, msg, parsed) => {
                 const stressStyle = "style='word-wrap: break-word;list-style: square;color: #FFCEE9;background-color: #AB6B8E;border-radius: 3px;padding: .2em .6em;margin: .2em .6em;'"
                 const weakStyle = "style='word-wrap: break-word;list-style: square;color: #B0809B;background-color: #AB6B8E;border-radius: 3px;padding: .2em .6em;margin: .2em .6em;'"
-                ChatRoomSendLocal(`输入<span ${stressStyle}>|</span>+<span ${weakStyle}>参数</span>显示颜文字面板。
-                左键点击表情: 将表情插入到输入栏的光标当前位置; 右键点击表情: 将表情以**星号消息的形式直接发出; 中键点击表情: 将表情以普通消息发出.
+                ChatRoomSendLocal(`输入<span ${stressStyle}>|</span>+<span ${weakStyle}>参数</span>，或点击聊天室输入栏下方的小按钮，显示颜文字面板。
+                左键点击表情: 将表情插入到输入栏的光标当前位置;
+                右键点击表情: 将表情以**星号消息的形式直接发出;
+                中键点击表情: 将表情以普通消息发出.
                 当前的参数有:
                 <span ${stressStyle}>help</span>显示所有的参数作用。
                 <span ${stressStyle}>all</span>显示全部表情包。

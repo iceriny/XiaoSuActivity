@@ -41,9 +41,11 @@
 
     transition: all 0.3s ease;
 }
+
 .kaomoji-menu .kaomoji-title-text:hover {
     background-color: rgba(175, 128, 155, 0.95);
 }
+
 .kaomoji-menu .kaomoji-title-text-active {
     background-color: rgba(175, 128, 137, 0.95);
 }
@@ -95,7 +97,7 @@
 
 /* 滚动条-轨道 */
 .kaomoji-menu .kaomoji-container::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.2);
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .2);
     border-radius: 8px;
 }
 
@@ -117,18 +119,23 @@
 }
 
 .kaomoji-button {
+    top: 0;
+    right: 0;
     position: absolute;
-    width: 1em;
-    height: 1em;
-    font-size: small;
+    cursor: pointer;
+    width: 2.5vh;
+    height: 2.5vh;
     align-items: center;
     background-color: rgba(200, 175, 189, 0.95);
-    border-radius: 1em;
-    padding: 1em;
+    border-style: none;
+    border-radius: 50%;
+    padding: 0.5vh;
 
     transition: all 0.3s ease;
 }
+
 .kaomoji-button:hover {
-    width: 2em;
-    height: 2em;
+    width: 4vh;
+    height: 4vh;
+    background-color: rgba(215, 133, 181, 0.95);
 }
