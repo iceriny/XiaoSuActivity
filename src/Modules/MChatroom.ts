@@ -235,7 +235,7 @@ export class ChatroomModule extends BaseModule {
         const kaomojiMenu = this.getKaomojiMenu(message);
         if (kaomojiMenu) {
             // const textAreaChatLog = document.getElementById('TextAreaChatLog')
-            kaomojiMenu.style.display = "flex";
+            kaomojiMenu.style.display = "none";
             // setTimeout(() => {
             //     kaomojiMenu.style.display = "none";
             // }, 30000);
