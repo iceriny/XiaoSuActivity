@@ -328,6 +328,8 @@ export class ChatroomModule extends BaseModule {
             SendChat(element.innerHTML);
         }
     }
+
+
     /**
      * 构建全新的无内容表情菜单
      * @returns 全新的无内容表情菜单
@@ -447,9 +449,15 @@ export class ChatroomModule extends BaseModule {
                     this.kaomojiClick(event, kaomojiElement);
                 });
                 // 阻断该元素的右键点击和中间点击事件
-                kaomojiElement.addEventListener('contextmenu', (event) => event.preventDefault());
+                kaomojiElement.addEventListener('contextmenu', (event) => {
+                    event.preventDefault();
+                    this.kaomojiClick(event, kaomojiElement);
+                })
                 kaomojiElement.addEventListener('mousedown', (event) => {
-                    if (event.button === 1) event.preventDefault();
+                    if (event.button === 1) {
+                        event.preventDefault();
+                        this.kaomojiClick(event, kaomojiElement);
+                    }
                 })
             }
             kaomojiContainer.appendChild(kaomojiElement);
