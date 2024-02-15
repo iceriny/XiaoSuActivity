@@ -54,7 +54,7 @@ export class ChatroomModule extends BaseModule {
                         this.stammerHandler(match[4], parseInt(match[1]), match[3] ? false : true, true);
                 }
 
-                // 匹配[ | + 空格 ]的颜文字命令
+                // 匹配[ | ]的颜文字命令
                 const kaomojiMatch = msg.match(/^\|(.*)/);
                 if (kaomojiMatch) {
                     if (Object.keys(ChatroomModule.kaomojiSet).includes(kaomojiMatch[1]) || kaomojiMatch[1] == "all") {
@@ -337,6 +337,7 @@ export class ChatroomModule extends BaseModule {
     private static buildKaomojiMenu() {
         // 创建表情菜单的div元素
         const menu: HTMLDivElement = document.createElement('div');
+        menu.style.display = 'block';//
 
         // 创建表情菜单标题的div元素
         const menuTitle: HTMLDivElement = document.createElement('div');
@@ -373,7 +374,7 @@ export class ChatroomModule extends BaseModule {
 
         // 监听表情菜单标题关闭按钮的点击事件，点击时移除表情菜单
         menuTitleClose.addEventListener('click', () => {
-            menu?.remove();
+            menu.style.display = 'none';
         });
 
         // 处理表情选择菜单
@@ -423,6 +424,7 @@ export class ChatroomModule extends BaseModule {
         // 将表情菜单标题、表情容器和表情菜单对象保存到静态属性中
         this.KaomojiMenuObject = { title: menuTitle, container: kaomojiContainer, menu: menu };
 
+        document.body.appendChild(menu);
         // 返回表情菜单标题、表情容器和表情菜单对象
         return { menuTitle, kaomojiContainer, menu };
     }
