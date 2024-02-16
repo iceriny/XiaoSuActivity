@@ -127,7 +127,7 @@ export class ActivityModule extends BaseModule {
                             }
                         });
                         ActivityOrgasmGameResistCount++;
-                        SendActivity(`{target}紧闭双眼尽力抵抗着高潮，但被{source}的瘙痒干扰，从嘴巴里泄露出一声压抑的呻吟，不止是否还能忍住.`, SourceCharacter, TargetCharacter )
+                        SendActivity(`{target}紧闭双眼尽力抵抗着高潮，但被{source}的瘙痒干扰，从嘴巴里泄露出一声压抑的呻吟，不知是否还能忍住.`, SourceCharacter, TargetCharacter )
                         ActivityOrgasmStop(Player, 100);
                         ActivityOrgasmPrepare(Player);
                     }

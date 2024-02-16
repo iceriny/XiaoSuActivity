@@ -44,40 +44,55 @@ export class ChatroomModule extends BaseModule {
             return result;
         });
 
-        hookFunction("ChatRoomResize", this.priority, (args, next) => {
+
+        // 调整按钮位置
+        hookFunction("ElementPosition", this.priority, (args, next) => {
             const result = next(args);
-            ChatroomModule.ResizeKaomojiButton();
+            if (args[0] === "InputChat") {
+                ChatroomModule.ResizeKaomojiButton();
+            }
             return result;
         });
-
+        // 生成InputChat元素时将InputChat元素保存起来
+        hookFunction("ElementCreateTextArea", this.priority, (args, next) => {
+            const result = next(args);
+            if (args[0] === "InputChat") {
+                ChatroomModule.InputElement = document.getElementById('InputChat') as HTMLInputElement;
+            }
+            return result;
+        });
+        // 当聊天室清理全部元素时 删除表情系统元素
         hookFunction("ChatRoomClearAllElements", this.priority, (args, next) => {
             ChatroomModule.removeKaomojiMenu();
             ChatroomModule.InputElement = null;
             return next(args);
         });
-
+        // 当聊天室显示元素时 显示表情系统菜单
         hookFunction("ChatRoomShowElements", this.priority, (args, next) => {
             const result = next(args);
             ChatroomModule.showKaomojiMenu();
             return result;
         });
+        // 当聊天室隐藏元素时 隐藏表情系统元素
         hookFunction("ChatRoomHideElements", this.priority, (args, next) => {
             const result = next(args);
             ChatroomModule.hideKaomojiMenu();
             return result;
         });
 
+        // 处理聊天室发送消息时 接受 " ` " 命令和 接受 " | " 命令
         hookFunction("CommandParse", 0,
             (args, next) => {
                 let msg: string = args[0];
-                // 匹配`开头的命令
+
+                // 匹配[ ` ]开头的命令 处理结巴系统
                 const match = msg.match(/^`([1-9])?(m)?( )? (.*)/);
                 if (match) {
                     msg = match[2] != "m" ? this.stammerHandler(match[4], parseInt(match[1]), match[3] ? false : true, false) :
                         this.stammerHandler(match[4], parseInt(match[1]), match[3] ? false : true, true);
                 }
 
-                // 匹配[ | ]的颜文字命令
+                // 匹配[ | ]的颜文字命令 处理表情系统
                 const kaomojiMatch = msg.match(/^\|(.*)/);
                 if (kaomojiMatch) {
                     if (Object.keys(ChatroomModule.kaomojiSet).includes(kaomojiMatch[1]) || kaomojiMatch[1] == "all") {
@@ -225,7 +240,9 @@ export class ChatroomModule extends BaseModule {
             container: null,
         };
 
+    /** 表情按钮 */
     static KaomojiButton: HTMLButtonElement | null = null;
+    /** 是否应该显示表情菜单 处理跟随聊天室UI隐藏表情菜单时，等需要再显示时，菜单是否跟随显示 */
     static KaomojiShouldShow: boolean = false;
 
     /**
@@ -264,6 +281,10 @@ export class ChatroomModule extends BaseModule {
      */
 
 
+    /**
+     * 构建表情按钮并返回按钮实例
+     * @returns 创建的表情按钮
+     */
     private static buildKaomojiButton(): HTMLButtonElement {
         if (this.KaomojiButton) return this.KaomojiButton;
         const button = document.createElement("button");
@@ -285,10 +306,13 @@ export class ChatroomModule extends BaseModule {
         return button;
     }
 
+    /**
+     * 调整按钮位置
+     */
     private static ResizeKaomojiButton() {
         if (this.InputElement && this.KaomojiButton) {
-            this.KaomojiButton.style.top = this.InputElement.offsetTop + this.InputElement.offsetHeight + 10 + "px";
-            this.KaomojiButton.style.left = this.InputElement.offsetLeft + "px";
+            this.KaomojiButton.style.bottom = this.InputElement.offsetTop + 5 + "px";
+            this.KaomojiButton.style.right = this.InputElement.offsetLeft - 5 + "px";
         }
     }
     /**
@@ -339,8 +363,8 @@ export class ChatroomModule extends BaseModule {
 
 
     /**
-     * 构建全新的无内容表情菜单
-     * @returns 全新的无内容表情菜单
+     * 构建表情菜单 并填充内容
+     * @returns 表情菜单的div元素包含菜单和菜单内表情容器元素
      */
     private static buildKaomojiMenu() {
         // 创建表情菜单的div元素
@@ -363,24 +387,28 @@ export class ChatroomModule extends BaseModule {
 
 
         // 创建表情菜单标题关闭按钮的div元素
-        const menuTitleClose: HTMLDivElement = document.createElement('div');
+        const menuTitleClose: HTMLButtonElement = document.createElement('button');
+        menuTitleClose.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+            viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" fill="red" />
+        </svg>`
 
         // 创建表情容器的div元素
         const kaomojiContainer: HTMLDivElement = document.createElement('div');
 
-        // 将表情菜单标题、表情容器和表情菜单添加到表情菜单div元素中
+        // 将表情菜单标题、表情容器添加到表情菜单div元素中  关闭按钮的添加在选择菜单添加之后
         menu.appendChild(menuTitle);
         menu.appendChild(kaomojiContainer);
-        menuTitle.appendChild(menuTitleClose);
-        menuTitleClose.innerHTML = "🔴";
+        
 
-        // 设置表情菜单和表情菜单标题的类名
+        // 设置除菜单按钮之外的其他元素的类名
         menu.className = 'kaomoji-menu';
         menuTitle.className = 'kaomoji-title';
         menuTitleClose.className = 'kaomoji-title-close';
         kaomojiContainer.className = 'kaomoji-container';
 
-        // 监听表情菜单标题关闭按钮的点击事件，点击时移除表情菜单
+        // 监听表情菜单标题关闭按钮的点击事件，点击时隐藏表情菜单
         menuTitleClose.addEventListener('click', () => {
             menu.style.display = 'none';
             this.KaomojiShouldShow = false;
@@ -388,47 +416,32 @@ export class ChatroomModule extends BaseModule {
 
         // 处理表情选择菜单
         for (const key in menuTitleTextSet) {
+            /** 获取菜单标题元素的索引key key为中文菜单的字符串在这里{@link menuTitleTextSet} */
+
+            // 赋值菜单选择按钮的内容
             menuTitleTextSet[key].innerHTML = key;
+            // 类名
             menuTitleTextSet[key].className = 'kaomoji-title-text';
+            // 添加到菜单标题元素中
             menuTitle.appendChild(menuTitleTextSet[key]);
+
+            // 为按钮添加点击事件
             menuTitleTextSet[key].addEventListener('click', () => {
+                // 处理选中按钮的格式变化
                 menuTitleTextSet[key].classList.toggle('kaomoji-title-text-active');
                 for (const key2 in menuTitleTextSet) {
                     if (key2 != key) {
                         menuTitleTextSet[key2].classList.remove('kaomoji-title-text-active');
                     }
                 }
-                let selectKey: string | null = null;
-                switch (key) {
-                    case '开心':
-                        selectKey = 'hp';
-                        break;
-                    case '难过':
-                        selectKey = 'sd';
-                        break;
-                    case '害羞':
-                        selectKey = 'sy';
-                        break;
-                    case '生气':
-                        selectKey = 'ar';
-                        break;
-                    case '惊讶':
-                        selectKey = 'sp';
-                        break;
-                    case '困惑':
-                        selectKey = 'cf';
-                        break;
-                    case '搞怪':
-                        selectKey = 'nt';
-                        break;
-                    default:
-                        selectKey = 'all';
-                        break;
-                }
+                /** 获取选择的key 这里的处理只是为了让中文的key变为表情库的key */
+                const selectKey = this.getSelectKey(key);
                 this.selectKaomojiTitle(kaomojiContainer, selectKey)
-
             })
         }
+
+        // 添加关闭按钮
+        menuTitle.appendChild(menuTitleClose);
 
         // 将表情菜单标题、表情容器和表情菜单对象保存到静态属性中
         this.KaomojiMenuObject = { title: menuTitle, container: kaomojiContainer, menu: menu };
@@ -439,12 +452,51 @@ export class ChatroomModule extends BaseModule {
     }
 
     /**
+     * 将中文key变为表情库的key
+     * @param key 将中文key变为表情库的key
+     * @returns 返回表情库key
+     */
+    private static getSelectKey(key: string): string {
+        /** 获取选择的key 这里的处理只是为了让中文的key变为表情库的key */
+        let selectKey: string | null = null;
+        switch (key) {
+            case '开心':
+                selectKey = 'hp';
+                break;
+            case '难过':
+                selectKey = 'sd';
+                break;
+            case '害羞':
+                selectKey = 'sy';
+                break;
+            case '生气':
+                selectKey = 'ar';
+                break;
+            case '惊讶':
+                selectKey = 'sp';
+                break;
+            case '困惑':
+                selectKey = 'cf';
+                break;
+            case '搞怪':
+                selectKey = 'nt';
+                break;
+            default:
+                selectKey = 'all';
+                break;
+        }
+        return selectKey;
+    }
+
+    /**
      * 选择标题按钮时触发的方法
      * @param kaomojiContainer 容纳表情的容器元素
      * @param key 要显示表情的索引键
      */
-    private static selectKaomojiTitle(kaomojiContainer: HTMLDivElement, key: string): void {
-        const kaomojiList: string[] = key == "all" ? this.getAllKaomoji() : this.kaomojiSet[key]
+    private static selectKaomojiTitle(kaomojiContainer: HTMLDivElement, selectKey: string): void {
+
+
+        const kaomojiList: string[] = selectKey == "all" ? this.getAllKaomoji() : this.kaomojiSet[selectKey]
         // 设置表情菜单内容
         kaomojiContainer.innerHTML = '';
         const kaomojiClassName = 'kaomoji';
@@ -453,7 +505,7 @@ export class ChatroomModule extends BaseModule {
             const kaomojiElement: HTMLDivElement = document.createElement('div');
             kaomojiElement.className = kaomojiClassName;
             kaomojiElement.innerText = kaomoji;
-            if (key !== "help") {
+            if (selectKey !== "help") {
                 kaomojiElement.addEventListener('click', (event) => {
                     this.kaomojiClick(event, kaomojiElement);
                 });

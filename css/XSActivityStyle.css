@@ -52,16 +52,22 @@
 
 
 .kaomoji-menu .kaomoji-title-close {
-    display: inline;
-    text-align: center;
-    margin-right: .5%;
-    width: 2em;
+    border: none;
+    padding: 0;
+    background: none;
     cursor: pointer;
 }
 
-.kaomoji-menu .kaomoji-title-close:hover {
-    color: rgba(0, 0, 0, 0.7);
+.kaomoji-menu .kaomoji-title-close svg circle {
+    display: block;
+    /* 确保SVG元素填充按钮的整个空间 */
+
+    transition: all 0.3s ease;
 }
+.kaomoji-menu .kaomoji-title-close svg circle:hover {
+    fill: rgba(100, 8, 25, 0.95);
+}
+
 
 .kaomoji-menu .kaomoji-container {
     display: flex;
@@ -132,7 +138,7 @@
     border-radius: 50%;
     padding: 0.5vh;
 
-    transition: all 0.3s ease;
+    transition: width 0.3s, height 0.3s, background-color 0.3s ease;
 }
 
 .kaomoji-button:hover {
