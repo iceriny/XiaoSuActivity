@@ -352,29 +352,30 @@ export class ChatroomModule extends BaseModule {
 
     /**
      * 点击表情元素后的事件处理
+     * &gt;>   &lt;<
      */
-    private static kaomojiClick(event: MouseEvent, element: HTMLDivElement): void {
+    private static kaomojiClick(event: MouseEvent, kaomojiElement: HTMLDivElement): void {
         if (event.button === 0) { // 左键点击 将表情插入到输入框当前光标位置，如果不在焦点则插入到末尾
 
             if (this.InputElement) {
                 // 获取光标位置
                 const cursorPosition = this.InputElement.selectionStart;
                 if (cursorPosition === null || cursorPosition == -1) {
-                    this.InputElement.value += element.innerHTML;
+                    this.InputElement.value += kaomojiElement.textContent;
                 } else {
                     // 插入字符串
                     var value = this.InputElement.value;
-                    var newValue = value.substring(0, cursorPosition) + element.innerHTML + value.substring(cursorPosition);
+                    var newValue = value.substring(0, cursorPosition) + kaomojiElement.textContent + value.substring(cursorPosition);
                     this.InputElement.value = newValue;
                     // 将光标位置移到插入字符串后面
-                    var newCursorPosition = cursorPosition + element.innerHTML.length;
+                    var newCursorPosition = cursorPosition + (kaomojiElement.textContent == null ? 0 : kaomojiElement.textContent.length);
                     this.InputElement.setSelectionRange(newCursorPosition, newCursorPosition);
                 }
             }
         } else if (event.button === 2) { // 右键点击直接使用*消息发送表情
-            SendEmote(element.innerHTML);
+            SendEmote(kaomojiElement.textContent);
         } else if (event.button === 1) { // 中键点击直接发送表情
-            SendChat(element.innerHTML);
+            SendChat(kaomojiElement.textContent);
         }
     }
 

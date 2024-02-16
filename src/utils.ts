@@ -29,10 +29,12 @@ export function patchFunction(functionName: string, patches: Record<string, stri
 	bcModSDK.patchFunction(functionName, patches);
 }
 
-export function SendEmote(msg: string) {
+export function SendEmote(msg: string | null) {
+	if (msg == null) return;
 	ServerSend("ChatRoomChat", { Content: msg, Type: "Emote" })
 }
-export function SendChat(msg: string) {
+export function SendChat(msg: string | null) {
+	if (msg == null) return;
 	ServerSend("ChatRoomChat", { Type: "Chat", Content: msg })
 }
 /**
