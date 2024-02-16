@@ -263,7 +263,7 @@ export class ChatroomModule extends BaseModule {
      */
     private static kaomojiHandler(message: string): void {
         const kaomojiMenu = this.getKaomojiMenu(message);
-        kaomojiMenu!.style.display = "flex";
+        kaomojiMenu!.style.display = "block";
         this.KaomojiShouldShow = true;
     }
 
@@ -387,7 +387,7 @@ export class ChatroomModule extends BaseModule {
         // 创建表情菜单的div元素
         const menu: HTMLDivElement = document.createElement('div');
         menu.id = 'kaomoji-menu';
-        menu.style.display = 'flex';//
+        menu.style.display = 'block';//
 
         // 创建表情菜单标题的div元素
         const menuTitle: HTMLDivElement = document.createElement('div');
