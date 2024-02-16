@@ -52,9 +52,7 @@ export class ArousalModule extends BaseModule {
         this.Loaded = true;
     }
 
-    EdgeTimerLastCycleCall: number = 0;
-    OrgasmTimerLastCycleCall: number = 0;
-
+    /** 对于忍耐高潮时的反应描述 */
     private descriptionOfEnduranceActivities = [
         `{source}脚趾一蜷一缩，难耐的交织.`,
         `{source}闭眼忍耐，鼻息中泄露出粉红的喘息.`,
@@ -65,6 +63,7 @@ export class ArousalModule extends BaseModule {
         `{source}浑身颤抖的抵抗高潮的逼近.`
     ];
 
+    /** 获取忍耐高潮时的反应描述 */
     get getEndureDesc(): string {
         return this.descriptionOfEnduranceActivities[Math.floor(Math.random() * this.descriptionOfEnduranceActivities.length)];
     }
