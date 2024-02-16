@@ -1,5 +1,6 @@
 /* kaomoji-menu */
 .kaomoji-menu {
+    display: flex;
     position: absolute;
     right: 5%;
     bottom: 15%;
@@ -7,6 +8,8 @@
     height: 40%;
     font-size: small;
     flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
     background-color: rgba(200, 175, 189, 0.95);
     border-radius: 0.5em;
     margin: 1.5em;
