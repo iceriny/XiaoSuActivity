@@ -432,7 +432,7 @@ export class ChatroomModule extends BaseModule {
                 // 处理选中按钮的格式变化
                 ChatroomModule.selectMenuTitleStyleHandle(key);
                 /** 获取选择的key 这里的处理只是为了让中文的key变为表情库的key */
-                const selectKey = this.getSelectKey(key);
+                const selectKey = this.getKaomojiSelectKey(key);
                 this.selectKaomojiTitle(kaomojiContainer, selectKey)
             })
         }
@@ -448,10 +448,14 @@ export class ChatroomModule extends BaseModule {
         return { kaomojiContainer, menu };
     }
 
-    private static selectMenuTitleStyleHandle(key: string) {
-        this.menuTitleTextSet[key].classList.toggle('kaomoji-title-text-active');
+    /**
+     * 
+     * @param selectKey 表情库的中文key
+     */
+    private static selectMenuTitleStyleHandle(selectKey: string) {
+        this.menuTitleTextSet[selectKey].classList.toggle('kaomoji-title-text-active');
         for (const key2 in this.menuTitleTextSet) {
-            if (key2 != key) {
+            if (key2 != selectKey) {
                 this.menuTitleTextSet[key2].classList.remove('kaomoji-title-text-active');
             }
         }
@@ -462,7 +466,7 @@ export class ChatroomModule extends BaseModule {
      * @param key 将中文key变为表情库的key
      * @returns 返回表情库key
      */
-    private static getSelectKey(key: string): string {
+    private static getKaomojiSelectKey(key: string): string {
         /** 获取选择的key 这里的处理只是为了让中文的key变为表情库的key */
         let selectKey: string | null = null;
         switch (key) {
@@ -494,25 +498,62 @@ export class ChatroomModule extends BaseModule {
         return selectKey;
     }
 
+        /**
+     * 将表情库的key变为中文菜单key
+     * @param selectKey 将中文key变为表情库的key
+     * @returns 返回表情库key
+     */
+        private static getKaomojiKey(selectKey: string): string {
+            /** 获取选择的key 这里的处理只是为了让中文的key变为表情库的key */
+            let key: string | null = null;
+            switch (selectKey) {
+                case 'hp':
+                    key = '开心';
+                    break;
+                case 'sd':
+                    key = '难过';
+                    break;
+                case 'sy':
+                    key = '害羞';
+                    break;
+                case 'ar':
+                    key = '生气';
+                    break;
+                case 'sp':
+                    key = '惊讶';
+                    break;
+                case 'cf':
+                    key = '困惑';
+                    break;
+                case 'nt':
+                    key = '搞怪';
+                    break;
+                default:
+                    key = '全部';
+                    break;
+            }
+            return key;
+        }
+
     /**
      * 选择标题按钮时触发的方法
      * @param kaomojiContainer 容纳表情的容器元素
-     * @param key 要显示表情的索引键
+     * @param key 要显示表情库索引键 英文
      */
-    private static selectKaomojiTitle(kaomojiContainer: HTMLDivElement, selectKey: string): void {
+    private static selectKaomojiTitle(kaomojiContainer: HTMLDivElement, key: string): void {
 
 
-        const kaomojiList: string[] = selectKey == "all" ? this.getAllKaomoji() : this.kaomojiSet[selectKey]
+        const kaomojiList: string[] = key == "all" ? this.getAllKaomoji() : this.kaomojiSet[key]
         // 设置表情菜单内容
         kaomojiContainer.innerHTML = '';
         const kaomojiClassName = 'kaomoji';
-        this.selectMenuTitleStyleHandle(selectKey);
+        this.selectMenuTitleStyleHandle(this.getKaomojiKey(key));
 
         for (const kaomoji of kaomojiList) {
             const kaomojiElement: HTMLDivElement = document.createElement('div');
             kaomojiElement.className = kaomojiClassName;
             kaomojiElement.innerText = kaomoji;
-            if (selectKey !== "help") {
+            if (key !== "help") {
                 kaomojiElement.addEventListener('click', (event) => {
                     this.kaomojiClick(event, kaomojiElement);
                 });
