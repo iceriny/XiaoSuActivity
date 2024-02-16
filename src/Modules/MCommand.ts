@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { BaseModule } from "./BaseModule";
-import { conDebug, MSGType, GetModule, timeRange, sendChangeLog } from "utils";
+import { conDebug, GetModule, timeRange, sendChangeLog } from "utils";
 import { ChatroomModule } from "./MChatroom";
 import { ActivityModule } from "./MActivity";
 
@@ -92,7 +93,7 @@ export class CommandsModule extends BaseModule {
         kaomoji: {
             Tag: "kaomoji",
             Description: "显示 快速颜文字 的使用说明.",
-            Action: (args, msg, parsed) => {
+            Action: () => {
                 const stressStyle = "style='word-wrap: break-word;list-style: square;color: #FFCEE9;background-color: #AB6B8E;border-radius: 3px;padding: .2em .6em;margin: .2em .6em;'"
                 const weakStyle = "style='word-wrap: break-word;list-style: square;color: #B0809B;background-color: #AB6B8E;border-radius: 3px;padding: .2em .6em;margin: .2em .6em;'"
                 ChatRoomSendLocal(`输入<span ${stressStyle}>|</span>+<span ${weakStyle}>参数</span>，或点击聊天室输入栏下方的小按钮，显示颜文字面板。

@@ -184,7 +184,7 @@ export class ChatroomModule extends BaseModule {
             // 随机决定是否添加结巴效果
             if (Math.random() < stammeringProbability) { // 假设添加结巴效果的概率为50%
                 result += this.addStammerEffect(currentWord);
-            };
+            }
 
             // 根据当前玩家的兴奋程度决定是否添加呻吟
             if (haveMoan && Player.ArousalSettings?.Progress && 100 * Math.random() <= Player.ArousalSettings?.Progress) {
@@ -340,7 +340,7 @@ export class ChatroomModule extends BaseModule {
     private static getKaomojiMenu(key: string): HTMLDivElement {
         // 获取表情菜单 如果不存在则创建
         const { kaomojiContainer, menu }
-            : { kaomojiContainer: HTMLDivElement; menu: HTMLDivElement; }
+        : { kaomojiContainer: HTMLDivElement; menu: HTMLDivElement; }
             = this.KaomojiMenuObject.menu
                 ? { kaomojiContainer: this.KaomojiMenuObject.container!, menu: this.KaomojiMenuObject.menu! }
                 : ChatroomModule.buildKaomojiMenu();
@@ -364,11 +364,11 @@ export class ChatroomModule extends BaseModule {
                     this.InputElement.value += kaomojiElement.textContent;
                 } else {
                     // 插入字符串
-                    var value = this.InputElement.value;
-                    var newValue = value.substring(0, cursorPosition) + kaomojiElement.textContent + value.substring(cursorPosition);
+                    const value = this.InputElement.value;
+                    const newValue = value.substring(0, cursorPosition) + kaomojiElement.textContent + value.substring(cursorPosition);
                     this.InputElement.value = newValue;
                     // 将光标位置移到插入字符串后面
-                    var newCursorPosition = cursorPosition + (kaomojiElement.textContent == null ? 0 : kaomojiElement.textContent.length);
+                    const newCursorPosition = cursorPosition + (kaomojiElement.textContent == null ? 0 : kaomojiElement.textContent.length);
                     this.InputElement.setSelectionRange(newCursorPosition, newCursorPosition);
                 }
             }
@@ -507,42 +507,42 @@ export class ChatroomModule extends BaseModule {
         return selectKey;
     }
 
-        /**
+    /**
      * 将表情库的key变为中文菜单key
      * @param selectKey 将中文key变为表情库的key
      * @returns 返回表情库key
      */
-        private static getKaomojiKey(selectKey: string): string {
-            /** 获取选择的key 这里的处理只是为了让中文的key变为表情库的key */
-            let key: string | null = null;
-            switch (selectKey) {
-                case 'hp':
-                    key = '开心';
-                    break;
-                case 'sd':
-                    key = '难过';
-                    break;
-                case 'sy':
-                    key = '害羞';
-                    break;
-                case 'ar':
-                    key = '生气';
-                    break;
-                case 'sp':
-                    key = '惊讶';
-                    break;
-                case 'cf':
-                    key = '困惑';
-                    break;
-                case 'nt':
-                    key = '搞怪';
-                    break;
-                default:
-                    key = '全部';
-                    break;
-            }
-            return key;
+    private static getKaomojiKey(selectKey: string): string {
+        /** 获取选择的key 这里的处理只是为了让中文的key变为表情库的key */
+        let key: string | null = null;
+        switch (selectKey) {
+            case 'hp':
+                key = '开心';
+                break;
+            case 'sd':
+                key = '难过';
+                break;
+            case 'sy':
+                key = '害羞';
+                break;
+            case 'ar':
+                key = '生气';
+                break;
+            case 'sp':
+                key = '惊讶';
+                break;
+            case 'cf':
+                key = '困惑';
+                break;
+            case 'nt':
+                key = '搞怪';
+                break;
+            default:
+                key = '全部';
+                break;
         }
+        return key;
+    }
 
     /**
      * 选择标题按钮时触发的方法

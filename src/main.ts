@@ -1,4 +1,4 @@
-import { conDebug, hookFunction, SendChat, MSGType } from "./utils";
+import { conDebug, hookFunction, MSGType } from "./utils";
 import { ModuleLoader } from "Modules/ModuleLoader";
 
 function initWait() {

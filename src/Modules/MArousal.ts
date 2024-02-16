@@ -1,5 +1,5 @@
 import { BaseModule } from "./BaseModule";
-import { conDebug, hookFunction, MSGType, patchFunction, GetModule, SendActivity } from "utils";
+import { patchFunction, SendActivity } from "utils";
 import { TimerProcessInjector } from "./MTimerProcessInjector";
 
 

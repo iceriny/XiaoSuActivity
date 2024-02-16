@@ -6,11 +6,22 @@ import { conDebug, hookFunction, MSGType, SendActivity } from "utils";
 */
 interface prerequisite {
     Name: ActivityPrerequisiteXiaoSu;
-    Action: (args: any) => boolean;
+    Action: (args: Array<unknown>) => boolean;
 }
 
+/**
+ * 描述中表示自己的占位符
+ */
 const selfPlaceholder = "SourceCharacter";
+/** 描述中表示目标的占位符 */
 const targetPlaceholder = "TargetCharacter";
+
+/**
+ * 动作模块的类
+ * 涉及功能有"
+ * - 添加自定义动作
+ * - 接受特定动作的特殊效果 当前为瘙痒增加高潮抵抗难度
+ */
 export class ActivityModule extends BaseModule {
 
 
@@ -28,6 +39,9 @@ export class ActivityModule extends BaseModule {
 
 
 
+    /**
+     * 狗子函数队列处理
+     */
     hookListHandler(): void {
         /**
          * 处理没有装本插件的玩家接受到的消息
@@ -36,11 +50,11 @@ export class ActivityModule extends BaseModule {
          */
         hookFunction("ServerSend", 5, (args, next) => { // ServerSend 只能检测自己发出的聊天信息 可以用来替换自己发出去的文字
             if (args[0] == "ChatRoomChat" && args[1]?.Type == "Activity") {
-                let data = args[1];
-                let actName = data.Dictionary[3]?.ActivityName ?? "";
+                const data = args[1];
+                const actName = data.Dictionary[3]?.ActivityName ?? "";
                 if (actName.indexOf("XSAct_") == 0) { // 这个条件表示只有当消息中包含以 "XSAct_" 开头的自定义活动时,才会执行下面的操作
                     // 拦截自定义活动的发送并执行自定义操作
-                    let { metadata, substitutions } = ChatRoomMessageRunExtractors(data, Player)
+                    const { substitutions } = ChatRoomMessageRunExtractors(data, Player)
                     let msg = ActivityDictionaryText(data.Content);
                     msg = CommonStringSubstitute(msg, substitutions ?? [])
                     data.Dictionary.push({
@@ -92,6 +106,7 @@ export class ActivityModule extends BaseModule {
 
 
 
+        /** 瘙痒动作增加抵抗难度 */
         hookFunction("ChatRoomMessage", this.priority, (args, next) => {
             const data = args[0];
             conDebug({
@@ -99,36 +114,41 @@ export class ActivityModule extends BaseModule {
                 type: MSGType.DebugLog,
                 content: data
             });
-            if (data.Type == "Activity"){
+            // 确定是否是活动消息
+            if (data.Type == "Activity") {
                 const actName = data.Dictionary[3]?.ActivityName as string;
                 const SourceCharacter = data.Dictionary[0]?.SourceCharacter as number;
                 const TargetCharacter = data.Dictionary[1]?.TargetCharacter as number;
-                if (actName == "Tickle" && !Number.isNaN(TargetCharacter) && TargetCharacter == Player?.MemberNumber){// 瘙痒动作且目标为自己
+                if (actName == "Tickle" && !Number.isNaN(TargetCharacter) && TargetCharacter == Player?.MemberNumber) {// 瘙痒动作且目标为自己
                     conDebug({
                         type: MSGType.DebugLog,
                         name: "检测到自己为目标的瘙痒动作",
                         content: {
-                            高潮阶段:Player.ArousalSettings?.OrgasmStage,
-                            抵抗难度:ActivityOrgasmGameResistCount
+                            高潮阶段: Player.ArousalSettings?.OrgasmStage,
+                            抵抗难度: ActivityOrgasmGameResistCount
                         }
                     });
-                    if (Player.ArousalSettings?.OrgasmStage == 1){// 如果当前正在抵抗则添加难度并重新开始抵抗游戏
+                    if (Player.ArousalSettings?.OrgasmStage == 1) {// 如果当前正在抵抗则添加难度并重新开始抵抗游戏
                         conDebug({
                             type: MSGType.DebugLog,
                             name: "捕捉到抵抗场景，开始截断抵抗 增加难度 并重新触发",
                             content: {
-                                高潮阶段:Player.ArousalSettings?.OrgasmStage,
-                                抵抗难度:ActivityOrgasmGameResistCount
+                                高潮阶段: Player.ArousalSettings?.OrgasmStage,
+                                抵抗难度: ActivityOrgasmGameResistCount
                             }
                         });
+                        // 增加抵抗难度
                         ActivityOrgasmGameResistCount++;
-                        SendActivity(`{target}紧闭双眼尽力抵抗着高潮，但被{source}的瘙痒干扰，从嘴巴里泄露出一声压抑的呻吟，不知是否还能忍住.`, SourceCharacter, TargetCharacter )
-                        ActivityOrgasmStop(Player, 100);
+                        // 发送活动消息
+                        SendActivity(`{target}紧闭双眼尽力抵抗着高潮，但被{source}的瘙痒干扰，从嘴巴里泄露出一声压抑的呻吟，不知是否还能忍住.`, SourceCharacter, TargetCharacter)
+                        // 打断当前高潮
+                        ActivityOrgasmStop(Player, 99.5);
+                        // 触发新的高潮
                         ActivityOrgasmPrepare(Player);
                     }
                 }
             }
-                return next(args);
+            return next(args);
         });
     }
 
@@ -341,7 +361,7 @@ export class ActivityModule extends BaseModule {
                 TargetSelf: ["ItemNose"],
                 MaxProgress: 20,
                 MaxProgressSelf: 20,
-                Prerequisite: ["ItemHoodCovered" , "ItemNoseCovered"]
+                Prerequisite: ["ItemHoodCovered", "ItemNoseCovered"]
             },
             desc: null,
             descString: ["", `${selfPlaceholder}皱了皱自己的鼻头.`],

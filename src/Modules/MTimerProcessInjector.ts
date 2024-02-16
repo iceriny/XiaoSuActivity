@@ -29,7 +29,7 @@ export class TimerProcessInjector extends BaseModule {
         for (const c of sequence) {
             this.processInjectionSet[c.name] = c;
         }
-    };
+    }
 
     public Load(): void {
         TimerProcessInjector.ProcessInjection();
@@ -84,7 +84,7 @@ export class TimerProcessInjector extends BaseModule {
     private static InjectionSort(): void {
         this.processInjectionSequence = Object.values(this.processInjectionSet)
             .sort((a, b) => a.priority - b.priority);
-    };
+    }
 
 
 }
