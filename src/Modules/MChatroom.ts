@@ -263,7 +263,7 @@ export class ChatroomModule extends BaseModule {
      */
     private static kaomojiHandler(message: string): void {
         const kaomojiMenu = this.getKaomojiMenu(message);
-        kaomojiMenu!.style.display = "block";
+        kaomojiMenu!.style.display = "flex";
         this.KaomojiShouldShow = true;
     }
 
