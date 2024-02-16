@@ -436,8 +436,6 @@ export class ChatroomModule extends BaseModule {
 
             // 为按钮添加点击事件
             menuTitleTextSet[key].addEventListener('click', () => {
-                // 处理选中按钮的格式变化
-                ChatroomModule.selectMenuTitleStyleHandle(key);
                 /** 获取选择的key 这里的处理只是为了让中文的key变为表情库的key */
                 const selectKey = this.getKaomojiSelectKey(key);
                 this.selectKaomojiTitle(kaomojiContainer, selectKey)
@@ -456,11 +454,14 @@ export class ChatroomModule extends BaseModule {
     }
 
     /**
-     * 
+     * 将菜单的样式设置成当前选择的样式
      * @param selectKey 表情库的中文key
      */
     private static selectMenuTitleStyleHandle(selectKey: string) {
-        this.menuTitleTextSet[selectKey].classList.toggle('kaomoji-title-text-active');
+        const _className = 'kaomoji-title-text-active';
+        if (!this.menuTitleTextSet[selectKey].classList.contains(_className)) {
+            this.menuTitleTextSet[selectKey].classList.add(_className);
+        }
         for (const key2 in this.menuTitleTextSet) {
             if (key2 != selectKey) {
                 this.menuTitleTextSet[key2].classList.remove('kaomoji-title-text-active');

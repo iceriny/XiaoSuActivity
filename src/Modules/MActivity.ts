@@ -661,10 +661,10 @@ export class ActivityModule extends BaseModule {
     */
     Judgment: { [judgmentName: string]: (acting: Character | PlayerCharacter, acted?: Character | PlayerCharacter, group?: AssetGroup) => boolean } = {
         ItemHoodCovered: (acting: Character | PlayerCharacter): boolean => { // 头部面罩位置是否覆盖 // 尝试修复
-            return InventoryPrerequisiteMessage(acting, "HoodEmpty") !== "";
+            return InventoryPrerequisiteMessage(acting, "HoodEmpty") === "";
         },
         ItemNoseCovered: (acting: Character | PlayerCharacter): boolean => { // 鼻子位置是否覆盖 // 测试
-            return (InventoryGet(acting, "NoseEmpty") ? "CannotBeUsedOverMask" : "") !== "";
+            return (InventoryGet(acting, "NoseEmpty") ? "CannotBeUsedOverMask" : "") === "";
         },
         Kneeling: (acting: Character | PlayerCharacter): boolean => { // 是否跪着
             return (acting as PlayerCharacter).IsKneeling();
