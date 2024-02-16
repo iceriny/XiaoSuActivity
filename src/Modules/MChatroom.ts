@@ -294,6 +294,7 @@ export class ChatroomModule extends BaseModule {
     private static buildKaomojiButton(): HTMLButtonElement {
         if (this.KaomojiButton) return this.KaomojiButton;
         const button = document.createElement("button");
+        button.id = "kaomoji-button";
         button.className = "kaomoji-button";
         button.type = 'button';
         button.addEventListener("click", () => {
@@ -307,7 +308,7 @@ export class ChatroomModule extends BaseModule {
         if(!this.isKaomojiMenuCloseEventListenerAdded){
             document.addEventListener('click', (event) => {
                 const target = event.target as HTMLElement; // 将事件目标转换为 HTMLElement 类型
-                if (!target.closest('#kaomoji-menu') && this.KaomojiShouldShow) {
+                if (!target.closest('#kaomoji-menu') && !target.closest('#kaomoji-button')  && this.KaomojiMenuObject.menu && this.KaomojiShouldShow) {
                     this.KaomojiMenuObject.menu!.style.display = "none";
                     this.KaomojiShouldShow = false;
                 }
