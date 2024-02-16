@@ -59,11 +59,6 @@ export class ActivityModule extends BaseModule {
          * - 执行原方法
          */
         hookFunction("ActivityCheckPrerequisite", 500, (args, next) => {
-            // conDebug({
-            //     name: "ActivityCheckPrerequisite",
-            //     type: MSGType.DebugLog,
-            //     content: args
-            // });
             const prereq = args[0];
             if (prereq in this.prerequisiteDict) {
                 const customPrereq = this.prerequisiteDict[prereq as ActivityPrerequisiteXiaoSu];
@@ -146,11 +141,7 @@ export class ActivityModule extends BaseModule {
         conDebug("加载自定义活动");
         let actLength = 0;
         for (const aN in this.activityToAddDict) { // a 为活动名
-            // conDebug({
-            //     type: MSGType.DebugLog,
-            //     name: "加载动作:",
-            //     content: aN
-            // });
+
             this.pushToActivity(this.activityToAddDict[aN as ActivityNameXiaoSu].act);
 
             this.activityDictAdd();
@@ -158,12 +149,7 @@ export class ActivityModule extends BaseModule {
             //加载文字描述
             const activityDesc = this.activityToAddDict[aN as ActivityNameXiaoSu].desc;
 
-            // const Loaded_XSA_ActivityDictionary_Index0 = ActivityDictionary
-            //     ?.filter(d => d[0].includes(aN))
-            //     .map(d => d[0]);
-
             activityDesc?.forEach((d) => {
-                // if (typeof Loaded_XSA_ActivityDictionary_Index0 !== "undefined" && !(d[0] in Loaded_XSA_ActivityDictionary_Index0)) ActivityDictionary?.push(d);
                 ActivityDictionary?.push(d);
             });
             actLength += 1;
@@ -209,7 +195,6 @@ export class ActivityModule extends BaseModule {
      * @param activity 将要载入的活动对象
      */
     private pushToActivity(activity: Activity) {
-        //if (ActivityFemale3DCG.indexOf(activity) && ActivityFemale3DCGOrdering.indexOf(activity.Name)) {
         ActivityFemale3DCG.push(activity);
         ActivityFemale3DCGOrdering.push(activity.Name);
         //}
@@ -329,7 +314,7 @@ export class ActivityModule extends BaseModule {
                 TargetSelf: ["ItemHood"],
                 MaxProgress: 30,
                 MaxProgressSelf: 30,
-                Prerequisite: ["ItemHoodCovered", "TargetItemHoodCovered"],//"ItemNoseCovered"
+                Prerequisite: ["ItemHoodCovered", "TargetItemHoodCovered", "ItemNoseCovered"],
                 StimulationAction: "Talk"
             },
             desc: null,
@@ -356,7 +341,7 @@ export class ActivityModule extends BaseModule {
                 TargetSelf: ["ItemNose"],
                 MaxProgress: 20,
                 MaxProgressSelf: 20,
-                Prerequisite: ["ItemHoodCovered"]// , "ItemNoseCovered"]
+                Prerequisite: ["ItemHoodCovered" , "ItemNoseCovered"]
             },
             desc: null,
             descString: ["", `${selfPlaceholder}皱了皱自己的鼻头.`],
@@ -383,7 +368,7 @@ export class ActivityModule extends BaseModule {
                 TargetSelf: ["ItemNose"],
                 MaxProgress: 20,
                 MaxProgressSelf: 20,
-                Prerequisite: ["UseMouth", "ItemHoodCovered"],////////////////////////////
+                Prerequisite: ["UseMouth", "ItemHoodCovered", "ItemNoseCovered"],
                 StimulationAction: "Talk"
             },
             desc: null,
@@ -675,11 +660,11 @@ export class ActivityModule extends BaseModule {
      * 前置条件字典将要调用的方法集合
     */
     Judgment: { [judgmentName: string]: (acting: Character | PlayerCharacter, acted?: Character | PlayerCharacter, group?: AssetGroup) => boolean } = {
-        ItemHoodCovered: (acting: Character | PlayerCharacter): boolean => { // 头部面罩位置是否覆盖
-            return InventoryPrerequisiteMessage(acting, "HoodEmpty") === "";
+        ItemHoodCovered: (acting: Character | PlayerCharacter): boolean => { // 头部面罩位置是否覆盖 // 尝试修复
+            return InventoryPrerequisiteMessage(acting, "HoodEmpty") !== "";
         },
-        ItemNoseCovered: (acting: Character | PlayerCharacter): boolean => { // 鼻子位置是否覆盖 // 暂时无效 回头修复
-            return InventoryGroupIsBlocked(acting, "NoseEmpty", true);
+        ItemNoseCovered: (acting: Character | PlayerCharacter): boolean => { // 鼻子位置是否覆盖 // 测试
+            return (InventoryGet(acting, "NoseEmpty") ? "CannotBeUsedOverMask" : "") !== "";
         },
         Kneeling: (acting: Character | PlayerCharacter): boolean => { // 是否跪着
             return (acting as PlayerCharacter).IsKneeling();
