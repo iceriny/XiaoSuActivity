@@ -328,8 +328,8 @@ export class ChatroomModule extends BaseModule {
      */
     private static ResizeKaomojiButton() {
         if (this.InputElement && this.KaomojiButton) {
-            this.KaomojiButton.style.top = parseInt(this.InputElement.style.top) + window.innerHeight*0.03 + "px";
-            this.KaomojiButton.style.left = parseInt(this.InputElement.style.left) - window.innerHeight*0.03 + "px";
+            this.KaomojiButton.style.top = parseInt(this.InputElement.style.top) - window.innerHeight*0.026 + "px";
+            this.KaomojiButton.style.left = parseInt(this.InputElement.style.left) - window.innerHeight*0.026 + "px";
         }
     }
     /**
