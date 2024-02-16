@@ -6,7 +6,10 @@
     width: 40%;
     height: 40%;
     font-size: small;
+    display: block;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     background-color: rgba(200, 175, 189, 0.95);
     border-radius: 0.5em;
     margin: 1.5em;
@@ -68,7 +71,7 @@
 
 .kaomoji-menu .kaomoji-container {
     display: flex;
-    overflow-y: auto;
+    overflow-y: scroll;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
