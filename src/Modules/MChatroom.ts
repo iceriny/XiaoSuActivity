@@ -1,5 +1,5 @@
-import { conDebug, hookFunction, segmentForCH, MSGType, copyAndDownloadHtmlElement, timeRange, SendEmote, SendChat } from "utils";
 import { BaseModule } from "Modules/BaseModule";
+import { MSGType, SendChat, SendEmote, conDebug, copyAndDownloadHtmlElement, hookFunction, segmentForCH, timeRange } from "utils";
 
 const buildKaomojiMenuCSShref = DEBUG ? "https://iceriny.github.io/XiaoSuActivity/dev/XSActivityStyle.css" : "https://iceriny.github.io/XiaoSuActivity/main/XSActivityStyle.css";
 export class ChatroomModule extends BaseModule {
@@ -230,15 +230,27 @@ export class ChatroomModule extends BaseModule {
     // VVVV==========颜文字表情模块==========VVVV //
 
     /** 表情菜单对象 */
-    static KaomojiMenuObject: {
+    private static KaomojiMenuObject: {
         menu: HTMLDivElement | null,
         title: HTMLDivElement | null,
-        container: HTMLDivElement | null,
+        container: HTMLDivElement | null
     } = {
             menu: null,
             title: null,
-            container: null,
+            container: null
         };
+
+    /** 表情菜单标题元素 */
+    private static menuTitleTextSet: { [key: string]: HTMLDivElement } = {
+        全部: document.createElement('div'),
+        开心: document.createElement('div'),
+        难过: document.createElement('div'),
+        害羞: document.createElement('div'),
+        生气: document.createElement('div'),
+        惊讶: document.createElement('div'),
+        困惑: document.createElement('div'),
+        搞怪: document.createElement('div')
+    }
 
     /** 表情按钮 */
     static KaomojiButton: HTMLButtonElement | null = null;
@@ -258,27 +270,20 @@ export class ChatroomModule extends BaseModule {
     /** 表情库 */
     private static kaomojiSet: { [groupName: string]: string[] } = {
         help: ["all ==> 全部表情", "hp ==> 开心", "sd ==> 伤心", "sy ==> 害羞", "ar ==> 生气", "ap ==> 惊讶", "cf ==> 困惑", "nt ==> 搞怪顽皮"],
-        hp: ["(￣w￣)ノ", "(≧∇≦)ﾉ", "o(^▽^)o", "(￣︶￣)↗", "o(*￣▽￣*)o", "(p≧w≦q)", "ㄟ(≧◇≦)ㄏ", "(/≧▽≦)/", "(　ﾟ∀ﾟ) ﾉ♡",
-            "o(*￣︶￣*)o", "(๑¯∀¯๑)", "(≧∀≦)ゞ", "φ(≧ω≦*)♪", "╰(*°▽°*)╯", "(*^▽^*)", "(๑•̀ㅂ•́)و✧", "(o゜▽゜)o☆[BINGO!]", "(^▽^ )", "<(*￣▽￣*)/", "┌|*´∀｀|┘", "♪(´∇`*)"],
-        sd: ["テ_デ", "□_□", "┭┮﹏┭┮", "╥﹏╥...", "o(TヘTo)", "〒▽〒", "ε(┬┬﹏┬┬)3", "(;´༎ຶД༎ຶ`)", "(ノへ`、)", "（-_-。）", "(ノへ￣、)"],
-        sy: ["|ω・）", "|･ω･｀)", "◕ฺ‿◕ฺ✿ฺ)", "つ﹏⊂", "(* /ω＼*)", "o(*////▽////*)q", "(*/ω＼*)", "(′▽`〃)", "(✿◡‿◡)", "(/▽＼)", "(๑´ㅂ`๑)", "(◡ᴗ◡✿)"],
-        ar: ["(σ｀д′)σ", "＼(゜ロ＼)(／ロ゜)／", "<(－︿－)>", "(ー`´ー)", "（｀へ´）", "(-__-)=@))> o<)", "(///￣皿￣)○～", "┻━┻︵╰(‵□′)╯︵┻━┻", "→)╥﹏╥)", "抽!!(￣ε(#￣)☆╰╮(￣▽￣///)", "(￣ε(#￣)☆╰╮o(￣皿￣///)",
-            "(* ￣︿￣)", "（＃￣～￣＃）", "(⊙x⊙;)", "o(*≧▽≦)ツ┏━┓", "(ノω<。)ノ))☆.。", "(〃＞目＜)", "( σ'ω')σ", "o(′益`)o", "(〃＞目＜)", "o(≧口≦)o", "Ｏ(≧口≦)Ｏ", "...(*￣０￣)ノ[等等我…]", "（≧0≦）"],
-        sp: ["’(°ー°〃)", "(ーー゛)", "(○´･д･)ﾉ", "wow~ ⊙o⊙", "~(￣0￣)/", "Σ(｀д′*ノ)ノ", "Σ(っ °Д °;)っ", "(⊙ˍ⊙)", "w(ﾟДﾟ)w", "ｍ(o・ω・o)ｍ", "⊙▽⊙"],
-        cf: ["( -'`-)", "(=′ー`)", "( -'`-; )", "(・-・*)", "( ｀д′)", "(￣m￣）", "( ╯▽╰)"],
-        nt: ["(ˉ▽￣～) 切~~", "(￣w￣)ノ", "( ￣ー￣)", "(‾◡◝)", "(￣_,￣ )", "( ﹁ ﹁ ) ~→", "<(￣ ﹌ ￣)@m"]
+        hp: ["ヾ(❀╹◡╹)ﾉ~", " (๑>؂<๑）", "(｡･ω･｡)ﾉ♡", "(◍ ´꒳` ◍)", "(￣w￣)ノ", "Hi~ o(*￣▽￣*)ブ", "(≧∇≦)ﾉ", "o(^▽^)o", "(￣︶￣)↗", "<(￣︶￣)↗[GO!]", "o(*￣▽￣*)o", "(p≧w≦q)", "ㄟ(≧◇≦)ㄏ", "(/≧▽≦)/", "(　ﾟ∀ﾟ) ﾉ♡", "(●'◡'●)", "ヽ(✿ﾟ▽ﾟ)ノ",
+            "o(*￣︶￣*)o", "(๑¯∀¯๑)", "(≧∀≦)ゞ", "φ(≧ω≦*)♪", "╰(*°▽°*)╯", "(*^▽^*)", "(๑•̀ㅂ•́)و✧", "(੭*ˊᵕˋ)੭*ଘ*", "(o゜▽゜)o☆[BINGO!]", "(^▽^ )", "<(*￣▽￣*)/", "┌|*´∀｀|┘",
+            "♪(´∇`*)", "(｡◕ฺˇε ˇ◕ฺ｡）", " ✌︎( ᐛ )✌︎", "(*・ω・)ﾉ", "(„• ֊ •„)"],
+        sd: ["テ_デ", "□_□", "┭┮﹏┭┮", "╥﹏╥...", "o(TヘTo)", "〒▽〒", "ε(┬┬﹏┬┬)3", "(;´༎ຶД༎ຶ`)", "(ノへ`、)", "（-_-。）", "(ノへ￣、)", "｡◔‸◔｡", "(⊙﹏⊙)"],
+        sy: ["|ω・）", "|･ω･｀)", "◕ฺ‿◕ฺ✿ฺ)", "つ﹏⊂", "(* /ω＼*)", "o(*////▽////*)q", "(*/ω＼*)", "(′▽`〃)", "(✿◡‿◡)", "(/▽＼)", "(๑´ㅂ`๑)", "(◡ᴗ◡✿)", "⁄(⁄ ⁄•⁄ω⁄•⁄ ⁄)⁄", "(〃'▽'〃)", "(๑╹ヮ╹๑)ﾉ"],
+        ar: ["/ᐠ｡ꞈ｡ᐟ\\", "˃ʍ˂", "(σ｀д′)σ", "＼(゜ロ＼)(／ロ゜)／", "<(－︿－)>", "(ー`´ー)", "（｀へ´）", "(-__-)=@))> o<)", "(///￣皿￣)○～", "┻━┻︵╰(‵□′)╯︵┻━┻",
+            "→)╥﹏╥)", "抽!!(￣ε(#￣)☆╰╮(￣▽￣///)", "(￣ε(#￣)☆╰╮o(￣皿￣///)", "(* ￣︿￣)", "（＃￣～￣＃）", "(⊙x⊙;)", "o(*≧▽≦)ツ┏━┓", "(ノω<。)ノ))☆.。",
+            "(〃＞目＜)", "( σ'ω')σ", "o(′益`)o", "(〃＞目＜)", "o(≧口≦)o", "Ｏ(≧口≦)Ｏ", "...(*￣０￣)ノ[等等我…]", "（≧0≦）", "ψ(*｀ー´)ψ", "ψ(￣皿￣)ノ"],
+        sp: ["✧∇✧", "!!!∑(ﾟДﾟノ)ノ", "’(°ー°〃)", "ヾ(ノ' ﹃' )ノ", "(ーー゛)", "(○´･д･)ﾉ", "wow~ ⊙o⊙", "~(￣0￣)/", "Σ(｀д′*ノ)ノ", "Σ(っ °Д °;)っ", "(⊙ˍ⊙)", "w(ﾟДﾟ)w",
+            "ｍ(o・ω・o)ｍ", "⊙▽⊙", "（இ௰இ）", "(●°u°●)​ 」", "（｡ò ∀ ó｡）", "(๑•̀ω•́)ノ"],
+        cf: ["⚆_⚆", "( -'`-)", "(=′ー`)", "( -'`-; )", "(・-・*)", "( ｀д′)", "(￣m￣）", "( ╯▽╰)", " o-o(=•ェ•=)m", "(⊙﹏⊙)", "Σ( ° △ °|||)︴", "(⊙ˍ⊙)", "( ᗜ ˰ ᗜ )", "꒰ ˶• ༝ •˶꒱"],
+        nt: ["(ˉ▽￣～) 切~~", "(￣w￣)ノ", "(￣v￣)ノ", "(￣l￣)ノ", "( ￣ー￣)", "(‾◡◝)", "(￣_,￣ )", "( ﹁ ﹁ ) ~→", "<(￣ ﹌ ￣)@m", "ꉂ-ꉂ(ˊᗜˋ*)", "(｀・ω・´）", "༼ つ ◕_◕ ༽つ", "ヽ(✿ﾟ▽ﾟ)ノ (°ー°〃)",
+            "ヾ(￣▽￣)Bye~Bye~", "(◉ω◉υ)⁼³₌₃", "(●—●)", "(｡･∀･)ﾉﾞ", "┬─┬ ノ('-'ノ)", "┸━━┸)>口<)", "(-.-)..zzZZ", "(｡◝ᴗ◜｡)", " =͟͟͞͞(꒪ᗜ꒪ ‧̣̥̇)", "(˵¯͒〰¯͒˵)"]
     }
-    /** 
-     *  (￣w￣)ノ(￣v￣)ノ(￣l￣)ノ ψ(*｀ー´)ψ  ψ(￣皿￣)ノ
-     */
-    /** 
-     * （இ௰இ）(｡◕ฺˇε ˇ◕ฺ｡） !!!∑(ﾟДﾟノ)ノ  ✌︎( ᐛ )✌︎  o-o(=•ェ•=)m  <(￣︶￣)↗[GO!]   ｡◔‸◔｡   ˃ʍ˂  ヾ(ノ' ﹃' )ノ
-     ꉂ-ꉂ(ˊᗜˋ*)  (●°u°●)​ 」，(｀・ω・´）(●'◡'●) ，(*・ω・)ﾉ， ༼ つ ◕_◕ ༽つ，(๑•̀ㅂ•́)و✧*，(੭*ˊᵕˋ)੭*ଘ*，ヽ(✿ﾟ▽ﾟ)ノ (°ー°〃)  ，  (⊙﹏⊙)，   Σ( ° △ °|||)︴，ヾ(￣▽￣)Bye~Bye~，(⊙ˍ⊙)，|･ω･｀)，⚆_⚆，(´▽｀)
-    ⁄(⁄ ⁄•⁄ω⁄•⁄ ⁄)⁄，(●—●)， (｡･∀･)ﾉﾞ，/ᐠ｡ꞈ｡ᐟ\，┬─┬ ノ('-'ノ)， ┸━━┸)>口<)，(-.-)..zzZZ，( ᗜ ˰ ᗜ ) ,(〃'▽'〃)
-    ꒰ ˶• ༝ •˶꒱，(\   (\ („• ֊ •„)*，*(\   (\ฅ(• - •)ฅ*，ฅ( ̳• ◡ • ̳)ฅ。(¦3[▓▓],,Hi~ o(*￣▽￣*)ブ，(๑˙ー˙๑)，，（｡ò ∀ ó｡）
-    (｡･ω･｡)ﾉ♡，(｡◝ᴗ◜｡)，ψ(｀∇´)ψ，(ง ˙o˙)ว，(◍ ´꒳` ◍)，(๑╹ヮ╹๑)ﾉ，(๑•̀ω•́)ノ，(∠・ω< )⌒★
-    ヾ(❀╹◡╹)ﾉ~， (๑>؂<๑）1(◎｀・ω・´)人(´・ω・｀*)   =͟͟͞͞(꒪ᗜ꒪ ‧̣̥̇)  (˵¯͒〰¯͒˵)  ✧∇✧   (◉ω◉υ)⁼³₌₃   | ᐕ)⁾⁾
-     */
 
 
     /**
@@ -298,6 +303,12 @@ export class ChatroomModule extends BaseModule {
                 this.KaomojiShouldShow = false;
             }
         });
+        document.addEventListener('click', () => {
+            if (this.KaomojiShouldShow) {
+                this.KaomojiMenuObject.menu!.style.display = "none";
+                this.KaomojiShouldShow = false;
+            }
+        })
         button.innerHTML = ":)";
 
         this.ResizeKaomojiButton();
@@ -311,8 +322,8 @@ export class ChatroomModule extends BaseModule {
      */
     private static ResizeKaomojiButton() {
         if (this.InputElement && this.KaomojiButton) {
-            this.KaomojiButton.style.bottom = parseInt(this.InputElement.style.top) + 5 + "px";
-            this.KaomojiButton.style.right = parseInt(this.InputElement.style.left) - 5 + "px";
+            this.KaomojiButton.style.top = parseInt(this.InputElement.style.top) + 15 + "px";
+            this.KaomojiButton.style.left = parseInt(this.InputElement.style.left) - 15 + "px";
         }
     }
     /**
@@ -374,16 +385,7 @@ export class ChatroomModule extends BaseModule {
         // 创建表情菜单标题的div元素
         const menuTitle: HTMLDivElement = document.createElement('div');
         // 创建表情菜单选择标题元素
-        const menuTitleTextSet: { [key: string]: HTMLDivElement } = {
-            全部: document.createElement('div'),
-            开心: document.createElement('div'),
-            难过: document.createElement('div'),
-            害羞: document.createElement('div'),
-            生气: document.createElement('div'),
-            惊讶: document.createElement('div'),
-            困惑: document.createElement('div'),
-            搞怪: document.createElement('div')
-        }
+        const menuTitleTextSet: { [key: string]: HTMLDivElement } = this.menuTitleTextSet;
 
 
         // 创建表情菜单标题关闭按钮的div元素
@@ -400,7 +402,7 @@ export class ChatroomModule extends BaseModule {
         // 将表情菜单标题、表情容器添加到表情菜单div元素中  关闭按钮的添加在选择菜单添加之后
         menu.appendChild(menuTitle);
         menu.appendChild(kaomojiContainer);
-        
+
 
         // 设置除菜单按钮之外的其他元素的类名
         menu.className = 'kaomoji-menu';
@@ -428,12 +430,7 @@ export class ChatroomModule extends BaseModule {
             // 为按钮添加点击事件
             menuTitleTextSet[key].addEventListener('click', () => {
                 // 处理选中按钮的格式变化
-                menuTitleTextSet[key].classList.toggle('kaomoji-title-text-active');
-                for (const key2 in menuTitleTextSet) {
-                    if (key2 != key) {
-                        menuTitleTextSet[key2].classList.remove('kaomoji-title-text-active');
-                    }
-                }
+                ChatroomModule.selectMenuTitleStyleHandle(key);
                 /** 获取选择的key 这里的处理只是为了让中文的key变为表情库的key */
                 const selectKey = this.getSelectKey(key);
                 this.selectKaomojiTitle(kaomojiContainer, selectKey)
@@ -449,6 +446,15 @@ export class ChatroomModule extends BaseModule {
         document.body.appendChild(menu);
         // 返回表情菜单标题、表情容器和表情菜单对象
         return { kaomojiContainer, menu };
+    }
+
+    private static selectMenuTitleStyleHandle(key: string) {
+        this.menuTitleTextSet[key].classList.toggle('kaomoji-title-text-active');
+        for (const key2 in this.menuTitleTextSet) {
+            if (key2 != key) {
+                this.menuTitleTextSet[key2].classList.remove('kaomoji-title-text-active');
+            }
+        }
     }
 
     /**
@@ -500,6 +506,7 @@ export class ChatroomModule extends BaseModule {
         // 设置表情菜单内容
         kaomojiContainer.innerHTML = '';
         const kaomojiClassName = 'kaomoji';
+        this.selectMenuTitleStyleHandle(selectKey);
 
         for (const kaomoji of kaomojiList) {
             const kaomojiElement: HTMLDivElement = document.createElement('div');
