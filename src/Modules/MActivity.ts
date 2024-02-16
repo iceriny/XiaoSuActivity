@@ -287,7 +287,7 @@ export class ActivityModule extends BaseModule {
                 TargetSelf: ["ItemHood"],
                 MaxProgress: 20,
                 MaxProgressSelf: 20,
-                Prerequisite: ["ItemHoodCovered", "TargetItemHoodCovered", "CantUseArms"]
+                Prerequisite: ["ItemHoodCovered", "TargetItemHoodCovered", "UseArms"]
             },
             desc: null,
             descString: [`${selfPlaceholder}轻柔抚动着${targetPlaceholder}的头发.`, `${selfPlaceholder}轻柔抚动着自己的头发.`],
@@ -328,7 +328,7 @@ export class ActivityModule extends BaseModule {
                 TargetSelf: ["ItemHood"],
                 MaxProgress: 30,
                 MaxProgressSelf: 30,
-                Prerequisite: ["CantUseArms", "ItemHoodCovered", "TargetItemHoodCovered"]
+                Prerequisite: ["UseArms", "ItemHoodCovered", "TargetItemHoodCovered"]
             },
             desc: null,
             descString: [`${selfPlaceholder}勾起一缕${targetPlaceholder}的发丝，在指尖绕来绕去.`, `${selfPlaceholder}勾起自己的一缕头发在指尖绕来绕去.`],
