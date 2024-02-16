@@ -4,9 +4,9 @@
     right: 5%;
     bottom: 15%;
     width: 40%;
-    max-height: 40%;
+    height: 40%;
     font-size: small;
-    display: flex;
+    display: block;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -88,7 +88,6 @@
 }
 
 .kaomoji-menu .kaomoji-container .kaomoji:hover {
-    margin: 9px;
     cursor: pointer;
     background-color: rgba(138, 138, 138, 0.35);
 }
