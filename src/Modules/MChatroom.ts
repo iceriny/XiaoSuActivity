@@ -286,6 +286,7 @@ export class ChatroomModule extends BaseModule {
     }
 
 
+    private static isKaomojiMenuCloseEventListenerAdded : boolean = false;
     /**
      * 构建表情按钮并返回按钮实例
      * @returns 创建的表情按钮
@@ -303,12 +304,16 @@ export class ChatroomModule extends BaseModule {
                 this.KaomojiShouldShow = false;
             }
         });
-        document.addEventListener('click', () => {
-            if (this.KaomojiShouldShow) {
-                this.KaomojiMenuObject.menu!.style.display = "none";
-                this.KaomojiShouldShow = false;
-            }
-        })
+        if(!this.isKaomojiMenuCloseEventListenerAdded){
+            document.addEventListener('click', (event) => {
+                const target = event.target as HTMLElement; // 将事件目标转换为 HTMLElement 类型
+                if (!target.closest('#kaomoji-menu') && this.KaomojiShouldShow) {
+                    this.KaomojiMenuObject.menu!.style.display = "none";
+                    this.KaomojiShouldShow = false;
+                }
+            });
+            this.isKaomojiMenuCloseEventListenerAdded = true;
+        }
         button.innerHTML = ":)";
 
         this.ResizeKaomojiButton();
@@ -380,6 +385,7 @@ export class ChatroomModule extends BaseModule {
     private static buildKaomojiMenu() {
         // 创建表情菜单的div元素
         const menu: HTMLDivElement = document.createElement('div');
+        menu.id = 'kaomoji-menu';
         menu.style.display = 'flex';//
 
         // 创建表情菜单标题的div元素
