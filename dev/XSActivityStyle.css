@@ -139,6 +139,7 @@
     padding: 0.5vh;
 
     transition: width 0.3s, height 0.3s, background-color 0.3s ease;
+    transform-origin: center center;
 }
 
 .kaomoji-button:hover {
