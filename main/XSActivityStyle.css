@@ -6,7 +6,6 @@
     width: 40%;
     height: 40%;
     font-size: small;
-    display: block;
     flex-direction: column;
     background-color: rgba(200, 175, 189, 0.95);
     border-radius: 0.5em;
