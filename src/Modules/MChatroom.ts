@@ -311,8 +311,8 @@ export class ChatroomModule extends BaseModule {
      */
     private static ResizeKaomojiButton() {
         if (this.InputElement && this.KaomojiButton) {
-            this.KaomojiButton.style.bottom = this.InputElement.offsetTop + 5 + "px";
-            this.KaomojiButton.style.right = this.InputElement.offsetLeft - 5 + "px";
+            this.KaomojiButton.style.bottom = parseInt(this.InputElement.style.top) + 5 + "px";
+            this.KaomojiButton.style.right = parseInt(this.InputElement.style.left) - 5 + "px";
         }
     }
     /**
