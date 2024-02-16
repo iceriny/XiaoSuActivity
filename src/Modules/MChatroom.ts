@@ -387,7 +387,7 @@ export class ChatroomModule extends BaseModule {
         // 创建表情菜单的div元素
         const menu: HTMLDivElement = document.createElement('div');
         menu.id = 'kaomoji-menu';
-        menu.style.display = 'block';//
+        menu.style.display = 'flex';//
 
         // 创建表情菜单标题的div元素
         const menuTitle: HTMLDivElement = document.createElement('div');
