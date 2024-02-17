@@ -123,31 +123,30 @@ export class CommandsModule extends BaseModule {
                     conDebug("没有指令");
                     return;
                 }
+                const params: string = this.getCommandParameters(parsed);
                 const WombTattoosModuleExample = GetModule("WombTattoosModule") as WombTattoosModule
-                for (const cmd of parsed) {
-                    switch (cmd) {
-                        case "getWombTattoosLayers":
-                            conDebug({
-                                name: 'WombTattoosModule layers',
-                                type: MSGType.DebugLog,
-                                content: WombTattoosModuleExample.wombTattoosLayers
-                            });
-                            break;
-                        case "playerHaveWT":
-                            conDebug({
-                                name: 'haveWombTattoos',
-                                type: MSGType.DebugLog,
-                                content: WombTattoosModule.haveWombTattoos(Player)
-                            });
-                            break;
-                        case "getAppliedLayerNames":
-                            conDebug({
-                                name: 'getAppliedLayerNames',
-                                type: MSGType.DebugLog,
-                                content: WombTattoosModule.getAppliedLayerNames(Player)
-                            });
-                            break;
-                    }
+                switch (params) {
+                    case "getWombTattoosLayers":
+                        conDebug({
+                            name: 'WombTattoosModule layers',
+                            type: MSGType.DebugLog,
+                            content: WombTattoosModuleExample.wombTattoosLayers
+                        });
+                        break;
+                    case "playerHaveWT":
+                        conDebug({
+                            name: 'haveWombTattoos',
+                            type: MSGType.DebugLog,
+                            content: WombTattoosModule.haveWombTattoos(Player)
+                        });
+                        break;
+                    case "getAppliedLayerNames":
+                        conDebug({
+                            name: 'getAppliedLayerNames',
+                            type: MSGType.DebugLog,
+                            content: WombTattoosModule.getAppliedLayerNames(Player)
+                        });
+                        break;
                 }
             }
         }
