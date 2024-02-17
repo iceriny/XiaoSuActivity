@@ -126,21 +126,21 @@ export class CommandsModule extends BaseModule {
                 const params: string = this.getCommandParameters(parsed);
                 const WombTattoosModuleExample = GetModule("WombTattoosModule") as WombTattoosModule
                 switch (params) {
-                    case "getWombTattoosLayers":
+                    case "get_womb_tattoos_layers":
                         conDebug({
                             name: 'WombTattoosModule layers',
                             type: MSGType.DebugLog,
                             content: WombTattoosModuleExample.wombTattoosLayers
                         });
                         break;
-                    case "playerHaveWT":
+                    case "player_have_wt":
                         conDebug({
                             name: 'haveWombTattoos',
                             type: MSGType.DebugLog,
                             content: WombTattoosModule.haveWombTattoos(Player)
                         });
                         break;
-                    case "getAppliedLayerNames":
+                    case "get_applied_layer_names":
                         conDebug({
                             name: 'getAppliedLayerNames',
                             type: MSGType.DebugLog,
