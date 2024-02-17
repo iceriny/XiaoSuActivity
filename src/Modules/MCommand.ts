@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { BaseModule } from "./BaseModule";
-import { conDebug, GetModule, timeRange, sendChangeLog } from "utils";
+import { conDebug, GetModule, timeRange, sendChangeLog, MSGType } from "utils";
 import { ChatroomModule } from "./MChatroom";
 import { ActivityModule } from "./MActivity";
+
+import { WombTattoosModule } from "./MWombTattoos";
 
 const timeRangeRegex: RegExp = /^(((0|1)\d|2[0-3]):[0-5]\d)-(((0|1)\d|2[0-3]):[0-5]\d)$/;
 
@@ -111,6 +113,42 @@ export class CommandsModule extends BaseModule {
                 <span ${stressStyle}>cf</span>显示疑惑的颜文字包。
                 <span ${stressStyle}>nt</span>显示顽皮搞怪的颜文字包。
                 `)
+            }
+        },
+        wttest: {
+            Tag: "wttest",
+            Description: "测试淫纹模块",
+            Action: (args, msg, parsed) => {
+                if (parsed.length == 0) {
+                    conDebug("没有指令");
+                    return;
+                }
+                const WombTattoosModuleExample = GetModule("WombTattoosModule") as WombTattoosModule
+                for (const cmd of parsed) {
+                    switch (cmd) {
+                        case "getWombTattoosLayers":
+                            conDebug({
+                                name: 'WombTattoosModule layers',
+                                type: MSGType.DebugLog,
+                                content: WombTattoosModuleExample.wombTattoosLayers
+                            });
+                            break;
+                        case "playerHaveWT":
+                            conDebug({
+                                name: 'haveWombTattoos',
+                                type: MSGType.DebugLog,
+                                content: WombTattoosModule.haveWombTattoos(Player)
+                            });
+                            break;
+                        case "getAppliedLayerNames":
+                            conDebug({
+                                name: 'getAppliedLayerNames',
+                                type: MSGType.DebugLog,
+                                content: WombTattoosModule.getAppliedLayerNames(Player)
+                            });
+                            break;
+                    }
+                }
             }
         }
     }

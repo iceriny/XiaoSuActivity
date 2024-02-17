@@ -108,6 +108,9 @@ export class ArousalModule extends BaseModule {
         }
     }
 
+    /**
+     * 补丁列表处理
+     */
     patchListHandler(): void {
         // 处理OrgasmStart
         patchFunction("ActivityOrgasmStart",
@@ -123,7 +126,7 @@ export class ArousalModule extends BaseModule {
                 "ActivityOrgasmGameResistCount = 0;":
                     "ActivityOrgasmGameResistCount = Math.round(ActivityOrgasmGameResistCount / 2);"
             });
-
     }
+
 }
 

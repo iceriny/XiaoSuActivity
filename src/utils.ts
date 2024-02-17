@@ -38,7 +38,7 @@ export function SendChat(msg: string | null) {
  */
 export function SendActivity(msg: string, sourceCharacter: number, targetCharacter?: number) {
 
-    const sourceCharacterObj: Character | undefined =  ChatRoomCharacter.find(c => c.MemberNumber == sourceCharacter),
+    const sourceCharacterObj: Character | undefined = ChatRoomCharacter.find(c => c.MemberNumber == sourceCharacter),
         targetCharacterObj: Character | undefined = targetCharacter ? ChatRoomCharacter.find(c => c.MemberNumber == targetCharacter) : undefined;
 
     if (sourceCharacterObj === undefined && targetCharacterObj === undefined) return;
@@ -66,29 +66,29 @@ export function SendActivity(msg: string, sourceCharacter: number, targetCharact
 }
 /* 发送的数据包对象的实例
 {
-	"Sender": 150217,
-	"Content": "ChatOther-ItemTorso-Tickle",
-	"Type": "Activity",
-	"Dictionary": [
-		{
-			"SourceCharacter": 150217
-		},
-		{
-			"TargetCharacter": 155979
-		},
-		{
-			"Tag": "FocusAssetGroup",
-			"FocusGroupName": "ItemTorso"
-		},
-		{
-			"ActivityName": "Tickle"
-		},
-		{
-			"Tag": "fbc_nonce",
-			"Text": 9
-		}
-	],
-	"MBCHC_ID": 44
+    "Sender": 150217,
+    "Content": "ChatOther-ItemTorso-Tickle",
+    "Type": "Activity",
+    "Dictionary": [
+        {
+            "SourceCharacter": 150217
+        },
+        {
+            "TargetCharacter": 155979
+        },
+        {
+            "Tag": "FocusAssetGroup",
+            "FocusGroupName": "ItemTorso"
+        },
+        {
+            "ActivityName": "Tickle"
+        },
+        {
+            "Tag": "fbc_nonce",
+            "Text": 9
+        }
+    ],
+    "MBCHC_ID": 44
 }
 */
 
@@ -102,8 +102,9 @@ export enum MSGType {
     DebugLog,
     Workflow_Log,
 }
-export function conDebug(msg: XSDebugMSG | string) {
+export function conDebug(msg: XSDebugMSG | string, color: string | null = null, style: string | null = null) {
     if (DEBUG === false) return;
+
 
     const result: object = typeof msg === "string" ? {
         name: "XiaoSuActivity_Debug",
@@ -118,7 +119,14 @@ export function conDebug(msg: XSDebugMSG | string) {
         time: new Date().toLocaleString(),
         ModVersion: XSActivity_VERSION
     }
-    console.debug(result);
+    if (style) {
+        console.debug("%c小酥的模组信息: ", style, result);
+    } else {
+        if (color) {
+            style = `background-color: ${color}; font-weight: bold;`
+        }
+        console.debug("%c小酥的模组信息: ", 'background-color: rgba(191, 154, 175, 1); font-weight: bold;', result);
+    }
 }
 
 export function GetModule<T>(moduleName: XS_ModuleName): T {
@@ -288,4 +296,16 @@ export function scrollToBottom(element: HTMLElement) {
         top: maxScrollTop,
         behavior: 'smooth'  // 可选：实现平滑滚动效果
     });
+}
+
+/**
+ * 确定是否应渲染资产层，假设资产本身是可见的。
+ * @param C - 角色，穿戴该物品的角色
+ * @param layer - 需要检查可见性的层
+ * @param asset - 层所属的资产
+ * @param typeRecord - 如果有的话，物品的类型记录
+ * @returns - 如果层应显示则返回 TRUE，否则返回 FALSE
+ */
+export function CharacterAppearanceIsLayerIsHave(C: Character, layer: AssetLayer, typeRecord: TypeRecord | null = null) {
+    return !(layer.AllowTypes && typeRecord !== null && !CharacterAppearanceAllowForTypes(layer.AllowTypes, typeRecord));
 }

@@ -6,6 +6,7 @@ import { CommandsModule } from "./MCommand";
 import { DataModule } from "./MData";
 import { ArousalModule } from "./MArousal";
 import { TimerProcessInjector } from "./MTimerProcessInjector";
+import {WombTattoosModule } from "./MWombTattoos"
 import { modules } from "./ModulesDict";
 
 export class ModuleLoader {
@@ -118,7 +119,10 @@ export class ModuleLoader {
         },
         ArousalModule: () => {
             this.pushToModules(new ArousalModule());
-        }
+        },
+        WombTattoosModule: () => {
+            this.pushToModules(new WombTattoosModule());
+        },
     }
 
 
