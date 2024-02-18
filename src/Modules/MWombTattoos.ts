@@ -69,6 +69,15 @@ export class WombTattoosModule extends BaseModule {
                         if (effect.timerCode) effect?.timerCode();
                     }
                 }
+            },
+            {
+                name: "HaveWombTattoosEffectsHandle2",
+                priority: 12,
+                timeInterval: 16,
+                preconditions: () => WombTattoosModule.screenFlickerIntensity != 0,
+                code: () => {
+                    WombTattoosModule.wombTattoosEffects.pinkShock.timerCode2!();
+                }
             }
         ];
     }
@@ -84,7 +93,7 @@ export class WombTattoosModule extends BaseModule {
             return next(args)
         })
 
-        const hookList: { [functionName: string]: PatchHook[] } = {}
+        const hookList: { [functionName: string]: [PatchHook, number][]} = {}
         const WE = WombTattoosModule.wombTattoosEffects
         for (const e in WE) {
             const name = WE[e].name
@@ -92,15 +101,15 @@ export class WombTattoosModule extends BaseModule {
             if (!hookItem) continue;
             for (const i in hookItem) {
                 if (hookList[i]) {
-                    hookList[i].push(hookItem[i].hook)
+                    hookList[i].push([hookItem[i].hook, hookItem[i].priority])
                 } else {
-                    hookList[i] = [hookItem[i].hook]
+                    hookList[i] = [[hookItem[i].hook, hookItem[i].priority]]
                 }
             }
         }
         for (const fn in hookList) {
             for (const h in hookList[fn]) {
-                hookFunction(fn, 5, hookList[fn][h])
+                hookFunction(fn, hookList[fn][h][1], hookList[fn][h][0])
             }
         }
         this.Loaded = true;
@@ -195,7 +204,7 @@ export class WombTattoosModule extends BaseModule {
         "WingSmall" // 小翼
     ]
     static wombTattoosEffects: {
-        [key: string]: { name: WombTattoosEffect, layers: string[], timerCode?: () => void, hook?: { [functionName: string]: { hook: PatchHook, priority: number } } }
+        [key: string]: { name: WombTattoosEffect, layers: string[], timerCode?: () => void,timerCode2?: () => void, hook?: { [functionName: string]: { hook: PatchHook, priority: number } } }
     } = {
             sensitive: { // 敏感提升
                 name: "sensitive",
@@ -240,12 +249,11 @@ export class WombTattoosModule extends BaseModule {
                             this.PinkShock();
                             this.screenFlickerIntensity = 0.8;
                         }
-                        if (this.screenFlickerIntensity != 0) {
-                            this.screenFlickerIntensity -= 0.05;
-                            if (this.screenFlickerIntensity < 0) this.screenFlickerIntensity = 0;
-                        }
-
                     }
+                },
+                timerCode2: () => {
+                    this.screenFlickerIntensity -= 0.025;
+                        if (this.screenFlickerIntensity < 0) this.screenFlickerIntensity = 0;
                 },
                 hook: {
                     'Player.HasTints': {
