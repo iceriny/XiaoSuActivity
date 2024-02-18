@@ -216,11 +216,7 @@ export class WombTattoosModule extends BaseModule {
         return false;
     }
     public static checkPlayerHaveWombTattoos() {
-        if (Player.XSA?.data.haveWombTattoos){
-            return Player.XSA?.data.haveWombTattoos ?? false
-        } else {
-            return false
-        }
+        return Player.XSA?.data.haveWombTattoos ?? false
     }
 
     /**

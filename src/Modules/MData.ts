@@ -11,6 +11,13 @@ export class DataModule extends BaseModule {
     // 使用正则表达式匹配浏览器版本信息
     static match = this.userAgentString.match(this.browserVersionRegex);
 
+    static DefaultData: XSA_Data = {
+        haveWombTattoos: false,
+        WombTattoosAppliedEffects: []
+    }
+    static DefaultSetting: XSA_SettingsData = {
+
+    }
     /**
      * 浏览器名称
      */
@@ -50,7 +57,11 @@ export class DataModule extends BaseModule {
         if (ExtensionStorage()) {
             Player.XSA = JSON.parse(LZString.decompressFromBase64(ExtensionStorage()) ?? '') as XSASettingData
         } else {
-            Player.XSA = <XSASettingData>{ version: XSActivity_VERSION }
+            Player.XSA = {
+                version: XSActivity_VERSION,
+                data: this.DefaultData,
+                settings: this.DefaultSetting
+            }
         }
     }
 
