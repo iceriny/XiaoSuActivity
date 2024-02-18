@@ -235,8 +235,31 @@ export class WombTattoosModule extends BaseModule {
                 name: "pinkShock",
                 layers: ['Flash'],
                 timerCode: () => {
-                    if (PlayerStorage()?.data?.WombTattoosAppliedEffects.includes("pinkShock")){
+                    if (PlayerStorage()?.data?.WombTattoosAppliedEffects.includes("pinkShock")) {
                         if (Math.random() < 0.005) this.PinkShock();
+                    }
+                },
+                hook: {
+                    'Player.HasTints': {
+                        priority: 3,
+                        hook: (args, next) => {
+                            if (!Player.ImmersionSettings?.AllowTints)
+                                return next(args);
+                            if (PlayerStorage()?.data.WombTattoosAppliedEffects.includes('pinkShock')) return true;
+                            return next(args);
+                        }
+                    },
+                    'Player.GetTints': {
+                        priority: 3,
+                        hook: (args, next) => {
+                            if (!Player.ImmersionSettings?.AllowTints)
+                                return next(args);
+                            if (PlayerStorage()?.data.WombTattoosAppliedEffects.includes('pinkShock')) {
+
+                                return [{ r: 254, g: 44, b: 84, a: Math.min(((PlayerStorage()?.data.sensitiveLevel ?? 5) * 3) / 20, 1) }];
+                            }
+                            return next(args);
+                        }
                     }
                 }
             }
@@ -290,10 +313,16 @@ export class WombTattoosModule extends BaseModule {
         AudioPlayInstantSound("Audio/Shocks.mp3");
         SendActivity(`${PH.s}的淫纹突然发出一丝诱人的波动，释放出一道电流!`, Player.MemberNumber!);
         InventoryShockExpression(Player);
-        DrawFlashScreen("#FF64C4", 1000, 5);
+        DrawFlashScreen("#FF64C4", 1000, 8);
         const currentProgress = Player.ArousalSettings?.Progress;
         const addedProgress = (currentProgress ?? 0) + 30;
-        ActivitySetArousal(Player, addedProgress > 100 ? 100 : addedProgress);
+        if (addedProgress > 100) {
+            ActivitySetArousal(Player, 100);
+            ActivityOrgasmPrepare(Player);
+        } else {
+            ActivitySetArousal(Player, addedProgress);
+        }
+
     }
 }
 //  ^^^^========淫纹大修=========^^^^  //
