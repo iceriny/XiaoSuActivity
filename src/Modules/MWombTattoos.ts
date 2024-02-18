@@ -236,7 +236,12 @@ export class WombTattoosModule extends BaseModule {
                 layers: ['Flash'],
                 timerCode: () => {
                     if (PlayerStorage()?.data?.WombTattoosAppliedEffects.includes("pinkShock")) {
-                        if (Math.random() < 0.005) this.PinkShock();
+                        if (Math.random() < 0.005) {
+                            this.PinkShock();
+                            this.screenFlickerIntensity = 0.8;
+                        }
+                        this.screenFlickerIntensity -= 0.1;
+                        if (this.screenFlickerIntensity < 0) this.screenFlickerIntensity = 0;
                     }
                 },
                 hook: {
@@ -255,8 +260,7 @@ export class WombTattoosModule extends BaseModule {
                             if (!Player.ImmersionSettings?.AllowTints)
                                 return next(args);
                             if (PlayerStorage()?.data.WombTattoosAppliedEffects.includes('pinkShock')) {
-
-                                return [{ r: 254, g: 44, b: 84, a: Math.min(((PlayerStorage()?.data.sensitiveLevel ?? 5) * 3) / 20, 1) }];
+                                return [{ r: 254, g: 44, b: 84, a: this.screenFlickerIntensity }];
                             }
                             return next(args);
                         }
@@ -309,11 +313,13 @@ export class WombTattoosModule extends BaseModule {
     }
 
 
+    private static screenFlickerIntensity: number = 0;
+
+
     public static PinkShock() {
         AudioPlayInstantSound("Audio/Shocks.mp3");
         SendActivity(`${PH.s}的淫纹突然发出一丝诱人的波动，释放出一道电流!`, Player.MemberNumber!);
         InventoryShockExpression(Player);
-        DrawFlashScreen("#FF64C4", 1000, 8);
         const currentProgress = Player.ArousalSettings?.Progress;
         const addedProgress = (currentProgress ?? 0) + 30;
         if (addedProgress > 100) {
