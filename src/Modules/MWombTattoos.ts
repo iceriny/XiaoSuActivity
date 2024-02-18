@@ -233,7 +233,7 @@ export class WombTattoosModule extends BaseModule {
             // },
             pinkShock: { //PinkShock()
                 name: "pinkShock",
-                layers: [],
+                layers: ['Flash'],
                 timerCode: () => {
                     if (PlayerStorage()?.data?.WombTattoosAppliedEffects.includes("pinkShock")){
                         if (Math.random() < 0.5) this.PinkShock();
