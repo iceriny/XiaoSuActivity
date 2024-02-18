@@ -236,19 +236,22 @@ export class WombTattoosModule extends BaseModule {
                 layers: ['Flash'],
                 timerCode: () => {
                     if (PlayerStorage()?.data?.WombTattoosAppliedEffects.includes("pinkShock")) {
-                        if (Math.random() < 0.005) {
+                        if (Math.random() < 0.003) {
                             this.PinkShock();
                             this.screenFlickerIntensity = 0.8;
                         }
-                        this.screenFlickerIntensity -= 0.1;
-                        if (this.screenFlickerIntensity < 0) this.screenFlickerIntensity = 0;
+                        if (this.screenFlickerIntensity != 0) {
+                            this.screenFlickerIntensity -= 0.05;
+                            if (this.screenFlickerIntensity < 0) this.screenFlickerIntensity = 0;
+                        }
+
                     }
                 },
                 hook: {
                     'Player.HasTints': {
                         priority: 3,
                         hook: (args, next) => {
-                            if (!Player.ImmersionSettings?.AllowTints)
+                            if (!Player.ImmersionSettings?.AllowTints && this.screenFlickerIntensity == 0)
                                 return next(args);
                             if (PlayerStorage()?.data.WombTattoosAppliedEffects.includes('pinkShock')) return true;
                             return next(args);
@@ -257,10 +260,10 @@ export class WombTattoosModule extends BaseModule {
                     'Player.GetTints': {
                         priority: 3,
                         hook: (args, next) => {
-                            if (!Player.ImmersionSettings?.AllowTints)
+                            if (!Player.ImmersionSettings?.AllowTints && this.screenFlickerIntensity == 0)
                                 return next(args);
                             if (PlayerStorage()?.data.WombTattoosAppliedEffects.includes('pinkShock')) {
-                                return [{ r: 254, g: 44, b: 84, a: this.screenFlickerIntensity }];
+                                return [{ r: 255, g: 100, b: 196, a: this.screenFlickerIntensity }];
                             }
                             return next(args);
                         }
