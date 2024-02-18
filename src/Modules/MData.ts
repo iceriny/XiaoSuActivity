@@ -13,7 +13,8 @@ export class DataModule extends BaseModule {
 
     static DefaultData: XSA_Data = {
         haveWombTattoos: false,
-        WombTattoosAppliedEffects: []
+        WombTattoosAppliedEffects: [],
+        sensitiveLevel: 0
     }
     static DefaultSetting: XSA_SettingsData = {
 
@@ -43,11 +44,18 @@ export class DataModule extends BaseModule {
 
     }
 
-    private hookListHandle() :void{
-        hookFunction('ChatRoomLeave', this.priority, (args, next)=>{
+    private hookListHandle(): void {
+        hookFunction('ChatRoomLeave', this.priority, (args, next) => {
             DataModule.allDataSave();
             return next(args);
-        })
+        });
+        // hookFunction("ChatRoomSync", this.priority, (args, next) => {
+        //     return next(args);
+        // });
+        hookFunction('ChatRoomSync', this.priority, (args, next) => {
+            DataModule.allDataSave();
+            return next(args);
+        });
     }
 
     /**

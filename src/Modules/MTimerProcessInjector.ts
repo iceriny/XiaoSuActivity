@@ -10,7 +10,7 @@ interface IProcessInjectionSet {
 /**
  * 注入进程对象
  */
-interface IInjectionCode {
+export interface IInjectionCode {
     name: string,
     priority: number,
     preconditions: () => boolean,

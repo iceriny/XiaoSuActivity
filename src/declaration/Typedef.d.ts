@@ -1521,8 +1521,9 @@ type XSA_Data = {
 	[key: string]: any;
 	haveWombTattoos: boolean;
 	WombTattoosAppliedEffects: WombTattoosEffect[];
+	sensitiveLevel: number
 }
-type WombTattoosEffect = 'sensitive'
+type WombTattoosEffect = 'sensitive' | 'pinkShock'
 type XSASettingData = {
 	version: string;
 	settings: XSA_SettingsData;

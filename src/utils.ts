@@ -91,11 +91,23 @@ export function SendActivity(msg: string, sourceCharacter: number, targetCharact
     "MBCHC_ID": 44
 }
 */
-
+/**
+ */
 // Utils
+/* 描述中表示自己的占位符 */
+
+export const selfPlaceholder = '{source}';
+/** 描述中表示目标的占位符 */
+
+export const targetPlaceholder = '{target}';
+
+export const PH = {
+    s:selfPlaceholder,
+    t:targetPlaceholder
+}
 interface XSDebugMSG {
-    name: string;
-    type: MSGType;
+    name?: string;
+    type?: MSGType;
     content: any;
 }
 export enum MSGType {
