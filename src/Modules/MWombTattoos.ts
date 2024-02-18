@@ -290,6 +290,7 @@ export class WombTattoosModule extends BaseModule {
         AudioPlayInstantSound("Audio/Shocks.mp3");
         SendActivity(`${PH.s}的淫纹突然发出一丝诱人的波动，释放出一道电流!`, Player.MemberNumber!);
         InventoryShockExpression(Player);
+        DrawFlashScreen("#FF64C4", 1000, 5);
         const currentProgress = Player.ArousalSettings?.Progress;
         const addedProgress = (currentProgress ?? 0) + 30;
         ActivitySetArousal(Player, addedProgress > 100 ? 100 : addedProgress);
