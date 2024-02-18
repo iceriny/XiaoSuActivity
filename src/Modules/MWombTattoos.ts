@@ -48,11 +48,8 @@ export class WombTattoosModule extends BaseModule {
                             appliedEffects.push(name);
                         }
                     }
-                    // 若有至少一个子宫纹身效果被应用
-                    if (appliedEffects.length > 0) {
-                        // 保存数据，将当前未应用的子宫纹身效果存储到游戏数据中
-                        DataModule.SaveData({ WombTattoosAppliedEffects: appliedEffects });
-                    }
+                    // 保存数据，将当前未应用的子宫纹身效果存储到游戏数据中
+                    DataModule.SaveData({ WombTattoosAppliedEffects: appliedEffects });
                 }
             }
         ];
