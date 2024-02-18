@@ -1,6 +1,8 @@
+import { hookFunction } from "utils";
 import { BaseModule } from "./BaseModule";
-
-export class DataModule extends BaseModule{
+export const PlayerStorage = () => Player.XSA;
+export const ExtensionStorage = () => Player.ExtensionSettings.XSA as string;
+export class DataModule extends BaseModule {
 
     // 获取用户代理字符串
     static userAgentString = navigator.userAgent;
@@ -19,6 +21,9 @@ export class DataModule extends BaseModule{
     static browserVersion = this.match ? parseInt(this.match[2]) : -1;
 
     public Load(): void {
+        this.hookListHandle();
+
+        DataModule.allDataTake();
 
         this.Loaded = true;
     }
@@ -28,5 +33,62 @@ export class DataModule extends BaseModule{
 
         window.BROWSER_NAME = DataModule.browserName;
         window.BROWSER_VERSION = DataModule.browserVersion;
+
+    }
+
+    private hookListHandle() :void{
+        hookFunction('ChatRoomLeave', this.priority, (args, next)=>{
+            DataModule.allDataSave();
+            return next(args);
+        })
+    }
+
+    /**
+     * 从ExtensionStorage获取mod数据
+     */
+    public static allDataTake() {
+        if (ExtensionStorage()) {
+            Player.XSA = JSON.parse(LZString.decompressFromBase64(ExtensionStorage()) ?? '') as XSASettingData
+        } else {
+            Player.XSA = <XSASettingData>{ version: XSActivity_VERSION }
+        }
+    }
+
+    /**
+     * 储存设置到ExtensionStorage
+     */
+    public static allDataSave() {
+        if (!ExtensionStorage()) {
+            Player.ExtensionSettings.XSA = ''
+        }
+        const data: XSASettingData = {
+            version: PlayerStorage()?.version ?? XSActivity_VERSION,
+            settings: PlayerStorage()?.settings ?? <XSA_SettingsData>{},
+            data: PlayerStorage()?.data ?? <XSA_Data>{},
+        }
+        Player.ExtensionSettings.XSA = LZString.compressToBase64(JSON.stringify(data));
+        ServerPlayerExtensionSettingsSync('XSA');
+    }
+
+    /**
+     * 保存设置到PlayerStorage
+     * @param settingKey 要保存的设置 key
+     * @param settingValue 要保存的值
+     */
+    public static SaveSettings(settingsItem: { [settingKey: string]: any }): void {
+        const settingsData = PlayerStorage()?.settings;
+        for (const item in settingsItem) {
+            if (settingsData && settingsData[item] != settingsItem[item]) {
+                settingsData[item] = settingsItem[item];
+            }
+        }
+    }
+    public static SaveData(dataItem: { [dataKey: string]: any }): void {
+        const data = PlayerStorage()?.data;
+        for (const item in dataItem) {
+            if (data && data[item] != dataItem[item]) {
+                data[item] = dataItem[item];
+            }
+        }
     }
 }

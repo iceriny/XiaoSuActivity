@@ -230,19 +230,19 @@ type AssetGroupItemName =
 	'ItemHood' | 'ItemLegs' | 'ItemMisc' | 'ItemMouth' | 'ItemMouth2' |
 	'ItemMouth3' | 'ItemNeck' | 'ItemNeckAccessories' | 'ItemNeckRestraints' |
 	'ItemNipples' | 'ItemNipplesPiercings' | 'ItemNose' | 'ItemPelvis' |
-	'ItemTorso' | 'ItemTorso2'| 'ItemVulva' | 'ItemVulvaPiercings' |
+	'ItemTorso' | 'ItemTorso2' | 'ItemVulva' | 'ItemVulvaPiercings' |
 	'ItemHandheld' | AssetGroupItemName_XSA
 	;
 
 type AssetGroupScriptName = 'ItemScript';
 
-type AssetGroupBodyName = 
+type AssetGroupBodyName =
 	ExpressionGroupName | 'BodyLower' | 'BodyUpper' | 'Bra' | 'Bracelet' | 'Cloth' |
 	'ClothAccessory' | 'ClothLower' | 'Corset' | 'EyeShadow' | 'FacialHair' | 'Garters' | 'Glasses' | 'Gloves' |
 	'HairAccessory1' | 'HairAccessory2' | 'HairAccessory3' | 'HairBack' |
 	'HairFront' | 'FacialHair' | 'Hands' | 'Hat' | 'Head' | 'Height' | 'Jewelry' | 'LeftAnklet' | 'LeftHand' | 'Mask' |
 	'Necklace' | 'Nipples' | 'Panties' | 'Pronouns' | 'RightAnklet' | 'RightHand' |
-	'Shoes' | 'Socks' | 'SocksLeft' | 'SocksRight' | 'Suit' | 'SuitLower' | 'TailStraps' | 'Wings'| 'BodyMarkings'
+	'Shoes' | 'Socks' | 'SocksLeft' | 'SocksRight' | 'Suit' | 'SuitLower' | 'TailStraps' | 'Wings' | 'BodyMarkings'
 	;
 
 type AssetGroupName = AssetGroupBodyName | AssetGroupItemName | AssetGroupScriptName;
@@ -303,7 +303,7 @@ type AssetPrerequisite =
 	"NoItemFeet" | "NoItemHands" | "NoItemLegs" | "NoMaidTray" | "NoOuterClothes" | "NotChained" | "NotChaste" | "NotKneeling" |
 	"NotLifted" | "NotMasked" | "NotMounted" | "NotProtrudingFromMouth" | "NotSuspended" | "OnBed" |
 	"RemotesAllowed" | "VulvaEmpty"
-;
+	;
 
 type CraftingStatusType = 0 | 1 | 2;
 
@@ -370,7 +370,7 @@ type BackgroundTag =
 type TitleName =
 	NPCArchetype | "None" | "Mistress" | "ClubSlave" | "Maid" | "HeadMaid" | "BondageMaid" | "Kidnapper" |
 	"MasterKidnapper" | "Patient" | "PermanentPatient" | "EscapedPatient" | "Nurse" | "Doctor" |
-	"LadyLuck" | "Patron" | "CollegeStudent" |"Nawashi" | "Houdini" | "PonyAlicorn" |
+	"LadyLuck" | "Patron" | "CollegeStudent" | "Nawashi" | "Houdini" | "PonyAlicorn" |
 	"PonyPegasus" | "PonyUnicorn" | "PonyWild" | "PonyHot" | "PonyWarm" | "PonyCold" | "PonyFarm" |
 	"PonyFoal" | "InfilrationMole" | "InfilrationInfiltrator" | "InfilrationAgent" |
 	"InfilrationOperative" | "InfilrationSuperspy" | "MagicSchoolWizard" | "MagicSchoolMagus" |
@@ -561,7 +561,7 @@ interface IFriendListBeepLogMessage {
  * Opposite of {@link Readonly}
  */
 type Mutable<T> = {
-    -readonly[P in keyof T]: T[P];
+	-readonly [P in keyof T]: T[P];
 };
 
 //#region Assets
@@ -662,9 +662,9 @@ interface AssetScriptGroup extends AssetGroup {
 
 /** Mapped type for mapping group names to their respective {@link AssetGroup} subtype */
 type AssetGroupMap = (
-	{[k in AssetGroupBodyName]: AssetAppearanceGroup}
-	& {[k in AssetGroupItemName]: AssetItemGroup}
-	& {[k in AssetGroupScriptName]: AssetScriptGroup}
+	{ [k in AssetGroupBodyName]: AssetAppearanceGroup }
+	& { [k in AssetGroupItemName]: AssetItemGroup }
+	& { [k in AssetGroupScriptName]: AssetScriptGroup }
 );
 
 /** An object defining a drawable layer of an asset */
@@ -924,27 +924,27 @@ interface Pose {
 type ActivityNameBasic = "Bite" | "Caress" | "Choke" | "Cuddle" | "FrenchKiss" |
 	"GagKiss" | "GaggedKiss" | "Grope" | "HandGag" | "Kick" |
 	"Kiss" | "Lick" | "MassageFeet" | "MassageHands" | "MasturbateFist" |
-	"MasturbateFoot" |"MasturbateHand" | "MasturbateTongue" |
+	"MasturbateFoot" | "MasturbateHand" | "MasturbateTongue" |
 	"MoanGag" | "MoanGagAngry" | "MoanGagGiggle" | "MoanGagGroan" | "MoanGagTalk" |
 	"MoanGagWhimper" | "Nibble" | "Nod" | "PenetrateFast" |
 	"PenetrateSlow" | "Pet" | "Pinch" | "PoliteKiss" | "Pull" |
 	"RestHead" | "Rub" | "Scratch" | "Sit" | "Slap" | "Spank" | "Step" | "StruggleArms" | "StruggleLegs" |
 	"Suck" | "TakeCare" | "Tickle" | "Whisper" | "Wiggle" |
 	"SistersHug" | "BrothersHandshake" | "SiblingsCheekKiss"
-;
+	;
 
 /*
  * 小酥添加的额外动作
 */
 type ActivityNameXiaosu_onlyName =
-	  "眯眼" | "眼神飘忽" | "恳求的看" | "恳求的摇头"
-	| "甩头发" | "轻抚发梢" | "叼起头发" | "嗅头发" |  "绕头发" | "大力甩头发" 
+	"眯眼" | "眼神飘忽" | "恳求的看" | "恳求的摇头"
+	| "甩头发" | "轻抚发梢" | "叼起头发" | "嗅头发" | "绕头发" | "大力甩头发"
 	| "抿住嘴巴" | "噘嘴" | "瘪嘴"
-	| "皱鼻子" | "打喷嚏" | "深呼吸" 
+	| "皱鼻子" | "打喷嚏" | "深呼吸"
 	| "低头" | "挺胸收腹" | "站直身体" | "坐直身体" | "身体一颤"
 	| "活动手臂" | "活动大腿" | "绷紧膝盖" | "内八夹腿"
 	| "蜷缩脚趾" | "绷直脚踝" | "踮脚"
-;
+	;
 
 type ActivityNameXiaoSu = `XSAct_${ActivityNameXiaosu_onlyName}`;
 
@@ -966,7 +966,7 @@ type ActivityPrerequisite =
 	"TargetCanUseTongue" | "TargetKneeling" | "TargetMouthBlocked" | "TargetMouthOpen" | "TargetZoneAccessible" | "TargetZoneNaked" |
 	"UseArms" | "UseFeet" | "UseHands" | "UseMouth" | "UseTongue" | "VulvaEmpty" | "ZoneAccessible" | "ZoneNaked" |
 	"Sisters" | "Brothers" | "SiblingsWithDifferentGender" | ActivityPrerequisiteXiaoSu
-;
+	;
 
 interface Activity {
 	Name: ActivityName;
@@ -1067,10 +1067,10 @@ interface ScreenFunctions {
 	 * @param {MouseEvent | TouchEvent} event - The event that triggered this
 	 */
 	MouseDown?(event: MouseEvent | TouchEvent): void;
-		/**
-	 * Called if the user releases the mouse button or the touchscreen on the canvas
-	 * @param {MouseEvent | TouchEvent} event - The event that triggered this
-	 */
+	/**
+ * Called if the user releases the mouse button or the touchscreen on the canvas
+ * @param {MouseEvent | TouchEvent} event - The event that triggered this
+ */
 	MouseUp?(event: MouseEvent | TouchEvent): void;
 	/**
 	 * Called if the user moves the mouse cursor or the touch on the touchscreen over the canvas
@@ -1396,9 +1396,9 @@ interface CharacterOnlineSharedSettings {
 
 type NPCArchetype =
 	/* Pandora NPCs */
-	"MemberNew"|"MemberOld"|"Cosplay"|"Mistress"|"Slave"|"Maid"|"Guard"|
+	"MemberNew" | "MemberOld" | "Cosplay" | "Mistress" | "Slave" | "Maid" | "Guard" |
 	/* Pandora Special */
-	"Victim"|"Target"|"Chest"|
+	"Victim" | "Target" | "Chest" |
 	// Misc
 	"Dominatrix" | "Nurse" | "Submissive" | "Mistress" | "Patient" | "Maid" | "Mistress" | "Maiestas" | "Vincula" | "Amplector" | "Corporis"
 	;
@@ -1511,17 +1511,25 @@ interface Character {
 	TrainingCountHigh?: number;
 	TrainingCountPerfect?: number;
 }
-
 interface ExtensionSettings {
 	[key: string]: any;
 }
-interface XSASettingData{
-    version: string;
-	settings: ExtensionSettings;
-	data: ExtensionSettings;
+type XSA_SettingsData = {
+	[key: string]: any;
+}
+type XSA_Data = {
+	[key: string]: any;
+	haveWombTattoos: boolean;
+	WombTattoosAppliedEffects: WombTattoosEffect[];
+}
+type WombTattoosEffect = 'sensitive'
+type XSASettingData = {
+	version: string;
+	settings: XSA_SettingsData;
+	data: XSA_Data;
 }
 interface PlayerCharacter extends Character {
-	XSASettings?: XSASettingData;
+	XSA?: XSASettingData;
 	// PreferenceInitPlayer() must be updated with defaults, when adding a new setting
 	ChatSettings?: {
 		ColorActions: boolean;
@@ -1743,8 +1751,8 @@ interface ElementMetaData {
 declare namespace ElementMetaData {
 	interface Typed { drawImage: boolean, hidden: boolean, imagePath: null | string }
 	interface Modular { drawImage: boolean, hidden: boolean, imagePath: null | string }
-	interface Vibrating  { drawImage: false, hidden: false, imagePath: null }
-	interface Text {}
+	interface Vibrating { drawImage: false, hidden: false, imagePath: null }
+	interface Text { }
 	interface VariableHeight { icon: ThumbIcon }
 	type NoArch = ElementMetaData;
 }
@@ -1838,20 +1846,20 @@ interface ExtendedItemCapsDialog<
 }
 
 /** Basic callback for extended item script hooks */
-type ExtendedItemScriptHookCallback<DataType extends ExtendedItemData<any>, T extends any[], RT=void> = (
+type ExtendedItemScriptHookCallback<DataType extends ExtendedItemData<any>, T extends any[], RT = void> = (
 	data: DataType,
 	originalFunction: null | ((...args: T) => RT),
 	...args: T,
 ) => RT;
 
-type ExtendedItemScriptHookCallbackNoNull<DataType extends ExtendedItemData<any>, T extends any[], RT=void> = (
+type ExtendedItemScriptHookCallbackNoNull<DataType extends ExtendedItemData<any>, T extends any[], RT = void> = (
 	data: DataType,
 	originalFunction: ((...args: T) => RT),
 	...args: T,
 ) => RT;
 
 /** Basic callback for extended item functions */
-type ExtendedItemCallback<T extends any[], RT=void> = (
+type ExtendedItemCallback<T extends any[], RT = void> = (
 	...args: T,
 ) => RT;
 
@@ -2986,7 +2994,7 @@ type StruggleKnownMinigames = "Strength" | "Flexibility" | "Dexterity" | "Loosen
 interface StruggleMinigame {
 	Setup: (C: Character, PrevItem: Item, NextItem: Item) => void;
 	Draw: (C: Character) => void;
-	HandleEvent?: (EventType: "KeyDown"|"Click", event: Event) => boolean;
+	HandleEvent?: (EventType: "KeyDown" | "Click", event: Event) => boolean;
 	DisablingCraftedProperty?: CraftingPropertyType;
 }
 
@@ -3442,7 +3450,7 @@ interface CraftingItemSelected {
 	/** Get or set the `OverridePriority` property of {@link CraftingItemSelected.ItemProperty} */
 	get OverridePriority(): null | AssetLayerOverridePriority;
 	set OverridePriority(value: null | AssetLayerOverridePriority);
- }
+}
 
 /**
  * A struct with tools for validating {@link CraftingItem} properties.
@@ -3726,12 +3734,12 @@ type WheelFortuneColor = "Blue" | "Gold" | "Gray" | "Green" | "Orange" | "Purple
 
 /** Base type for fortune wheel options */
 interface WheelFortuneOptionType {
-    /** A single-character UTF16 string with the option's ID */
-    ID: string;
-    /** The color of the option button */
-    Color: WheelFortuneColor;
-    /** An optional script that will be executed whenever the option is picked */
-    Script?: () => void;
+	/** A single-character UTF16 string with the option's ID */
+	ID: string;
+	/** The color of the option button */
+	Color: WheelFortuneColor;
+	/** An optional script that will be executed whenever the option is picked */
+	Script?: () => void;
 }
 
 // #end region

@@ -12,7 +12,7 @@ export const bcModSDK = bcModSDKRef.registerMod({
     repository: "https://github.com/iceriny/XiaoSuActivity"
 });
 
-type PatchHook = (args: any[], next: (args: any[]) => any) => any;
+export type PatchHook = (args: any[], next: (args: any[]) => any) => any;
 export function hookFunction(target: string, priority: number, hook: PatchHook): () => void {
     const removeCallback = bcModSDK.hookFunction(target, priority, hook);
     return removeCallback;
