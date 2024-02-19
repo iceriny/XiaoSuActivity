@@ -1,7 +1,7 @@
 import { hookFunction } from "utils";
 import { BaseModule } from "./BaseModule";
 export const PlayerStorage = () => Player.XSA;
-export const PlayerOnlineSharedSettingsStorage = () => Player.OnlineSharedSettings?.XSA_OnlineSharedSettings;
+export const PlayerOnlineSharedSettingsStorage = () => Player.OnlineSharedSettings?.XSA;
 export const ExtensionStorage = () => Player.ExtensionSettings.XSA as string;
 const XSA_OnlineSharedSettingsDataKeyList = ['XSA_OnlineSharedSettingsData', 'sensitiveLevel'];
 export class DataModule extends BaseModule {
@@ -22,6 +22,10 @@ export class DataModule extends BaseModule {
     }
     static DefaultSetting: XSA_SettingsData = {
 
+    }
+    static DefaultOnlineSharedSettingsData: XSA_OnlineSharedSettingsData = {
+        wombTattoosAppliedEffects: [],
+        sensitiveLevel: 0
     }
     /**
      * 浏览器名称
@@ -81,6 +85,14 @@ export class DataModule extends BaseModule {
                 settings: this.DefaultSetting
             }
         }
+        if (PlayerOnlineSharedSettingsStorage()) {
+            Player.OnlineSharedSettings!.XSA = {
+                wombTattoosAppliedEffects: Player.XSA.data.wombTattoosAppliedEffects ?? [],
+                sensitiveLevel: Player.XSA.data.sensitiveLevel ?? 0
+            }
+        } else {
+            Player.OnlineSharedSettings!.XSA = this.DefaultOnlineSharedSettingsData
+        }
     }
 
     /**
@@ -119,7 +131,7 @@ export class DataModule extends BaseModule {
             if (data && data[itemKey] != dataItem[itemKey]) {
                 data[itemKey] = dataItem[itemKey];
             }
-            if (OnlineSharedSettings && XSA_OnlineSharedSettingsDataKeyList.includes(itemKey)){
+            if (OnlineSharedSettings && XSA_OnlineSharedSettingsDataKeyList.includes(itemKey)) {
                 OnlineSharedSettings.wombTattoosAppliedEffects = dataItem[itemKey];
             }
         }

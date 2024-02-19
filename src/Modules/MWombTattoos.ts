@@ -223,7 +223,7 @@ export class WombTattoosModule extends BaseModule {
                                         addedProgress = WombTattoosModule.handleProgressParametersBasedOnSensitivityLevel(addedProgress, sensitiveLevel);
                                     }
                                 } else { // 处理非玩家自己的逻辑
-                                    const onlineSharedSettings = C.OnlineSharedSettings?.XSA_OnlineSharedSettings;
+                                    const onlineSharedSettings = C.OnlineSharedSettings?.XSA;
                                     if (onlineSharedSettings
                                         && onlineSharedSettings.sensitiveLevel) {
                                         if (onlineSharedSettings?.wombTattoosAppliedEffects?.find(e => e === 'sensitive')) {

@@ -1394,7 +1394,7 @@ type XSA_OnlineSharedSettingsData = {
  * @see {@link Character.OnlineSharedSettings}
  */
 interface CharacterOnlineSharedSettings {
-	XSA_OnlineSharedSettings?: XSA_OnlineSharedSettingsData;
+	XSA?: XSA_OnlineSharedSettingsData;
 	AllowFullWardrobeAccess: boolean;
 	BlockBodyCosplay: boolean;
 	AllowPlayerLeashing: boolean;
