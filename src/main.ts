@@ -8,8 +8,8 @@ function initWait() {
         content: "Init wait"
     });
     if (CurrentScreen == null || CurrentScreen === 'Login') {
-        hookFunction('LoginResponse', 0, (args, next) => {
-            next(args);
+        hookFunction('LoginResponse', 10, (args, next) => {
+            const result = next(args);
             conDebug({
                 name: `Init! Login Response caught`,
                 content: args,
@@ -19,6 +19,7 @@ function initWait() {
             if (response && typeof response.Name === 'string' && typeof response.AccountName === 'string' || !ModuleLoader.CompleteLoadingSuccessful) {
                 init();
             }
+            return result;
         });
     }
 }

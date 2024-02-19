@@ -90,6 +90,24 @@ export class WombTattoosModule extends BaseModule {
     }
 
     public Load(): void {
+        // 修改WombTattoos为非cosplay物品
+        hookFunction('LoginResponse', 999, (args, next) => {
+            const response = args[0];
+            if (response && typeof response.Name === 'string' && typeof response.AccountName === 'string') {
+                for (const group of AssetFemale3DCG as AssetGroupDefinition.Appearance[]) {
+                    if (group.Group === 'ClothAccessory') {
+                        for (const item of group.Asset as AssetDefinition.Appearance[]) {
+                            if (item.Name === "WombTattoos") {
+                                item.BodyCosplay = false;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            return next(args);
+        });
         /** 在加载角色画布时，如果是玩家 则 检查是否有纹身 如果有则 添加纹身效果指示器 */
         hookFunction("CharacterLoadCanvas", 0, (args, next) => {
             if (args[0] === Player) {
@@ -279,25 +297,22 @@ export class WombTattoosModule extends BaseModule {
                     }
                 },
                 highFrequencyTimerTimerCode: () => {
-                    this.screenFlickerIntensity -= 0.025;
+                    if (this.screenFlickerIntensity == 0) return;
+                    this.screenFlickerIntensity -= 0.015;
                     if (this.screenFlickerIntensity < 0) this.screenFlickerIntensity = 0;
                 },
                 hook: {
                     'Player.HasTints': {
                         priority: 3,
                         hook: (args, next) => {
-                            if (!Player.ImmersionSettings?.AllowTints && this.screenFlickerIntensity == 0 && PlayerStorage())
-                                return next(args);
-                            if (PlayerStorage()?.data.wombTattoosAppliedEffects?.includes('pinkShock')) return true;
+                            if (PlayerStorage()?.data.wombTattoosAppliedEffects?.includes('pinkShock') && this.screenFlickerIntensity !== 0) return true;
                             return next(args);
                         }
                     },
                     'Player.GetTints': {
                         priority: 3,
                         hook: (args, next) => {
-                            if (!Player.ImmersionSettings?.AllowTints && this.screenFlickerIntensity == 0 && PlayerStorage())
-                                return next(args);
-                            if (PlayerStorage()?.data.wombTattoosAppliedEffects?.includes('pinkShock')) {
+                            if (PlayerStorage()?.data.wombTattoosAppliedEffects?.includes('pinkShock') && this.screenFlickerIntensity !== 0) {
                                 return [{ r: 255, g: 100, b: 196, a: this.screenFlickerIntensity }];
                             }
                             return next(args);
@@ -316,6 +331,7 @@ export class WombTattoosModule extends BaseModule {
                     }
                 },
                 highFrequencyTimerTimerCode: () => {
+                    if (this.tranceIntensity == 0) return;
                     this.tranceIntensity -= 0.001;
                     if (this.tranceIntensity < 0) this.tranceIntensity = 0;
                 },
@@ -324,21 +340,16 @@ export class WombTattoosModule extends BaseModule {
                     'Player.HasTints': {
                         priority: 4,
                         hook: (args, next) => {
-                            if (!Player.ImmersionSettings?.AllowTints && this.tranceIntensity == 0 && PlayerStorage())
-                                return next(args);
-                            if (PlayerStorage()?.data.wombTattoosAppliedEffects?.includes('trance')) return true;
-                            return next(args);
+                            if (PlayerStorage() && PlayerStorage()?.data.wombTattoosAppliedEffects?.includes('trance') && this.tranceIntensity !== 0) return true;
+                            else return next(args);
                         }
                     },
                     'Player.GetTints': {
                         priority: 4,
                         hook: (args, next) => {
-                            if (!Player.ImmersionSettings?.AllowTints && this.tranceIntensity == 0 && PlayerStorage())
-                                return next(args);
-                            if (PlayerStorage()?.data.wombTattoosAppliedEffects?.includes('trance')) {
+                            if (PlayerStorage() && PlayerStorage()?.data.wombTattoosAppliedEffects?.includes('trance') && this.tranceIntensity !== 0){
                                 return [{ r: GetRandomInt(177, 255), g: 80, b: GetRandomInt(80, 255), a: this.screenFlickerIntensity }];
-                            }
-                            return next(args);
+                            } else return next(args);
                         }
                     }
                 }
