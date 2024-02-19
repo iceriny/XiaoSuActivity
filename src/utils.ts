@@ -362,3 +362,14 @@ export function scrollToBottom(element: HTMLElement) {
 export function CharacterAppearanceIsLayerIsHave(C: Character, layer: AssetLayer, typeRecord: TypeRecord | null = null) {
     return !(layer.AllowTypes && typeRecord !== null && !CharacterAppearanceAllowForTypes(layer.AllowTypes, typeRecord));
 }
+
+
+/**
+ * 获取一个随机整数
+ * @param min 最小值
+ * @param max 最大值
+ * @returns 返回的随机整数
+ */
+export function GetRandomInt(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}

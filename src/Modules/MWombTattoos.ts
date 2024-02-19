@@ -1,6 +1,6 @@
 import { BaseModule } from "./BaseModule";
 import { DataModule, PlayerStorage } from "./MData";
-import { CharacterAppearanceIsLayerIsHave, hookFunction, PatchHook, SendActivity, PH } from "utils";
+import { CharacterAppearanceIsLayerIsHave, hookFunction, PatchHook, SendActivity, PH, GetRandomInt } from "utils";
 import { TimerProcessInjector } from "./MTimerProcessInjector";
 
 type wombTattoosLayersName = "Zoom" | "Big" | "Bloom" | "BottomSpike" | "Flash" | "Fly" | "Grass" | "Grow" | "GrowHollow" | "HeartSmallOutline" | "Heartline" | "HeartSmall" | "HeartSolid" | "HeartWings" | "In" | "Leaves" | "MidSpike" | "Ribow" | "Sense" | "Shake" | "SideHearts" | "Swim" | "Thorn" | "ThornOut" | "TopSpike" | "Venom" | "Viper" | "Waves" | "WingSmall";
@@ -66,18 +66,25 @@ export class WombTattoosModule extends BaseModule {
                     // 遍历所有子宫纹身效果
                     for (const e in E) {
                         const effect = E[e];
-                        if (effect.timerCode) effect?.timerCode();
+                        if (effect.defaultTimerCode) effect?.defaultTimerCode();
                     }
                 }
             },
             {
-                name: "HaveWombTattoosEffectsHandle2",
+                name: "ScreenFlickerForPinkShock",
                 priority: 12,
                 timeInterval: 16,
                 preconditions: () => WombTattoosModule.screenFlickerIntensity != 0,
                 code: () => {
-                    WombTattoosModule.wombTattoosEffects.pinkShock.timerCode2!();
+                    WombTattoosModule.wombTattoosEffects.pinkShock.highFrequencyTimerTimerCode!;
+                    WombTattoosModule.wombTattoosEffects.trance.highFrequencyTimerTimerCode!;
                 }
+            }, {
+                name: "RandomTrance",
+                priority: 13,
+                timeInterval: WombTattoosModule.wombTattoosEffects.trance.dynamicTimeInterval!,
+                preconditions: () => WombTattoosModule.GetCharacterWombTattoosEffects(Player)?.includes('trance') ?? false,
+                code: () => WombTattoosModule.wombTattoosEffects.trance.customizeTimerCode!
             }
         ];
     }
@@ -122,6 +129,19 @@ export class WombTattoosModule extends BaseModule {
             }
         }
         return null;
+    }
+
+    /**
+     * 获取目标应用的纹身效果
+     * @param C 要获取的角色
+     * @returns 返回目标的已经应用的纹身效果列表
+     */
+    public static GetCharacterWombTattoosEffects(C: Character | PlayerCharacter): WombTattoosEffect[] | null {
+        if (C.IsOnline()) {
+            if (C.IsPlayer()) return C.XSA?.data.wombTattoosAppliedEffects ?? [];
+            else return C.OnlineSharedSettings?.XSA?.wombTattoosAppliedEffects ?? [];
+        }
+        return [];
     }
 
     /**
@@ -173,10 +193,10 @@ export class WombTattoosModule extends BaseModule {
     static wombTattoosLayersName: wombTattoosLayersName[] = [
         "Zoom", // 膨胀
         "Big", //大
-        "Bloom", // 开花
+        "Bloom", // 开花 ::高潮渴望
         "BottomSpike", // 底部尖刺
         "Flash", // 爆炸
-        "Fly", // 飞
+        "Fly", // 飞  :开花 :: 恍惚 
         "Grass", // 花托
         "Grow", // 卵巢
         "GrowHollow", // 卵巢-空心
@@ -202,7 +222,12 @@ export class WombTattoosModule extends BaseModule {
         "WingSmall" // 小翼
     ]
     static wombTattoosEffects: {
-        [key: string]: { name: WombTattoosEffect, layers: string[], timerCode?: () => void, timerCode2?: () => void, hook?: { [functionName: string]: { hook: PatchHook, priority: number } } }
+        [key: string]:
+        {
+            name: WombTattoosEffect, layers: wombTattoosLayersName[],
+            defaultTimerCode?: () => void, customizeTimerCode?: () => void, highFrequencyTimerTimerCode?: () => void, dynamicTimeInterval?: () => number,
+            hook?: { [functionName: string]: { hook: PatchHook, priority: number } }
+        }
     } = {
             sensitive: { // 敏感提升
                 name: "sensitive",
@@ -245,15 +270,15 @@ export class WombTattoosModule extends BaseModule {
             pinkShock: { //电击
                 name: "pinkShock",
                 layers: ['Flash'],
-                timerCode: () => {
-                    if (PlayerStorage() && PlayerStorage()?.data?.wombTattoosAppliedEffects?.includes("pinkShock")) {
+                defaultTimerCode: () => {
+                    if (PlayerStorage() && WombTattoosModule.GetCharacterWombTattoosEffects(Player)?.includes("pinkShock")) {
                         if (Math.random() < 0.003) {
                             this.PinkShock();
                             this.screenFlickerIntensity = 0.8;
                         }
                     }
                 },
-                timerCode2: () => {
+                highFrequencyTimerTimerCode: () => {
                     this.screenFlickerIntensity -= 0.025;
                     if (this.screenFlickerIntensity < 0) this.screenFlickerIntensity = 0;
                 },
@@ -279,8 +304,46 @@ export class WombTattoosModule extends BaseModule {
                         }
                     }
                 }
+            },
+            trance: { // 迷幻 使用随机的 10 ~ 20 分钟 动态的时间间隔来控制时间间隔
+                name: 'trance',
+                layers: ['Bloom', 'Fly'],
+                customizeTimerCode: () => {
+                    // TODO: 迷幻演出
+                    this.tranceIntensity = 0.9;
+                },
+                highFrequencyTimerTimerCode: () => {
+                    this.tranceIntensity -= 0.001;
+                    if (this.tranceIntensity < 0) this.tranceIntensity = 0;
+                },
+                dynamicTimeInterval: (): number => ((Math.random() + 1) * 60000), ///////////////////////////////////////////// 测试使用1~2分钟 
+                hook: {
+                    'Player.HasTints': {
+                        priority: 4,
+                        hook: (args, next) => {
+                            if (!Player.ImmersionSettings?.AllowTints && this.tranceIntensity == 0 && PlayerStorage())
+                                return next(args);
+                            if (PlayerStorage()?.data.wombTattoosAppliedEffects?.includes('trance')) return true;
+                            return next(args);
+                        }
+                    },
+                    'Player.GetTints': {
+                        priority: 4,
+                        hook: (args, next) => {
+                            if (!Player.ImmersionSettings?.AllowTints && this.tranceIntensity == 0 && PlayerStorage())
+                                return next(args);
+                            if (PlayerStorage()?.data.wombTattoosAppliedEffects?.includes('trance')) {
+                                return [{ r: GetRandomInt(177, 255), g: 80, b: GetRandomInt(80, 255), a: this.screenFlickerIntensity }];
+                            }
+                            return next(args);
+                        }
+                    }
+                }
             }
         }
+
+    /**表示恍惚程度的变量 */
+    private static tranceIntensity = 0;
     /**
      * 根据敏感等级处理进度参数----
      * 如果sensitiveLevel ==1 快感倍数为2[   x  *  (2 + (1 - 1) * 0.5)  ]

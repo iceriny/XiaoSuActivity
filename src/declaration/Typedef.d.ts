@@ -1552,7 +1552,7 @@ type XSA_Data = {
 }
 type XSA_DataKey = Extract<keyof XSA_Data, string>;
 
-type WombTattoosEffect = 'sensitive' | 'pinkShock'
+type WombTattoosEffect = 'sensitive' | 'pinkShock' | 'trance'
 
 //  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  //
 interface PlayerCharacter extends Character {

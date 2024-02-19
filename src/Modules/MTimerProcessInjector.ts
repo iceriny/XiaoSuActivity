@@ -14,7 +14,7 @@ export interface IInjectionCode {
     name: string,
     priority: number,
     preconditions: () => boolean,
-    timeInterval: number,
+    timeInterval: number | (() => number),
     code: () => void
 }
 
@@ -40,8 +40,8 @@ export class TimerProcessInjector extends BaseModule {
         this.priority = 999;
     }
 
-    /** 记录上次调用时间 的集合 */
-    private static TimerLastCycleCallSet: { [name: string]: number } = {};
+    /** 记录上次调用时间 & 时间间隔 的集合 */
+    private static TimerLastCycleCallSet: { [name: string]: {timerLastCycleCall: number, timeInterval: number, isDynamic: boolean, getTimeInterval?: () => number} } = {};
 
     /**
      * 时序进程注入
@@ -52,7 +52,16 @@ export class TimerProcessInjector extends BaseModule {
 
         // 设置计时器Set
         for (const c of this.processInjectionSequence) {
-            this.TimerLastCycleCallSet[c.name] = -1;
+            this.TimerLastCycleCallSet[c.name].timerLastCycleCall = -1;
+            if (typeof c.timeInterval == 'number'){
+                this.TimerLastCycleCallSet[c.name].timeInterval = c.timeInterval;
+                this.TimerLastCycleCallSet[c.name].isDynamic = false;
+            } else {
+                this.TimerLastCycleCallSet[c.name].timeInterval = c.timeInterval();
+                this.TimerLastCycleCallSet[c.name].getTimeInterval = c.timeInterval;
+                this.TimerLastCycleCallSet[c.name].isDynamic = true;
+            }
+            
         }
 
         conDebug(`[TimerProcessInjector] Injection Process... Injection Count: ${this.processInjectionSequence.length}`);
@@ -63,12 +72,15 @@ export class TimerProcessInjector extends BaseModule {
                 //conDebug(`[TimerProcessInjector] ${c.name} is Running...`);
 
                 // 初始化计时器
-                if (this.TimerLastCycleCallSet[c.name] == -1) this.TimerLastCycleCallSet[c.name] == currentTime;
+                if (this.TimerLastCycleCallSet[c.name].timerLastCycleCall == -1) this.TimerLastCycleCallSet[c.name].timerLastCycleCall == currentTime;
 
                 // 判定前置条件 && 时间间隔已到
-                if (c.preconditions() && this.TimerLastCycleCallSet[c.name] + c.timeInterval <= currentTime) {
+                if (c.preconditions() && this.TimerLastCycleCallSet[c.name].timerLastCycleCall + this.TimerLastCycleCallSet[c.name].timeInterval <= currentTime) {
                     c.code();
-                    this.TimerLastCycleCallSet[c.name] = currentTime;
+                    this.TimerLastCycleCallSet[c.name].timerLastCycleCall = currentTime;
+                    if (this.TimerLastCycleCallSet[c.name].isDynamic) {
+                        this.TimerLastCycleCallSet[c.name].timeInterval = this.TimerLastCycleCallSet[c.name].getTimeInterval!();
+                    }
                 }
                 
                 //conDebug(`[TimerProcessInjector] ${c.name} is Done.`);
