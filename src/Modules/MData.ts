@@ -1,7 +1,9 @@
 import { hookFunction } from "utils";
 import { BaseModule } from "./BaseModule";
 export const PlayerStorage = () => Player.XSA;
+export const PlayerOnlineSharedSettingsStorage = () => Player.OnlineSharedSettings?.XSA_OnlineSharedSettings;
 export const ExtensionStorage = () => Player.ExtensionSettings.XSA as string;
+const XSA_OnlineSharedSettingsDataKeyList = ['XSA_OnlineSharedSettingsData', 'sensitiveLevel'];
 export class DataModule extends BaseModule {
 
     // 获取用户代理字符串
@@ -13,8 +15,10 @@ export class DataModule extends BaseModule {
 
     static DefaultData: XSA_Data = {
         haveWombTattoos: false,
-        WombTattoosAppliedEffects: [],
-        sensitiveLevel: 0
+        wombTattoosAppliedEffects: [],
+        sensitiveLevel: 0,
+        resistCount: 0,
+        player_Progress: Player.ArousalSettings?.Progress ?? 0
     }
     static DefaultSetting: XSA_SettingsData = {
 
@@ -32,6 +36,12 @@ export class DataModule extends BaseModule {
         this.hookListHandle();
 
         DataModule.allDataTake();
+
+        DataModule.SyncDataForPlayer();
+
+        setTimeout(() => {
+            ActivityChatRoomArousalSync(Player);
+        }, 1000);
 
         this.Loaded = true;
     }
@@ -63,7 +73,7 @@ export class DataModule extends BaseModule {
      */
     public static allDataTake() {
         if (ExtensionStorage()) {
-            Player.XSA = JSON.parse(LZString.decompressFromBase64(ExtensionStorage()) ?? '') as XSASettingData
+            Player.XSA = JSON.parse(LZString.decompressFromBase64(ExtensionStorage()) ?? '') as XSASettingAndData
         } else {
             Player.XSA = {
                 version: XSActivity_VERSION,
@@ -80,7 +90,7 @@ export class DataModule extends BaseModule {
         if (!ExtensionStorage()) {
             Player.ExtensionSettings.XSA = ''
         }
-        const data: XSASettingData = {
+        const data: XSASettingAndData = {
             version: PlayerStorage()?.version ?? XSActivity_VERSION,
             settings: PlayerStorage()?.settings ?? <XSA_SettingsData>{},
             data: PlayerStorage()?.data ?? <XSA_Data>{},
@@ -104,10 +114,27 @@ export class DataModule extends BaseModule {
     }
     public static SaveData(dataItem: { [dataKey: string]: any }): void {
         const data = PlayerStorage()?.data;
-        for (const item in dataItem) {
-            if (data && data[item] != dataItem[item]) {
-                data[item] = dataItem[item];
+        const OnlineSharedSettings = PlayerOnlineSharedSettingsStorage();
+        for (const itemKey in dataItem) {
+            if (data && data[itemKey] != dataItem[itemKey]) {
+                data[itemKey] = dataItem[itemKey];
+            }
+            if (OnlineSharedSettings && XSA_OnlineSharedSettingsDataKeyList.includes(itemKey)){
+                OnlineSharedSettings.wombTattoosAppliedEffects = dataItem[itemKey];
             }
         }
+    }
+    /**
+     * 将PlayerStorage中的数据同步到Player 在模块加载时 takeData后调用
+     * @see Load
+     * @returns 无
+     */
+    public static SyncDataForPlayer() {
+        const data = PlayerStorage()?.data;
+        if (!data) return;
+        if (Player.ArousalSettings && Player.ArousalSettings.Progress && data.player_Progress) {
+            Player.ArousalSettings.Progress = data.player_Progress;
+        }
+        ActivityOrgasmGameResistCount = data.resistCount
     }
 }

@@ -1,4 +1,5 @@
 import { BaseModule } from "./BaseModule";
+import { DataModule } from "./MData";
 import { patchFunction, SendActivity } from "utils";
 import { TimerProcessInjector } from "./MTimerProcessInjector";
 
@@ -12,14 +13,13 @@ export class ArousalModule extends BaseModule {
             {// 处理边缘计数计算 并且每45秒 增加一层 抵抗高潮难度  如果高潮则禁用inputChat
                 name: "EdgeTimerLastCycleCall",
                 priority: 0,
-                preconditions: () => window.EdgeCount !== undefined && Player.ArousalSettings?.Progress !== undefined,
+                preconditions: () => Player.ArousalSettings?.Progress !== undefined,
                 timeInterval: 45000,
                 code: () => {
                     if (Player.ArousalSettings!.Progress >= 93) {
-                        window.EdgeCount!++;
                         ActivityOrgasmGameResistCount++;
+                        DataModule.SaveData({ resistCount: ActivityOrgasmGameResistCount, Player_Progress: Player.ArousalSettings!.Progress });
                     } else {
-                        if (window.EdgeCount! >= 1) window.EdgeCount!--;
                         if (ActivityOrgasmGameResistCount >= 1) ActivityOrgasmGameResistCount--;
                     }
                 }
@@ -46,9 +46,7 @@ export class ArousalModule extends BaseModule {
     }
 
     public Load(): void {
-        window.EdgeCount = 0;
         this.patchListHandler();
-
         this.Loaded = true;
     }
 
@@ -116,10 +114,10 @@ export class ArousalModule extends BaseModule {
         patchFunction("ActivityOrgasmStart",
             {// XSA补丁处理~ 基础高潮时间为 4~7秒, 每边缘45秒钟增加随机的 300ms ~ 1300ms 的高潮时间。 最多增加 20000ms，也就是最长高潮时间为 27 秒
                 "C.ArousalSettings.OrgasmTimer = CurrentTime + (Math.random() * 10000) + 5000;":
-                    `if (window.EdgeCount === undefined) {
+                    `if (window?.XSActivity_Loaded === undefined) {
                 C.ArousalSettings.OrgasmTimer = CurrentTime + (Math.random() * 10000) + 5000;
             } else {
-                const addedTime = (Math.random() + 0.3) * 1000 * window.EdgeCount;
+                const addedTime = (Math.random() + 0.3) * 1000 * ActivityOrgasmGameResistCount;
                 C.ArousalSettings.OrgasmTimer = CurrentTime + (addedTime > 20000 ? 20000 : addedTime) + 4000 + (3000 * Math.random());
             }`,
                 // 高潮时将抵抗难度减半而非变为0

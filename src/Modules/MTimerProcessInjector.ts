@@ -20,11 +20,11 @@ export interface IInjectionCode {
 
 export class TimerProcessInjector extends BaseModule {
 
-    /** 注入进程的顺序 */
+    /** 注入进程的顺序队列 */
     private static processInjectionSequence: IInjectionCode[] = [];
     /** 注入进程集合 */
     private static processInjectionSet: IProcessInjectionSet = {};
-    /** 注入进程集合 */
+    /** 注入进程集合 需要在Init函数的末尾注入 */
     public static set setProcessInjectionSequence(sequence: IInjectionCode[]) {
         for (const c of sequence) {
             this.processInjectionSet[c.name] = c;

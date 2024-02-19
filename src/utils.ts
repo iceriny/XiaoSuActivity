@@ -21,11 +21,20 @@ export function hookFunction(target: string, priority: number, hook: PatchHook):
 export function patchFunction(functionName: string, patches: Record<string, string | null>): void {
     bcModSDK.patchFunction(functionName, patches);
 }
-
+/**
+ * 发送*表情信息
+ * @param msg 要发送的内容
+ * @returns 无
+ */
 export function SendEmote(msg: string | null) {
     if (msg == null) return;
     ServerSend("ChatRoomChat", { Content: msg, Type: "Emote" })
 }
+/**
+ * 发送聊天消息
+ * @param msg 发送的内容
+ * @returns 无
+ */
 export function SendChat(msg: string | null) {
     if (msg == null) return;
     ServerSend("ChatRoomChat", { Type: "Chat", Content: msg })
@@ -48,7 +57,6 @@ export function SendActivity(msg: string, sourceCharacter: number, targetCharact
     const resultDict: ChatMessageDictionary = [
         { Tag: "MISSING ACTIVITY DESCRIPTION FOR KEYWORD XSA_ActMessage", Text: msg.replaceAll("{source}", sourceCharacterNickname).replaceAll("{target}", targetCharacterNickname) }
     ]
-
 
     resultDict.push({ SourceCharacter: sourceCharacter });
     if (targetCharacter !== undefined) resultDict.push({ TargetCharacter: targetCharacter });
@@ -96,24 +104,39 @@ export function SendActivity(msg: string, sourceCharacter: number, targetCharact
 // Utils
 /* 描述中表示自己的占位符 */
 
-export const selfPlaceholder = '{source}';
+const selfPlaceholder = '{source}';
 /** 描述中表示目标的占位符 */
 
-export const targetPlaceholder = '{target}';
-
+const targetPlaceholder = '{target}';
+/**
+ * 包含全局占位符的对象 s:自己  t:目标
+ */
 export const PH = {
     s:selfPlaceholder,
     t:targetPlaceholder
 }
+/**
+ * Debug信息对象接口
+ */
 interface XSDebugMSG {
     name?: string;
     type?: MSGType;
     content: any;
 }
+/**
+ * Debug信息类型
+ */
 export enum MSGType {
     DebugLog,
     Workflow_Log,
 }
+/**
+ * 发送debug信息到控制台
+ * @param msg 信息
+ * @param color 可选颜色参数
+ * @param style 可选的css风格参数
+ * @returns 无
+ */
 export function conDebug(msg: XSDebugMSG | string, color: string | null = null, style: string | null = null) {
     if (DEBUG === false) return;
 
@@ -141,11 +164,20 @@ export function conDebug(msg: XSDebugMSG | string, color: string | null = null, 
     }
 }
 
+/**
+ * 获取已加载的模型实例
+ * @param moduleName 模型名称
+ * @returns 已加载的模型实例
+ */
 export function GetModule<T>(moduleName: XS_ModuleName): T {
     return modules[moduleName] as T;
 }
 
-
+/**
+ * 处理获取到的元素中时间范围外的元素 次工具在导出聊天记录时使用
+ * @param element 获取的元素
+ * @param time_limit 时间范围
+ */
 function removeElementsByTimeRange(element: HTMLElement, time_limit: timeRange) {
     const elements = element.querySelectorAll('[data-time]');
 
@@ -269,7 +301,11 @@ export function sendChangeLog() {
     ChatRoomSendLocal(content, 60000);
 }
 
-
+/**
+ * 处理结巴效果基于segmenter.segment()分词
+ * @param str 传入的字符串
+ * @returns 返回处理后的字符串
+ */
 export function segmentForCH(str: string): string[] | null {
     conDebug({
         name: "segmentForCHTest",
@@ -295,7 +331,12 @@ export function segmentForCH(str: string): string[] | null {
         return null;
     }
 }
-
+/**
+ * 检测数字是否被整除
+ * @param num 要检测的数字
+ * @param divisor 除数
+ * @returns 是否被整除
+ */
 export function isDivisible(num: number, divisor: number): boolean {
     return num % divisor === 0;
 }

@@ -1380,10 +1380,21 @@ interface CharacterGameParameters {
 }
 
 /**
+ * **MOD在线公开数据**
+ * @ 本地数据见VVV
+ * @see XSASettingAndData
+ */
+type XSA_OnlineSharedSettingsData = {
+	wombTattoosAppliedEffects: WombTattoosEffect[];
+	sensitiveLevel: number
+}
+
+/**
  * The characters online shared settings.
  * @see {@link Character.OnlineSharedSettings}
  */
 interface CharacterOnlineSharedSettings {
+	XSA_OnlineSharedSettings?: XSA_OnlineSharedSettingsData;
 	AllowFullWardrobeAccess: boolean;
 	BlockBodyCosplay: boolean;
 	AllowPlayerLeashing: boolean;
@@ -1514,23 +1525,38 @@ interface Character {
 interface ExtensionSettings {
 	[key: string]: any;
 }
+//  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv  //
+
+/**
+ * **MOD本地数据**
+ * 在线公开数据见:
+ * @see XSA_OnlineSharedSettingsData
+ */
+
+type XSASettingAndData = {
+	version: string;
+	settings: XSA_SettingsData;
+	data: XSA_Data;
+}
+
 type XSA_SettingsData = {
 	[key: string]: any;
 }
 type XSA_Data = {
 	[key: string]: any;
 	haveWombTattoos: boolean;
-	WombTattoosAppliedEffects: WombTattoosEffect[];
+	wombTattoosAppliedEffects: WombTattoosEffect[];
 	sensitiveLevel: number
+	resistCount: number;
+	player_Progress: number
 }
+type XSA_DataKey = Extract<keyof XSA_Data, string>;
+
 type WombTattoosEffect = 'sensitive' | 'pinkShock'
-type XSASettingData = {
-	version: string;
-	settings: XSA_SettingsData;
-	data: XSA_Data;
-}
+
+//  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  //
 interface PlayerCharacter extends Character {
-	XSA?: XSASettingData;
+	XSA?: XSASettingAndData;
 	// PreferenceInitPlayer() must be updated with defaults, when adding a new setting
 	ChatSettings?: {
 		ColorActions: boolean;

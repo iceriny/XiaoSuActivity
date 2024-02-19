@@ -75,5 +75,12 @@ export const CHANGELOG: ChangeLogObj[] = [
         description: "颜文字发送功能大修!",
         type: ChangeType.main,
         changes: ["颜文字表情功能大修! 新版使用方法请输入/xsa kaomoji 查看!"]
+    },
+    {
+        version: "0.2.0",
+        description: "淫纹大修!",
+        type: ChangeType.main,
+        changes: ["淫纹大修! 输入 /xsa yw 查看功能.","高潮抵抗难度和温度计进度现在可以跨平台继承 换句话说 掉线也不会丢失相关数据"]
+
     }
 ]

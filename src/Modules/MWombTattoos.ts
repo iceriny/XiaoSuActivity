@@ -1,6 +1,6 @@
 import { BaseModule } from "./BaseModule";
 import { DataModule, PlayerStorage } from "./MData";
-import { CharacterAppearanceIsLayerIsHave, conDebug, hookFunction, MSGType, PatchHook, SendActivity, PH } from "utils";
+import { CharacterAppearanceIsLayerIsHave, hookFunction, PatchHook, SendActivity, PH } from "utils";
 import { TimerProcessInjector } from "./MTimerProcessInjector";
 
 type wombTattoosLayersName = "Zoom" | "Big" | "Bloom" | "BottomSpike" | "Flash" | "Fly" | "Grass" | "Grow" | "GrowHollow" | "HeartSmallOutline" | "Heartline" | "HeartSmall" | "HeartSolid" | "HeartWings" | "In" | "Leaves" | "MidSpike" | "Ribow" | "Sense" | "Shake" | "SideHearts" | "Swim" | "Thorn" | "ThornOut" | "TopSpike" | "Venom" | "Viper" | "Waves" | "WingSmall";
@@ -29,7 +29,9 @@ export class WombTattoosModule extends BaseModule {
                  * 此处功能：检查玩家当前应用的子宫纹身层，并根据子宫纹身效果模块(E)来决定哪些效果应当生效
                  */
                 code: () => {
+                    // 触发该代码块后 `isCheckWombTattoosEffect` 设置为 `false`，以防止后续的持续检查逻辑执行消耗资源
                     WombTattoosModule.isCheckWombTattoosEffect = false;
+
                     // 获取当前玩家应用的子宫纹身图层名称列表
                     const wombTattoosAppliedLayerNames = WombTattoosModule.getAppliedLayerNames(Player);
 
@@ -49,8 +51,6 @@ export class WombTattoosModule extends BaseModule {
                         }
                     }
                     // 处理敏感等级 敏感等级在激活敏感效果的前提下 每多一个效果等级+1 每级额外增加0.5倍的敏感度
-
-
                     // 保存数据，将当前未应用的子宫纹身效果存储到游戏数据中
                     DataModule.SaveData({ WombTattoosAppliedEffects: appliedEffects, sensitiveLevel: appliedEffects.length });
                 }
@@ -59,7 +59,7 @@ export class WombTattoosModule extends BaseModule {
                 name: "HaveWombTattoosEffectsHandle",
                 priority: 11,
                 timeInterval: 200,
-                preconditions: () => (PlayerStorage()?.data?.haveWombTattoos ?? false) && (PlayerStorage()?.data?.WombTattoosAppliedEffects?.length ?? 0) > 0,
+                preconditions: () => (PlayerStorage()?.data?.haveWombTattoos ?? false) && (PlayerStorage()?.data?.wombTattoosAppliedEffects?.length ?? 0) > 0,
                 code: () => {
                     // 获取所有子宫纹身效果集合
                     const E = WombTattoosModule.wombTattoosEffects;
@@ -83,8 +83,6 @@ export class WombTattoosModule extends BaseModule {
     }
 
     public Load(): void {
-        window.EdgeCount = 0;
-
         /** 在加载角色画布时，如果是玩家 则 检查是否有纹身 如果有则 添加纹身效果指示器 */
         hookFunction("CharacterLoadCanvas", 0, (args, next) => {
             if (args[0] === Player) {
@@ -93,7 +91,7 @@ export class WombTattoosModule extends BaseModule {
             return next(args)
         })
 
-        const hookList: { [functionName: string]: [PatchHook, number][]} = {}
+        const hookList: { [functionName: string]: [PatchHook, number][] } = {}
         const WE = WombTattoosModule.wombTattoosEffects
         for (const e in WE) {
             const name = WE[e].name
@@ -204,7 +202,7 @@ export class WombTattoosModule extends BaseModule {
         "WingSmall" // 小翼
     ]
     static wombTattoosEffects: {
-        [key: string]: { name: WombTattoosEffect, layers: string[], timerCode?: () => void,timerCode2?: () => void, hook?: { [functionName: string]: { hook: PatchHook, priority: number } } }
+        [key: string]: { name: WombTattoosEffect, layers: string[], timerCode?: () => void, timerCode2?: () => void, hook?: { [functionName: string]: { hook: PatchHook, priority: number } } }
     } = {
             sensitive: { // 敏感提升
                 name: "sensitive",
@@ -213,25 +211,29 @@ export class WombTattoosModule extends BaseModule {
                     ActivityTimerProgress: {
                         priority: 3,
                         hook: (args, next) => {
-                            if (args[0] == Player) {
-                                const data = PlayerStorage()?.data.WombTattoosAppliedEffects;
-                                if (data?.find(e => e === 'sensitive')) {
-                                    conDebug({
-                                        name: "sensitive触发 处理前",
-                                        type: MSGType.DebugLog,
-                                        content: args[1]
-                                    }, "rgba(200, 154, 190, 1)");
-                                    // 如果sensitiveLevel未定义则设置为1 当sensitive触发时 sensitiveLevel >= 1
-                                    const sensitiveLevel = PlayerStorage()?.data?.sensitiveLevel ?? 1;
-                                    // 如果sensitiveLevel ==1 快感倍数为2[   x  *  (2 + (1 - 1) * 0.5)  ]
-                                    args[1] = args[1] * (2 + (sensitiveLevel - 1) * 0.5);
-                                    conDebug({
-                                        name: "sensitive触发 处理后",
-                                        type: MSGType.DebugLog,
-                                        content: args[1]
-                                    }, "rgba(200, 154, 190, 1)");
+                            const C = args[0] as Character;
+                            let addedProgress = args[1] as number;
+                            if (C.IsOnline()) {
+                                if (C.IsPlayer()) {
+                                    const data = PlayerStorage()?.data.wombTattoosAppliedEffects;
+                                    if (data?.find(e => e === 'sensitive')) {
+                                        // 如果sensitiveLevel未定义则设置为1 当sensitive触发时 sensitiveLevel >= 1
+                                        const sensitiveLevel = PlayerStorage()?.data?.sensitiveLevel ?? 1;
+                                        // 如果sensitiveLevel ==1 快感倍数为2[   x  *  (2 + (1 - 1) * 0.5)  ]
+                                        addedProgress = WombTattoosModule.handleProgressParametersBasedOnSensitivityLevel(addedProgress, sensitiveLevel);
+                                    }
+                                } else { // 处理非玩家自己的逻辑
+                                    const onlineSharedSettings = C.OnlineSharedSettings?.XSA_OnlineSharedSettings;
+                                    if (onlineSharedSettings
+                                        && onlineSharedSettings.sensitiveLevel) {
+                                        if (onlineSharedSettings?.wombTattoosAppliedEffects?.find(e => e === 'sensitive')) {
+                                            const sensitiveLevel = onlineSharedSettings?.sensitiveLevel;
+                                            addedProgress = WombTattoosModule.handleProgressParametersBasedOnSensitivityLevel(addedProgress, sensitiveLevel);
+                                        }
+                                    }
                                 }
                             }
+                            args[1] = addedProgress;
                             return next(args)
                         },
                     }
@@ -240,11 +242,11 @@ export class WombTattoosModule extends BaseModule {
             // orgasmControl: () => { //高潮控制
 
             // },
-            pinkShock: { //PinkShock()
+            pinkShock: { //电击
                 name: "pinkShock",
                 layers: ['Flash'],
                 timerCode: () => {
-                    if (PlayerStorage()?.data?.WombTattoosAppliedEffects.includes("pinkShock")) {
+                    if (PlayerStorage()?.data?.wombTattoosAppliedEffects.includes("pinkShock")) {
                         if (Math.random() < 0.003) {
                             this.PinkShock();
                             this.screenFlickerIntensity = 0.8;
@@ -253,7 +255,7 @@ export class WombTattoosModule extends BaseModule {
                 },
                 timerCode2: () => {
                     this.screenFlickerIntensity -= 0.025;
-                        if (this.screenFlickerIntensity < 0) this.screenFlickerIntensity = 0;
+                    if (this.screenFlickerIntensity < 0) this.screenFlickerIntensity = 0;
                 },
                 hook: {
                     'Player.HasTints': {
@@ -261,7 +263,7 @@ export class WombTattoosModule extends BaseModule {
                         hook: (args, next) => {
                             if (!Player.ImmersionSettings?.AllowTints && this.screenFlickerIntensity == 0)
                                 return next(args);
-                            if (PlayerStorage()?.data.WombTattoosAppliedEffects.includes('pinkShock')) return true;
+                            if (PlayerStorage()?.data.wombTattoosAppliedEffects.includes('pinkShock')) return true;
                             return next(args);
                         }
                     },
@@ -270,7 +272,7 @@ export class WombTattoosModule extends BaseModule {
                         hook: (args, next) => {
                             if (!Player.ImmersionSettings?.AllowTints && this.screenFlickerIntensity == 0)
                                 return next(args);
-                            if (PlayerStorage()?.data.WombTattoosAppliedEffects.includes('pinkShock')) {
+                            if (PlayerStorage()?.data.wombTattoosAppliedEffects.includes('pinkShock')) {
                                 return [{ r: 255, g: 100, b: 196, a: this.screenFlickerIntensity }];
                             }
                             return next(args);
@@ -279,6 +281,16 @@ export class WombTattoosModule extends BaseModule {
                 }
             }
         }
+    /**
+     * 根据敏感等级处理进度参数----
+     * 如果sensitiveLevel ==1 快感倍数为2[   x  *  (2 + (1 - 1) * 0.5)  ]
+     * @param args 正常的增加进度
+     * @param sensitiveLevel 敏感等级
+     */
+    private static handleProgressParametersBasedOnSensitivityLevel(addedProgress: number, sensitiveLevel: number) {
+        addedProgress = addedProgress * (2 + (sensitiveLevel - 1) * 0.5);
+        return addedProgress;
+    }
 
     private getWombTattoosLayers() {
         const a = AssetFemale3DCG.find(group => group.Group === 'BodyMarkings')?.Asset as AssetDefinition.Item[]
@@ -297,6 +309,12 @@ export class WombTattoosModule extends BaseModule {
         }
         return false;
     }
+    /**
+     * @see checkHaveWombTattoosToAddOrRemoveEffect
+     * @see onHaveWombTattoos
+     * @see offHaveWombTattoos
+     * @returns 玩家的XSA.data.haveWombTattoos是否为真 表示玩家是否有淫纹
+     */
     public static checkPlayerHaveWombTattoos() {
         return Player.XSA?.data.haveWombTattoos ?? false
     }
@@ -324,6 +342,7 @@ export class WombTattoosModule extends BaseModule {
     }
 
 
+    /** 屏幕闪烁强度 */
     private static screenFlickerIntensity: number = 0;
 
 
