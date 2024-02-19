@@ -18,7 +18,7 @@ export class DataModule extends BaseModule {
         wombTattoosAppliedEffects: [],
         sensitiveLevel: 0,
         resistCount: 0,
-        player_Progress: Player.ArousalSettings?.Progress ?? 0
+        player_Progress: 0
     }
     static DefaultSetting: XSA_SettingsData = {
 
