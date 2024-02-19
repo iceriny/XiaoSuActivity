@@ -76,17 +76,42 @@ export class DataModule extends BaseModule {
      * 从ExtensionStorage获取mod数据
      */
     public static allDataTake() {
+        // 处理XSASettingAndData的获取 从ExtensionStorage获取数据
         if (ExtensionStorage()) {
+            // 处理XSASettingAndData的获取 从ExtensionStorage获取数据
             Player.XSA = JSON.parse(LZString.decompressFromBase64(ExtensionStorage()) ?? '') as XSASettingAndData
+            // 如果没有获取到数据则读取默认数据
+            for (const k in Player.XSA){
+                // 处理data
+                if (k === 'data'){
+                    for (const k2 in Player.XSA.data){
+                        if (Player.XSA.data[k2] === undefined){
+                            Player.XSA.data[k2] = this.DefaultData[k2]
+                        }
+                    }
+                }
+                // 处理settings
+                if (k === 'settings') {
+                    for (const k3 in Player.XSA.settings){
+                        if (Player.XSA.settings[k3] === undefined){
+                            Player.XSA.settings[k3] = this.DefaultSetting[k3]
+                        }
+                    }
+                }
+            }
         } else {
+            // 如果没有定义ExtensionStorage 则读取默认数据
             Player.XSA = {
                 version: XSActivity_VERSION,
                 data: this.DefaultData,
                 settings: this.DefaultSetting
             }
         }
+
+        // 将获取到的数据输出到PlayerOnlineSharedSettingsStorage
         if (PlayerOnlineSharedSettingsStorage()) {
             Player.OnlineSharedSettings!.XSA = {
+                // 需要手动处理每一条需要的 PlayerOnlineSharedSettings 后续如果有使用额外的数据需要手动添加
                 wombTattoosAppliedEffects: Player.XSA.data.wombTattoosAppliedEffects ?? [],
                 sensitiveLevel: Player.XSA.data.sensitiveLevel ?? 0
             }
@@ -147,6 +172,6 @@ export class DataModule extends BaseModule {
         if (Player.ArousalSettings && Player.ArousalSettings.Progress && data.player_Progress) {
             Player.ArousalSettings.Progress = data.player_Progress;
         }
-        ActivityOrgasmGameResistCount = data.resistCount
+        ActivityOrgasmGameResistCount = data.resistCount ?? 0
     }
 }
