@@ -82,9 +82,14 @@ export class TimerProcessInjector extends BaseModule {
                 // 判定前置条件 && 时间间隔已到
                 if (c.preconditions() && this.TimerLastCycleCallSet[c.name].timerLastCycleCall + this.TimerLastCycleCallSet[c.name].timeInterval <= currentTime) {
                     c.code();
+                    if ( typeof c.timeInterval !== 'number'){
+                        conDebug(`[TimerProcessInjector] ${c.name} is Dynamic... value: ${this.TimerLastCycleCallSet[c.name].timeInterval}.`);
+                    }
+                    
                     this.TimerLastCycleCallSet[c.name].timerLastCycleCall = currentTime;
                     if (this.TimerLastCycleCallSet[c.name].isDynamic) {
                         this.TimerLastCycleCallSet[c.name].timeInterval = this.TimerLastCycleCallSet[c.name].getTimeInterval!();
+                        conDebug(`[TimerProcessInjector] ${c.name} is Dynamic... value: ${this.TimerLastCycleCallSet[c.name].timeInterval}.`);
                     }
                 }
                 

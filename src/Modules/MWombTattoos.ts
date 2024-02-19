@@ -84,7 +84,9 @@ export class WombTattoosModule extends BaseModule {
                 priority: 13,
                 timeInterval: WombTattoosModule.wombTattoosEffects.trance.dynamicTimeInterval!,
                 preconditions: () => WombTattoosModule.GetCharacterWombTattoosEffects(Player)?.includes('trance') ?? false,
-                code: () => WombTattoosModule.wombTattoosEffects.trance.customizeTimerCode!
+                code: () => {
+                    WombTattoosModule.wombTattoosEffects.trance.customizeTimerCode!();
+                }
             }
         ];
     }
