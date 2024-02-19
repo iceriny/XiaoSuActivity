@@ -41,7 +41,7 @@ export class WombTattoosModule extends BaseModule {
                     // 初始化已应用的效果列表
                     const appliedEffects: WombTattoosEffect[] = [];
 
-                    // 遍历所有子宫纹身效果
+                    // 遍历所有子宫纹身效果 
                     for (const e in E) {
                         const effect = E[e];
                         const name = effect.name

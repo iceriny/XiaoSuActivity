@@ -52,14 +52,19 @@ export class TimerProcessInjector extends BaseModule {
 
         // 设置计时器Set
         for (const c of this.processInjectionSequence) {
-            this.TimerLastCycleCallSet[c.name].timerLastCycleCall = -1;
             if (typeof c.timeInterval == 'number'){
-                this.TimerLastCycleCallSet[c.name].timeInterval = c.timeInterval;
-                this.TimerLastCycleCallSet[c.name].isDynamic = false;
+                this.TimerLastCycleCallSet[c.name] = {
+                    timerLastCycleCall: -1,
+                    timeInterval: c.timeInterval,
+                    isDynamic: false
+                }
             } else {
-                this.TimerLastCycleCallSet[c.name].timeInterval = c.timeInterval();
-                this.TimerLastCycleCallSet[c.name].getTimeInterval = c.timeInterval;
-                this.TimerLastCycleCallSet[c.name].isDynamic = true;
+                this.TimerLastCycleCallSet[c.name] = {
+                    timerLastCycleCall: -1,
+                    timeInterval: c.timeInterval(),
+                    isDynamic: true,
+                    getTimeInterval: c.timeInterval
+                }
             }
             
         }
