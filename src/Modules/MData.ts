@@ -132,7 +132,7 @@ export class DataModule extends BaseModule {
                 data[itemKey] = dataItem[itemKey];
             }
             if (OnlineSharedSettings && XSA_OnlineSharedSettingsDataKeyList.includes(itemKey)) {
-                OnlineSharedSettings.wombTattoosAppliedEffects = dataItem[itemKey];
+                OnlineSharedSettings[itemKey as keyof XSA_OnlineSharedSettingsData] = dataItem[itemKey];
             }
         }
     }
