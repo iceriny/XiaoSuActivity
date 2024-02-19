@@ -76,8 +76,8 @@ export class WombTattoosModule extends BaseModule {
                 timeInterval: 16,
                 preconditions: () => WombTattoosModule.screenFlickerIntensity != 0,
                 code: () => {
-                    WombTattoosModule.wombTattoosEffects.pinkShock.highFrequencyTimerTimerCode!;
-                    WombTattoosModule.wombTattoosEffects.trance.highFrequencyTimerTimerCode!;
+                    WombTattoosModule.wombTattoosEffects.pinkShock.highFrequencyTimerTimerCode!();
+                    WombTattoosModule.wombTattoosEffects.trance.highFrequencyTimerTimerCode!();
                 }
             }, {
                 name: "RandomTrance",
@@ -310,6 +310,7 @@ export class WombTattoosModule extends BaseModule {
                 layers: ['Bloom', 'Fly'],
                 customizeTimerCode: () => {
                     // TODO: 迷幻演出
+                    SendActivity(`${PH.s}被自己的淫纹影响，大脑陷入了一阵恍惚之中.....`, Player.MemberNumber!)
                     this.tranceIntensity = 0.9;
                 },
                 highFrequencyTimerTimerCode: () => {
