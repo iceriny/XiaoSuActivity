@@ -309,9 +309,11 @@ export class WombTattoosModule extends BaseModule {
                 name: 'trance',
                 layers: ['Bloom', 'Fly'],
                 customizeTimerCode: () => {
-                    // TODO: 迷幻演出
-                    SendActivity(`${PH.s}被自己的淫纹影响，大脑陷入了一阵恍惚之中.....`, Player.MemberNumber!)
-                    this.tranceIntensity = 0.9;
+                    if (this.GetCharacterWombTattoosEffects(Player)?.includes("trance")) {
+                        // TODO: 迷幻演出
+                        SendActivity(`${PH.s}被自己的淫纹影响，大脑陷入了一阵恍惚之中.....`, Player.MemberNumber!)
+                        this.tranceIntensity = 0.9;
+                    }
                 },
                 highFrequencyTimerTimerCode: () => {
                     this.tranceIntensity -= 0.001;
