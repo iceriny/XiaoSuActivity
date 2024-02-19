@@ -246,7 +246,7 @@ export class WombTattoosModule extends BaseModule {
                 name: "pinkShock",
                 layers: ['Flash'],
                 timerCode: () => {
-                    if (PlayerStorage() && PlayerStorage()?.data?.wombTattoosAppliedEffects.includes("pinkShock")) {
+                    if (PlayerStorage() && PlayerStorage()?.data?.wombTattoosAppliedEffects?.includes("pinkShock")) {
                         if (Math.random() < 0.003) {
                             this.PinkShock();
                             this.screenFlickerIntensity = 0.8;
@@ -263,7 +263,7 @@ export class WombTattoosModule extends BaseModule {
                         hook: (args, next) => {
                             if (!Player.ImmersionSettings?.AllowTints && this.screenFlickerIntensity == 0 && PlayerStorage())
                                 return next(args);
-                            if (PlayerStorage()?.data.wombTattoosAppliedEffects.includes('pinkShock')) return true;
+                            if (PlayerStorage()?.data.wombTattoosAppliedEffects?.includes('pinkShock')) return true;
                             return next(args);
                         }
                     },
@@ -272,7 +272,7 @@ export class WombTattoosModule extends BaseModule {
                         hook: (args, next) => {
                             if (!Player.ImmersionSettings?.AllowTints && this.screenFlickerIntensity == 0 && PlayerStorage())
                                 return next(args);
-                            if (PlayerStorage()?.data.wombTattoosAppliedEffects.includes('pinkShock')) {
+                            if (PlayerStorage()?.data.wombTattoosAppliedEffects?.includes('pinkShock')) {
                                 return [{ r: 255, g: 100, b: 196, a: this.screenFlickerIntensity }];
                             }
                             return next(args);
