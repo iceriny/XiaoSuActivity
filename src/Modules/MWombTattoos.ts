@@ -52,7 +52,7 @@ export class WombTattoosModule extends BaseModule {
                     }
                     // 处理敏感等级 敏感等级在激活敏感效果的前提下 每多一个效果等级+1 每级额外增加0.5倍的敏感度
                     // 保存数据，将当前未应用的子宫纹身效果存储到游戏数据中
-                    DataModule.SaveData({ WombTattoosAppliedEffects: appliedEffects, sensitiveLevel: appliedEffects.length });
+                    DataModule.SaveData({ wombTattoosAppliedEffects: appliedEffects, sensitiveLevel: appliedEffects.length });
                 }
             },
             {

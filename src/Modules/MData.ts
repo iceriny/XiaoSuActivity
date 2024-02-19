@@ -3,7 +3,7 @@ import { BaseModule } from "./BaseModule";
 export const PlayerStorage = () => Player.XSA;
 export const PlayerOnlineSharedSettingsStorage = () => Player.OnlineSharedSettings?.XSA;
 export const ExtensionStorage = () => Player.ExtensionSettings.XSA as string;
-const XSA_OnlineSharedSettingsDataKeyList = ['XSA_OnlineSharedSettingsData', 'sensitiveLevel'];
+const XSA_OnlineSharedSettingsDataKeyList = ['wombTattoosAppliedEffects', 'sensitiveLevel'];
 export class DataModule extends BaseModule {
 
     // 获取用户代理字符串
