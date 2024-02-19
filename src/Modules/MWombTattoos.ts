@@ -74,7 +74,7 @@ export class WombTattoosModule extends BaseModule {
                 name: "ScreenFlickerForPinkShock",
                 priority: 12,
                 timeInterval: 16,
-                preconditions: () => WombTattoosModule.screenFlickerIntensity != 0,
+                preconditions: () => WombTattoosModule.screenFlickerIntensity != 0 || WombTattoosModule.tranceIntensity != 0,
                 code: () => {
                     WombTattoosModule.wombTattoosEffects.pinkShock.highFrequencyTimerTimerCode!();
                     WombTattoosModule.wombTattoosEffects.trance.highFrequencyTimerTimerCode!();
