@@ -332,7 +332,7 @@ export class WombTattoosModule extends BaseModule {
                             SendActivity(`${PH.s}被自己的淫纹影响，大脑陷入了一阵恍惚之中.....`, Player.MemberNumber!)
                             // this.tranceIntensity = 0.9;
                             // DrawFlashScreen("#FFB0B0", 14400, 140);
-                            DrawModule.setFlash('FF2ED9', 5000, 140);
+                            DrawModule.setFlash('#FF2ED9', 5000, 80);
                         } else {
                             setTimeout(() => {
                                 SendActivity(`${PH.s}被自己的淫纹影响，大脑陷入了一阵恍惚之中.....`, Player.MemberNumber!)
