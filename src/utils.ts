@@ -3,8 +3,14 @@ import { modules } from "Modules/ModulesDict";
 import { XS_ModuleName } from "Modules/BaseModule";
 import { CHANGELOG, ChangeType } from "changeLogData";
 
+//   VVVVVVVVVVVVVVVVVVVVVVVVVVVVV  ----用得到的常数---- VVVVVVVVVVVVVVVVVVVVVVV    //
 
-// SDK
+export const CSShref = DEBUG ? "https://iceriny.github.io/XiaoSuActivity/dev/XSActivityStyle.css" : "https://iceriny.github.io/XiaoSuActivity/main/XSActivityStyle.css";
+
+//   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ----用得到的常数---- ^^^^^^^^^^^^^^^^^^^^^^^    //
+
+
+//   VVVVVVVVVVVVVVVVVVVVVVVVVVVVV  ----SDK----  VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV    //
 export const bcModSDK = bcModSDKRef.registerMod({
     name: "XiaoSuActivity",
     fullName: "XiaoSu's Activity Expand",
@@ -21,6 +27,8 @@ export function hookFunction(target: string, priority: number, hook: PatchHook):
 export function patchFunction(functionName: string, patches: Record<string, string | null>): void {
     bcModSDK.patchFunction(functionName, patches);
 }
+
+//    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ----SDK----  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^    //
 /**
  * 发送*表情信息
  * @param msg 要发送的内容
@@ -72,6 +80,11 @@ export function SendActivity(msg: string, sourceCharacter: number, targetCharact
         Type: "Activity", Content: "XSA_ActMessage", Dictionary: resultDict, Sender: sourceCharacter
     });
 }
+
+
+//   ^^^^^^^^^^^^^^^  ----游戏函数调用----  ^^^^^^^^^^^^^^^    //
+
+
 /* 发送的数据包对象的实例
 {
     "Sender": 150217,

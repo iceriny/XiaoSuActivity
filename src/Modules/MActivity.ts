@@ -5,7 +5,7 @@ import { conDebug, hookFunction, MSGType, SendActivity } from "utils";
  * 动作的限定条件信息对象
 */
 interface prerequisite {
-    Name: ActivityPrerequisiteXiaoSu;
+    Name: XSA_ActivityPrerequisite;
     Action: (args: Array<unknown>) => boolean;
 }
 
@@ -75,7 +75,7 @@ export class ActivityModule extends BaseModule {
         hookFunction("ActivityCheckPrerequisite", 500, (args, next) => {
             const prereq = args[0];
             if (prereq in this.prerequisiteDict) {
-                const customPrereq = this.prerequisiteDict[prereq as ActivityPrerequisiteXiaoSu];
+                const customPrereq = this.prerequisiteDict[prereq as XSA_ActivityPrerequisite];
                 return customPrereq.Action(args);
             } else {
                 return next(args);
@@ -97,7 +97,7 @@ export class ActivityModule extends BaseModule {
             const aName = fileName.replace('.png', '');
 
             if (aName.indexOf("XSAct_") == 0) {
-                const resultName = `Assets/Female3DCG/Activity/${this.activityToAddDict[aName as ActivityNameXiaoSu].img}.png`;
+                const resultName = `Assets/Female3DCG/Activity/${this.activityToAddDict[aName as XSA_ActivityName].img}.png`;
                 args[0] = resultName;
                 return next(args);
             }
@@ -162,12 +162,12 @@ export class ActivityModule extends BaseModule {
         let actLength = 0;
         for (const aN in this.activityToAddDict) { // a 为活动名
 
-            this.pushToActivity(this.activityToAddDict[aN as ActivityNameXiaoSu].act);
+            this.pushToActivity(this.activityToAddDict[aN as XSA_ActivityName].act);
 
             this.activityDictAdd();
 
             //加载文字描述
-            const activityDesc = this.activityToAddDict[aN as ActivityNameXiaoSu].desc;
+            const activityDesc = this.activityToAddDict[aN as XSA_ActivityName].desc;
 
             activityDesc?.forEach((d) => {
                 ActivityDictionary?.push(d);
@@ -183,7 +183,7 @@ export class ActivityModule extends BaseModule {
     activityDictAdd() {
 
         for (const a in this.activityToAddDict) {
-            const pendingActivity = this.activityToAddDict[a as ActivityNameXiaoSu];
+            const pendingActivity = this.activityToAddDict[a as XSA_ActivityName];
 
             const actName = pendingActivity.act.Name;
             const nameWithoutPrefix = actName.substring(6);
@@ -247,7 +247,7 @@ export class ActivityModule extends BaseModule {
      * @desc - desc默认需要为null,当活动初始化时,会自动添加文字描述
      * @descString - 两个元素的数组 [0]为如果目标为他人的描述，[1]为目标自己的描述
     */
-    activityToAddDict: { [ActivityIndex in ActivityNameXiaoSu]: { act: Activity, desc: null | string[][], descString: [string, string], img: ActivityName } } = {
+    activityToAddDict: { [ActivityIndex in XSA_ActivityName]: { act: Activity, desc: null | string[][], descString: [string, string], img: ActivityName } } = {
         XSAct_眯眼: {
             act: {
                 Name: "XSAct_眯眼",
@@ -618,11 +618,10 @@ export class ActivityModule extends BaseModule {
         }
 
     }
-
     /**
      * 前置条件字典
-     * @PrerequisiteName - 需要是在{@link ActivityPrerequisiteXiaoSu}的字符串
-     * @Name - 需要是在{@link ActivityPrerequisiteXiaoSu}的字符串
+     * @PrerequisiteName - 需要是在{@link XSA_ActivityPrerequisite}的字符串
+     * @Name - 需要是在{@link XSA_ActivityPrerequisite}的字符串
      * @Action - 检测判断的具体动作
      * - @param args - 一个数组,包含四个元素.
      * - args[0]为@param prereq:{@link ActivityPrerequisite} 判定决定使用哪个条件的依据，但此处无用 请不要在这里使用该参数
@@ -630,7 +629,7 @@ export class ActivityModule extends BaseModule {
      * - args[2]为@param acted:{@link Character} | {@link PlayerCharacter} 代表动作目标的数据
      * - args[3]为@param group:{@link AssetGroup}.
      */
-    prerequisiteDict: { [PrerequisiteName in ActivityPrerequisiteXiaoSu]: prerequisite } = {
+    prerequisiteDict: { [PrerequisiteName in XSA_ActivityPrerequisite]: prerequisite } = {
         ItemHoodCovered: { //头部面罩位置是否覆盖
             Name: "ItemHoodCovered",
             Action: (args) => {
@@ -696,10 +695,10 @@ export class ActivityModule extends BaseModule {
     }
 
 
-    public getAllAct(): ActivityNameXiaosu_onlyName[] {
-        const result: ActivityNameXiaosu_onlyName[] = []
+    public getAllAct(): XSA_ActivityName_onlyName[] {
+        const result: XSA_ActivityName_onlyName[] = []
         for (const a in this.activityToAddDict) {
-            const suffix = a.substring(6) as ActivityNameXiaosu_onlyName; // 从索引为 6 的位置开始截取到字符串末尾
+            const suffix = a.substring(6) as XSA_ActivityName_onlyName; // 从索引为 6 的位置开始截取到字符串末尾
             result.push(suffix); // 输出：XXXX
         }
         conDebug({

@@ -1,7 +1,6 @@
 import { BaseModule } from "Modules/BaseModule";
 import { MSGType, SendChat, SendEmote, conDebug, copyAndDownloadHtmlElement, hookFunction, segmentForCH, timeRange } from "utils";
 
-const buildKaomojiMenuCSShref = DEBUG ? "https://iceriny.github.io/XiaoSuActivity/dev/XSActivityStyle.css" : "https://iceriny.github.io/XiaoSuActivity/main/XSActivityStyle.css";
 export class ChatroomModule extends BaseModule {
 
     // VVVV==========初始化与加载函数==========VVVV //
@@ -14,13 +13,6 @@ export class ChatroomModule extends BaseModule {
         this.moduleName = "ChatroomModule";
         this.priority = 30;
 
-        const linkElement = document.createElement("link");
-        linkElement.rel = "stylesheet";
-        linkElement.type = "text/css";
-        linkElement.href = buildKaomojiMenuCSShref;
-
-        // 将 link 元素插入到 head 标签中
-        document.head.appendChild(linkElement);
     }
 
 

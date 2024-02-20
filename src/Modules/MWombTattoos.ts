@@ -83,7 +83,7 @@ export class WombTattoosModule extends BaseModule {
                 name: "RandomTrance",
                 priority: 13,
                 timeInterval: WombTattoosModule.wombTattoosEffects.trance.dynamicTimeInterval!,
-                preconditions: () => WombTattoosModule.GetCharacterWombTattoosEffects(Player)?.includes('trance') ?? false,
+                preconditions: () => WombTattoosModule.HasWombTattoosEffect(Player, 'trance'),
                 code: () => {
                     WombTattoosModule.wombTattoosEffects.trance.customizeTimerCode!();
                 }
@@ -92,24 +92,6 @@ export class WombTattoosModule extends BaseModule {
     }
 
     public Load(): void {
-        // 修改WombTattoos为非cosplay物品
-        hookFunction('LoginResponse', 999, (args, next) => {
-            const response = args[0];
-            if (response && typeof response.Name === 'string' && typeof response.AccountName === 'string') {
-                for (const group of AssetFemale3DCG as AssetGroupDefinition.Appearance[]) {
-                    if (group.Group === 'ClothAccessory') {
-                        for (const item of group.Asset as AssetDefinition.Appearance[]) {
-                            if (item.Name === "WombTattoos") {
-                                item.BodyCosplay = false;
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-            return next(args);
-        });
         /** 在加载角色画布时，如果是玩家 则 检查是否有纹身 如果有则 添加纹身效果指示器 */
         hookFunction("CharacterLoadCanvas", 0, (args, next) => {
             if (args[0] === Player) {
@@ -158,10 +140,22 @@ export class WombTattoosModule extends BaseModule {
      */
     public static GetCharacterWombTattoosEffects(C: Character | PlayerCharacter): WombTattoosEffect[] | null {
         if (C.IsOnline()) {
-            if (C.IsPlayer()) return C.XSA?.data.wombTattoosAppliedEffects ?? [];
+            if (C.IsPlayer()) return C.XSA?.data?.wombTattoosAppliedEffects ?? [];
             else return C.OnlineSharedSettings?.XSA?.wombTattoosAppliedEffects ?? [];
         }
         return [];
+    }
+
+    /**
+     * 检测目标角色是否具有对应的效果
+     * @param C 要检测的角色
+     * @param effectName 要检测的效果名
+     * @returns 是否有该效果
+     */
+    public static HasWombTattoosEffect(C: Character | PlayerCharacter, effectName: WombTattoosEffect): boolean {
+        const haveEffects = this.GetCharacterWombTattoosEffects(C);
+        if (haveEffects && haveEffects.includes(effectName)) return true;
+        else return false;
     }
 
     /**
@@ -291,7 +285,7 @@ export class WombTattoosModule extends BaseModule {
                 name: "pinkShock",
                 layers: ['Flash'],
                 defaultTimerCode: () => {
-                    if (PlayerStorage() && WombTattoosModule.GetCharacterWombTattoosEffects(Player)?.includes("pinkShock")) {
+                    if (WombTattoosModule.HasWombTattoosEffect(Player, 'pinkShock')) {
                         if (Math.random() < 0.003) {
                             this.PinkShock();
                             this.screenFlickerIntensity = 0.8;
@@ -307,14 +301,14 @@ export class WombTattoosModule extends BaseModule {
                     'Player.HasTints': {
                         priority: 3,
                         hook: (args, next) => {
-                            if (PlayerStorage()?.data.wombTattoosAppliedEffects?.includes('pinkShock') && this.screenFlickerIntensity !== 0) return true;
+                            if (WombTattoosModule.HasWombTattoosEffect(Player, 'pinkShock') && this.screenFlickerIntensity !== 0) return true;
                             return next(args);
                         }
                     },
                     'Player.GetTints': {
                         priority: 3,
                         hook: (args, next) => {
-                            if (PlayerStorage()?.data.wombTattoosAppliedEffects?.includes('pinkShock') && this.screenFlickerIntensity !== 0) {
+                            if (WombTattoosModule.HasWombTattoosEffect(Player, 'pinkShock') && this.screenFlickerIntensity !== 0) {
                                 return [{ r: 255, g: 100, b: 196, a: this.screenFlickerIntensity }];
                             }
                             return next(args);
@@ -326,7 +320,7 @@ export class WombTattoosModule extends BaseModule {
                 name: 'trance',
                 layers: ['Bloom', 'Fly'],
                 customizeTimerCode: () => {
-                    if (this.GetCharacterWombTattoosEffects(Player)?.includes("trance")) {
+                    if (this.HasWombTattoosEffect(Player, 'trance')) {
                         // TODO: 迷幻演出
                         SendActivity(`${PH.s}被自己的淫纹影响，大脑陷入了一阵恍惚之中.....`, Player.MemberNumber!)
                         this.tranceIntensity = 0.9;
@@ -342,14 +336,14 @@ export class WombTattoosModule extends BaseModule {
                     'Player.HasTints': {
                         priority: 4,
                         hook: (args, next) => {
-                            if (PlayerStorage() && PlayerStorage()?.data.wombTattoosAppliedEffects?.includes('trance') && this.tranceIntensity !== 0) return true;
+                            if (this.HasWombTattoosEffect(Player, 'trance') && this.tranceIntensity !== 0) return true;
                             else return next(args);
                         }
                     },
                     'Player.GetTints': {
                         priority: 4,
                         hook: (args, next) => {
-                            if (PlayerStorage() && PlayerStorage()?.data.wombTattoosAppliedEffects?.includes('trance') && this.tranceIntensity !== 0){
+                            if (this.HasWombTattoosEffect(Player, 'trance') && this.tranceIntensity !== 0) {
                                 return [{ r: GetRandomInt(177, 255), g: 80, b: GetRandomInt(80, 255), a: this.screenFlickerIntensity }];
                             } else return next(args);
                         }
@@ -359,7 +353,11 @@ export class WombTattoosModule extends BaseModule {
         }
 
     /**表示恍惚程度的变量 */
-    private static tranceIntensity = 0;
+    private static tranceIntensity: number = 0;
+
+    /** 屏幕闪烁强度 */
+    private static screenFlickerIntensity: number = 0;
+
     /**
      * 根据敏感等级处理进度参数----
      * 如果sensitiveLevel ==1 快感倍数为2[   x  *  (2 + (1 - 1) * 0.5)  ]
@@ -421,8 +419,6 @@ export class WombTattoosModule extends BaseModule {
     }
 
 
-    /** 屏幕闪烁强度 */
-    private static screenFlickerIntensity: number = 0;
 
 
     public static PinkShock() {

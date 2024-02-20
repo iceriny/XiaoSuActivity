@@ -1,5 +1,8 @@
 import { hookFunction } from "utils";
 import { BaseModule } from "./BaseModule";
+import { CSShref } from "utils";
+
+
 export const PlayerStorage = () => Player.XSA;
 export const PlayerOnlineSharedSettingsStorage = () => Player.OnlineSharedSettings?.XSA;
 export const ExtensionStorage = () => Player.ExtensionSettings.XSA as string;
@@ -55,6 +58,14 @@ export class DataModule extends BaseModule {
 
         window.BROWSER_NAME = DataModule.browserName;
         window.BROWSER_VERSION = DataModule.browserVersion;
+
+        const linkElement = document.createElement("link");
+        linkElement.rel = "stylesheet";
+        linkElement.type = "text/css";
+        linkElement.href = CSShref;
+
+        // 将 link 元素插入到 head 标签中
+        document.head.appendChild(linkElement);
 
     }
 

@@ -4,7 +4,7 @@ import { conDebug, hookFunction } from "utils";
 /**
  * 进程注入集合
  */
-interface IProcessInjectionSet {
+interface IProcessInjectionSetOBJ {
     [key: string]: IInjectionCode
 }
 /**
@@ -23,7 +23,7 @@ export class TimerProcessInjector extends BaseModule {
     /** 注入进程的顺序队列 */
     private static processInjectionSequence: IInjectionCode[] = [];
     /** 注入进程集合 */
-    private static processInjectionSet: IProcessInjectionSet = {};
+    private static processInjectionSet: IProcessInjectionSetOBJ = {};
     /** 注入进程集合 需要在Init函数的末尾注入 */
     public static set setProcessInjectionSequence(sequence: IInjectionCode[]) {
         for (const c of sequence) {
