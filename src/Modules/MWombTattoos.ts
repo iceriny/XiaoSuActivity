@@ -287,8 +287,16 @@ export class WombTattoosModule extends BaseModule {
                 defaultTimerCode: () => {
                     if (WombTattoosModule.HasWombTattoosEffect(Player, 'pinkShock')) {
                         if (Math.random() < 0.003) {
-                            this.PinkShock();
-                            this.screenFlickerIntensity = 0.8;
+                            if (this.tranceIntensity == 0) {
+                                this.PinkShock();
+                                this.screenFlickerIntensity = 0.8;
+                            } else {
+                                setTimeout(() => {
+                                    this.PinkShock();
+                                    this.screenFlickerIntensity = 0.8;
+                                }, 5000);
+                            }
+
                         }
                     }
                 },
@@ -308,7 +316,7 @@ export class WombTattoosModule extends BaseModule {
                     'Player.GetTints': {
                         priority: 3,
                         hook: (args, next) => {
-                            if (WombTattoosModule.HasWombTattoosEffect(Player, 'pinkShock') && this.screenFlickerIntensity !== 0) {
+                            if (WombTattoosModule.HasWombTattoosEffect(Player, 'pinkShock') && this.screenFlickerIntensity !== 0 && this.tranceIntensity === 0 ) {
                                 return [{ r: 255, g: 100, b: 196, a: this.screenFlickerIntensity }];
                             }
                             return next(args);
@@ -322,8 +330,15 @@ export class WombTattoosModule extends BaseModule {
                 customizeTimerCode: () => {
                     if (this.HasWombTattoosEffect(Player, 'trance')) {
                         // TODO: 迷幻演出
-                        SendActivity(`${PH.s}被自己的淫纹影响，大脑陷入了一阵恍惚之中.....`, Player.MemberNumber!)
-                        this.tranceIntensity = 0.9;
+                        if (this.screenFlickerIntensity == 0) {
+                            SendActivity(`${PH.s}被自己的淫纹影响，大脑陷入了一阵恍惚之中.....`, Player.MemberNumber!)
+                            this.tranceIntensity = 0.9;
+                        } else {
+                            setTimeout(() => {
+                                SendActivity(`${PH.s}被自己的淫纹影响，大脑陷入了一阵恍惚之中.....`, Player.MemberNumber!)
+                                this.tranceIntensity = 0.9;
+                            }, 3000);
+                        }
                     }
                 },
                 highFrequencyTimerTimerCode: () => {
@@ -334,16 +349,16 @@ export class WombTattoosModule extends BaseModule {
                 dynamicTimeInterval: (): number => ((Math.random() + 1) * 60000), ///////////////////////////////////////////// 测试使用1~2分钟 
                 hook: {
                     'Player.HasTints': {
-                        priority: 4,
+                        priority: 3,
                         hook: (args, next) => {
                             if (this.HasWombTattoosEffect(Player, 'trance') && this.tranceIntensity !== 0) return true;
                             else return next(args);
                         }
                     },
                     'Player.GetTints': {
-                        priority: 4,
+                        priority: 3,
                         hook: (args, next) => {
-                            if (this.HasWombTattoosEffect(Player, 'trance') && this.tranceIntensity !== 0) {
+                            if (this.HasWombTattoosEffect(Player, 'trance') && this.tranceIntensity !== 0 && this.screenFlickerIntensity === 0) {
                                 return [{ r: GetRandomInt(177, 255), g: 80, b: GetRandomInt(80, 255), a: this.screenFlickerIntensity }];
                             } else return next(args);
                         }
