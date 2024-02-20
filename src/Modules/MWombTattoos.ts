@@ -1,6 +1,6 @@
 import { BaseModule } from "./BaseModule";
 import { DataModule, PlayerStorage } from "./MData";
-import { CharacterAppearanceIsLayerIsHave, hookFunction, PatchHook, SendActivity, PH, GetRandomInt } from "utils";
+import { CharacterAppearanceIsLayerIsHave, hookFunction, PatchHook, SendActivity, PH } from "utils";
 import { TimerProcessInjector } from "./MTimerProcessInjector";
 import { DrawModule } from "./MDrawModule";
 
@@ -69,15 +69,6 @@ export class WombTattoosModule extends BaseModule {
                 }
             },
             {
-                name: "ScreenFlickerForPinkShock",
-                priority: 12,
-                timeInterval: 16,
-                preconditions: () => WombTattoosModule.screenFlickerIntensity != 0 || WombTattoosModule.tranceIntensity != 0,
-                code: () => {
-                    WombTattoosModule.wombTattoosEffects.pinkShock.highFrequencyTimerTimerCode!();
-                    WombTattoosModule.wombTattoosEffects.trance.highFrequencyTimerTimerCode!();
-                }
-            }, {
                 name: "RandomTrance",
                 priority: 13,
                 timeInterval: WombTattoosModule.wombTattoosEffects.trance.dynamicTimeInterval!,
@@ -285,39 +276,8 @@ export class WombTattoosModule extends BaseModule {
                 defaultTimerCode: () => {
                     if (WombTattoosModule.HasWombTattoosEffect(Player, 'pinkShock')) {
                         if (Math.random() < 0.003) {
-                            if (this.tranceIntensity == 0) {
-                                this.PinkShock();
-                                this.screenFlickerIntensity = 0.8;
-                            } else {
-                                setTimeout(() => {
-                                    this.PinkShock();
-                                    this.screenFlickerIntensity = 0.8;
-                                }, 5000);
-                            }
-
-                        }
-                    }
-                },
-                highFrequencyTimerTimerCode: () => {
-                    if (this.screenFlickerIntensity == 0) return;
-                    this.screenFlickerIntensity -= 0.015;
-                    if (this.screenFlickerIntensity < 0) this.screenFlickerIntensity = 0;
-                },
-                hook: {
-                    'Player.HasTints': {
-                        priority: 3,
-                        hook: (args, next) => {
-                            if (WombTattoosModule.HasWombTattoosEffect(Player, 'pinkShock') && this.screenFlickerIntensity !== 0) return true;
-                            return next(args);
-                        }
-                    },
-                    'Player.GetTints': {
-                        priority: 3,
-                        hook: (args, next) => {
-                            if (WombTattoosModule.HasWombTattoosEffect(Player, 'pinkShock') && this.screenFlickerIntensity !== 0 && this.tranceIntensity === 0) {
-                                return [{ r: 255, g: 100, b: 196, a: this.screenFlickerIntensity }];
-                            }
-                            return next(args);
+                            this.PinkShock();
+                            DrawModule.setFlash('#FF2ED9', 1000, 80);
                         }
                     }
                 }
@@ -328,50 +288,13 @@ export class WombTattoosModule extends BaseModule {
                 customizeTimerCode: () => {
                     if (this.HasWombTattoosEffect(Player, 'trance')) {
                         // TODO: 迷幻演出
-                        if (this.screenFlickerIntensity == 0) {
-                            SendActivity(`${PH.s}被自己的淫纹影响，大脑陷入了一阵恍惚之中.....`, Player.MemberNumber!)
-                            // this.tranceIntensity = 0.9;
-                            // DrawFlashScreen("#FFB0B0", 14400, 140);
-                            DrawModule.setFlash('#FF2ED9', 5000, 80);
-                        } else {
-                            setTimeout(() => {
-                                SendActivity(`${PH.s}被自己的淫纹影响，大脑陷入了一阵恍惚之中.....`, Player.MemberNumber!)
-                                this.tranceIntensity = 0.9;
-                            }, 3000);
-                        }
+                        SendActivity(`${PH.s}被自己的淫纹影响，大脑陷入了一阵恍惚之中.....`, Player.MemberNumber!);
+                        DrawModule.setFlash('#FF2ED9', 5000, 80);
                     }
                 },
-                highFrequencyTimerTimerCode: () => {
-                    if (this.tranceIntensity == 0) return;
-                    this.tranceIntensity -= 0.001;
-                    if (this.tranceIntensity < 0) this.tranceIntensity = 0;
-                },
-                dynamicTimeInterval: (): number => ((Math.random() + 1) * 60000), ///////////////////////////////////////////// 测试使用1~2分钟 
-                hook: {
-                    'Player.HasTints': {
-                        priority: 3,
-                        hook: (args, next) => {
-                            if (this.HasWombTattoosEffect(Player, 'trance') && this.tranceIntensity !== 0) return true;
-                            else return next(args);
-                        }
-                    },
-                    'Player.GetTints': {
-                        priority: 3,
-                        hook: (args, next) => {
-                            if (this.HasWombTattoosEffect(Player, 'trance') && this.tranceIntensity !== 0 && this.screenFlickerIntensity === 0) {
-                                return [{ r: GetRandomInt(177, 255), g: 80, b: GetRandomInt(80, 255), a: this.screenFlickerIntensity }];
-                            } else return next(args);
-                        }
-                    }
-                }
+                dynamicTimeInterval: (): number => ((Math.random() + 1) * 60000) ///////////////////////////////////////////// 测试使用1~2分钟 
             }
         }
-
-    /**表示恍惚程度的变量 */
-    private static tranceIntensity: number = 0;
-
-    /** 屏幕闪烁强度 */
-    private static screenFlickerIntensity: number = 0;
 
     /**
      * 根据敏感等级处理进度参数----
