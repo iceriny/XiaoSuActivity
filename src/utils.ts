@@ -50,7 +50,7 @@ export function SendChat(msg: string | null) {
 type LocalMessageCSSName = null | 'local-message' | 'trance-message'
 export function SendLocalMessage(msg: string, className: LocalMessageCSSName = null , timeout: number = 0) {
     if (className !== null ){
-        msg = `<div class=".${className}">${msg}</div>`
+        msg = `<div class="${className}">${msg}</div>`
     }
     if (msg.includes('{source}'))msg.replaceAll("{source}", Player?.Nickname ?? "某人");
     if (timeout === 0) ChatRoomSendLocal(msg)

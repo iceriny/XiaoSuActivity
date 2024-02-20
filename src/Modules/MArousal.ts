@@ -1,7 +1,8 @@
 import { BaseModule } from "./BaseModule";
 import { DataModule } from "./MData";
-import { patchFunction, SendActivity } from "utils";
+import { hookFunction, patchFunction, SendActivity } from "utils";
 import { TimerProcessInjector } from "./MTimerProcessInjector";
+import { WombTattoosModule } from "./MWombTattoos";
 
 
 export class ArousalModule extends BaseModule {
@@ -48,6 +49,14 @@ export class ArousalModule extends BaseModule {
     public Load(): void {
         this.patchListHandler();
         this.Loaded = true;
+
+        hookFunction('ActivityOrgasmStart', 999, (args, next) => {
+            const P = args[0] as Character;
+            if (P.IsPlayer() && WombTattoosModule.needActivityOrgasmRuined){
+                ActivityOrgasmRuined = true;
+            }
+            return next(args);
+        })
     }
 
     /** 对于忍耐高潮时的反应描述 */

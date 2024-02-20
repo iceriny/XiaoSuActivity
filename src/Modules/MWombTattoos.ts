@@ -41,15 +41,19 @@ export class WombTattoosModule extends BaseModule {
                     // 初始化已应用的效果列表
                     const appliedEffects: WombTattoosEffect[] = [];
 
-                    // 遍历所有子宫纹身效果 
-                    for (const e in E) {
-                        const effect = E[e];
-                        const name = effect.name
-                        // 如果当前效果的所有关联图层都在玩家已应用的图层列表中，则添加该效果至已应用效果列表
-                        if (effect.layers.every(l => wombTattoosAppliedLayerNames.includes(l))) {
-                            appliedEffects.push(name);
+                    // 如果有核心图层 HeartSmall
+                    if (wombTattoosAppliedLayerNames.includes('HeartSmall')) {
+                        // 遍历所有子宫纹身效果 
+                        for (const e in E) {
+                            const effect = E[e];
+                            const name = effect.name
+                            // 如果有心(小)图层 当前效果的所有关联图层都在玩家已应用的图层列表中，则添加该效果至已应用效果列表
+                            if (effect.layers.every(l => wombTattoosAppliedLayerNames.includes(l))) {
+                                appliedEffects.push(name);
+                            }
                         }
                     }
+
                     // 处理敏感等级 敏感等级在激活敏感效果的前提下 每多一个效果等级+1 每级额外增加0.5倍的敏感度
                     // 保存数据，将当前未应用的子宫纹身效果存储到游戏数据中
                     DataModule.SaveData({ wombTattoosAppliedEffects: appliedEffects, sensitiveLevel: appliedEffects.length });
@@ -289,11 +293,12 @@ export class WombTattoosModule extends BaseModule {
                 defaultTimerCode: () => {
                     if (WombTattoosModule.HasWombTattoosEffect(Player, 'trance') && this.IsTrancing) {
                         if (Math.random() < 0.003) {
-                            ActivityOrgasmPrepare(Player, true);
+                            this.needActivityOrgasmRuined = true;
+                            ActivityOrgasmPrepare(Player);
                             SendActivity(`${PH.s}被自己的淫纹影响，突然一阵剧烈的快感袭来，却仿佛梦幻般消失.....`, Player.MemberNumber!);
                         }
                         if (Math.random() < 0.02) {
-                            SendLocalMessage(this.getTranceMessage, 'trance-message', 1001);
+                            SendLocalMessage(this.getTranceMessage, 'trance-message', 10001);
                         }
                     }
                 },
@@ -307,7 +312,7 @@ export class WombTattoosModule extends BaseModule {
             }
         }
 
-
+        public static needActivityOrgasmRuined: boolean = false;
 
     /**
      * 根据敏感等级处理进度参数----
@@ -396,12 +401,12 @@ export class WombTattoosModule extends BaseModule {
         return WombTattoosModule.tranceMessage[Math.floor(Math.random() * WombTattoosModule.tranceMessage.length)];
     }
 
-    private static IsTrancing: boolean = false;
+    public static IsTrancing: boolean = false;
     private static Trance() {
         WombTattoosModule.IsTrancing = true;
         SendActivity(`${PH.s}被自己的淫纹影响，大脑陷入了一阵恍惚之中.....`, Player.MemberNumber!);
         const pt = Player.ArousalSettings?.ProgressTimer ?? 0;
-        if (Player.ArousalSettings?.ProgressTimer){
+        if (Player.ArousalSettings?.ProgressTimer) {
             Player.ArousalSettings.ProgressTimer = pt + 25;
         }
         AudioPlayInstantSound("Audio/BellMedium.mp3");
