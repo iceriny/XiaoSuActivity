@@ -41,7 +41,7 @@ export class DrawModule extends BaseModule {
             } else {
                 this.FlashEndTime = this.FlashEndTime ?? event.time + CommonTime();
                 if (this.FlashEndTime > CommonTime()) {
-                    const FlashAlpha = DrawGetScreenFlashAlpha(event.time);
+                    const FlashAlpha = this.DrawGetFlashAlpha(event.time - CommonTime(), event.intensity);
                     DrawRect(0, 0, 2000, 1000, event.color + FlashAlpha);
                     break;
                 } else {
@@ -51,6 +51,18 @@ export class DrawModule extends BaseModule {
                 }
             }
         }
+    }
+
+    /**
+     * Gets the alpha of a screen flash. append to a color like "#111111" + DrawGetScreenFlash(FlashTime)
+     * @param  flashTime - Time remaining as part of the screen flash
+     * @param flashIntensity - Intensity of the screen flash
+     * @returns - alpha of screen flash
+     */
+    private static DrawGetFlashAlpha(flashTime: number, flashIntensity: number) {
+        let alpha = Math.max(0, Math.min(255, Math.floor(flashIntensity * (1 - Math.exp(-flashTime / 2500))))).toString(16);
+        if (alpha.length < 2) alpha = "0" + alpha;
+        return alpha;
     }
 
 }
