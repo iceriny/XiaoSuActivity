@@ -41,7 +41,7 @@ export class DrawModule extends BaseModule {
             } else {
                 this.FlashEndTime = this.FlashEndTime ?? event.time + CommonTime();
                 if (this.FlashEndTime > CommonTime()) {
-                    const FlashAlpha = this.DrawGetFlashAlpha(event.time/Math.max(1, 4 - this.FlashEndTime), event.intensity);
+                    const FlashAlpha = this.DrawGetFlashAlpha((event.time - CommonTime())/Math.max(1, 4 - this.FlashEndTime), event.intensity);
                     DrawRect(0, 0, 2000, 1000, event.color + FlashAlpha);
                     break;
                 } else {
