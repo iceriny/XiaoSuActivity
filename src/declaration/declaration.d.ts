@@ -6,7 +6,10 @@ interface Window {
 	BROWSER_NAME?: string;
 	BROWSER_VERSION?: number;
 }
-
+/**
+ * mod模块名称定义
+ */
+type XS_ModuleName = "Base" | "TimerProcessInjector" | "ActivityModule" | "ChatroomModule" | "CommandsModule" | "DataModule" | "ArousalModule" | 'WombTattoosModule' | 'DrawModule';
 
 //  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv  //
 

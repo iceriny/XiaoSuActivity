@@ -1,11 +1,8 @@
-/**
- * mod模块名称定义
- */
-export type XS_ModuleName = "Base" | "TimerProcessInjector" | "ActivityModule" | "ChatroomModule" | "CommandsModule" | "DataModule" | "ArousalModule" | 'WombTattoosModule';
+
 /**
  * 完整模块数量
  */
-export const FullModCount = 7;
+export const FullModCount = 8;
 
 
 /**

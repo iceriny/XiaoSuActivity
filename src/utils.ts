@@ -1,6 +1,5 @@
 import bcModSDKRef from "bondage-club-mod-sdk";
 import { modules } from "Modules/ModulesDict";
-import { XS_ModuleName } from "Modules/BaseModule";
 import { CHANGELOG, ChangeType } from "changeLogData";
 
 //   VVVVVVVVVVVVVVVVVVVVVVVVVVVVV  ----用得到的常数---- VVVVVVVVVVVVVVVVVVVVVVV    //

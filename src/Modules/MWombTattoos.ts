@@ -2,6 +2,7 @@ import { BaseModule } from "./BaseModule";
 import { DataModule, PlayerStorage } from "./MData";
 import { CharacterAppearanceIsLayerIsHave, hookFunction, PatchHook, SendActivity, PH, GetRandomInt } from "utils";
 import { TimerProcessInjector } from "./MTimerProcessInjector";
+import { DrawModule } from "./MDrawModule";
 
 type wombTattoosLayersName = "Zoom" | "Big" | "Bloom" | "BottomSpike" | "Flash" | "Fly" | "Grass" | "Grow" | "GrowHollow" | "HeartSmallOutline" | "Heartline" | "HeartSmall" | "HeartSolid" | "HeartWings" | "In" | "Leaves" | "MidSpike" | "Ribow" | "Sense" | "Shake" | "SideHearts" | "Swim" | "Thorn" | "ThornOut" | "TopSpike" | "Venom" | "Viper" | "Waves" | "WingSmall";
 //  VVVV========淫纹大修=========VVVV  //
@@ -17,17 +18,14 @@ export class WombTattoosModule extends BaseModule {
             {
                 name: "WombTattoosCheck",
                 priority: 10,
-                /**
-                 * 预先条件函数，判断是否满足执行该过程的条件
-                 * 在本例中，返回值为 `WombTattoosModule.checkPlayerHaveWombTattoos()` 的结果
-                 */
+
+                // 预先条件函数，判断是否满足执行该过程的条件
+                // 在本例中，返回值为 `WombTattoosModule.checkPlayerHaveWombTattoos()` 的结果
                 preconditions: () => WombTattoosModule.checkPlayerHaveWombTattoos() && WombTattoosModule.isCheckWombTattoosEffect,
                 timeInterval: 1000,
 
-                /**
-                 * 执行代码块，当预设条件满足时，会运行此函数体内的逻辑
-                 * 此处功能：检查玩家当前应用的子宫纹身层，并根据子宫纹身效果模块(E)来决定哪些效果应当生效
-                 */
+                // 执行代码块，当预设条件满足时，会运行此函数体内的逻辑
+                // 此处功能：检查玩家当前应用的子宫纹身层，并根据子宫纹身效果模块(E)来决定哪些效果应当生效
                 code: () => {
                     // 触发该代码块后 `isCheckWombTattoosEffect` 设置为 `false`，以防止后续的持续检查逻辑执行消耗资源
                     WombTattoosModule.isCheckWombTattoosEffect = false;
@@ -316,7 +314,7 @@ export class WombTattoosModule extends BaseModule {
                     'Player.GetTints': {
                         priority: 3,
                         hook: (args, next) => {
-                            if (WombTattoosModule.HasWombTattoosEffect(Player, 'pinkShock') && this.screenFlickerIntensity !== 0 && this.tranceIntensity === 0 ) {
+                            if (WombTattoosModule.HasWombTattoosEffect(Player, 'pinkShock') && this.screenFlickerIntensity !== 0 && this.tranceIntensity === 0) {
                                 return [{ r: 255, g: 100, b: 196, a: this.screenFlickerIntensity }];
                             }
                             return next(args);
@@ -332,8 +330,9 @@ export class WombTattoosModule extends BaseModule {
                         // TODO: 迷幻演出
                         if (this.screenFlickerIntensity == 0) {
                             SendActivity(`${PH.s}被自己的淫纹影响，大脑陷入了一阵恍惚之中.....`, Player.MemberNumber!)
-                            this.tranceIntensity = 0.9;
-                            DrawFlashScreen("#FFB0B0", 14400, 140);
+                            // this.tranceIntensity = 0.9;
+                            // DrawFlashScreen("#FFB0B0", 14400, 140);
+                            DrawModule.setFlash('FF2ED9', 5000, 140);
                         } else {
                             setTimeout(() => {
                                 SendActivity(`${PH.s}被自己的淫纹影响，大脑陷入了一阵恍惚之中.....`, Player.MemberNumber!)

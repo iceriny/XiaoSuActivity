@@ -1,12 +1,13 @@
 import { conDebug } from "utils";
-import { BaseModule, FullModCount, XS_ModuleName } from "./BaseModule";
+import { BaseModule, FullModCount } from "./BaseModule";
 import { ActivityModule } from "./MActivity";
 import { ChatroomModule } from "./MChatroom";
 import { CommandsModule } from "./MCommand";
 import { DataModule } from "./MData";
 import { ArousalModule } from "./MArousal";
 import { TimerProcessInjector } from "./MTimerProcessInjector";
-import {WombTattoosModule } from "./MWombTattoos"
+import { WombTattoosModule } from "./MWombTattoos";
+import { DrawModule } from "./MDrawModule";
 import { modules } from "./ModulesDict";
 
 export class ModuleLoader {
@@ -37,7 +38,7 @@ export class ModuleLoader {
 
         return this.modulesInitCount;
     }
-    
+
     /**
      * 加载模块   Loader对外加载入口.
      */
@@ -123,6 +124,9 @@ export class ModuleLoader {
         WombTattoosModule: () => {
             this.pushToModules(new WombTattoosModule());
         },
+        DrawModule: () => {
+            this.pushToModules(new DrawModule());
+        }
     }
 
 

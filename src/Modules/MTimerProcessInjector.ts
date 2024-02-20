@@ -98,6 +98,8 @@ export class TimerProcessInjector extends BaseModule {
 
             return next(args);
         });
+
+        
     }
 
     /**
