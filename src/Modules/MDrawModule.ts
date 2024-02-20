@@ -13,6 +13,16 @@ export class DrawModule extends BaseModule {
             return next(args);
         });
 
+        // 绘制模糊效果的hook
+
+        hookFunction('Player.GetBlurLevel', -999, (args, next) => {
+            let blurLevel = next(args);
+            if (!CommonPhotoMode && blurLevel === 0 && DrawModule.blurLevel !== 0) {
+                blurLevel = DrawModule.blurLevel;
+            }
+            return blurLevel;
+        });
+
         this.Loaded = true;
     }
     public Init(): void {
@@ -20,18 +30,20 @@ export class DrawModule extends BaseModule {
         this.priority = 20;
     }
 
-    public static DrawFlashEventMap: Map<symbol, { color: string, time: number, intensity: number, triggered: boolean }>
-        = new Map<symbol, { color: string, time: number, intensity: number, triggered: boolean }>();
+    public static blurLevel: number = 0;
 
-    public static setFlash(color: string, time: number, intensity: number): void {
-        this.DrawFlashEventMap.set(Symbol(), { color: color, time: time, intensity: intensity, triggered: false });
+    public static DrawFlashEventMap: Map<symbol, { color: string, time: number, intensity: number, triggered: boolean, callback?: () => void }>
+        = new Map<symbol, { color: string, time: number, intensity: number, triggered: boolean, callback?: () => void }>();
+
+    public static setFlash(color: string, time: number, intensity: number, callback?: () => void): void {
+        this.DrawFlashEventMap.set(Symbol(), { color: color, time: time, intensity: intensity, triggered: false, callback: callback });
     }
 
     public static FlashEndTime: number | null = null;
 
 
     private static DrawFlash(): void {
-        if (this.DrawFlashEventMap.size === 0) return;
+        if (this.DrawFlashEventMap.size === 0 && CurrentScreen !== 'ChatRoom') return;
 
         for (const key of this.DrawFlashEventMap.keys()) {
             const event = this.DrawFlashEventMap.get(key)!;
@@ -47,10 +59,18 @@ export class DrawModule extends BaseModule {
                 } else {
                     event.triggered = true;
                     this.FlashEndTime = null;
+                    event.callback?.();
                     continue;
                 }
             }
         }
+    }
+
+    public static setDrawBlur(duration: number, level: number) {
+        this.blurLevel = level;
+        setTimeout(() => {
+            this.blurLevel = 0;
+        }, duration);
     }
 
     /**
@@ -65,4 +85,24 @@ export class DrawModule extends BaseModule {
         return alpha;
     }
 
+
+    /**
+     * Calculates dynamic intensity based on elapsed time.
+     * This example simulates a flickering effect.
+     * @param elapsedTime - The time elapsed since the flash started, in milliseconds.
+     * @param baseIntensity - The base intensity of the flash.
+     * @param totalDuration - The total duration of the flash.
+     * @returns - Adjusted intensity.
+     */
+    private static calculateDynamicIntensity(elapsedTime: number, baseIntensity: number, totalDuration: number): number {
+        // Oscillation period (in milliseconds)
+        const period = 500;
+        // Calculate phase of the sine wave
+        const phase = (2 * Math.PI * elapsedTime) / period;
+        // Oscillate intensity around the baseIntensity value
+        return baseIntensity + baseIntensity * 0.1 * Math.sin(phase);
+    }
+
 }
+
+

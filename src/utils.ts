@@ -46,6 +46,16 @@ export function SendChat(msg: string | null) {
     if (msg == null) return;
     ServerSend("ChatRoomChat", { Type: "Chat", Content: msg })
 }
+
+type LocalMessageCSSName = null | 'local-message' | 'trance-message'
+export function SendLocalMessage(msg: string, className: LocalMessageCSSName = null , timeout: number = 0) {
+    if (className !== null ){
+        msg = `<div class=".${className}">${msg}</div>`
+    }
+    if (msg.includes('{source}'))msg.replaceAll("{source}", Player?.Nickname ?? "某人");
+    if (timeout === 0) ChatRoomSendLocal(msg)
+    else ChatRoomSendLocal(msg, timeout);
+}
 /**
  * 发送动作消息
  * @param msg 动作消息的内容
@@ -124,8 +134,8 @@ const targetPlaceholder = '{target}';
  * 包含全局占位符的对象 s:自己  t:目标
  */
 export const PH = {
-    s:selfPlaceholder,
-    t:targetPlaceholder
+    s: selfPlaceholder,
+    t: targetPlaceholder
 }
 /**
  * Debug信息对象接口

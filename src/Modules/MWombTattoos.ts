@@ -1,8 +1,10 @@
 import { BaseModule } from "./BaseModule";
 import { DataModule, PlayerStorage } from "./MData";
-import { CharacterAppearanceIsLayerIsHave, hookFunction, PatchHook, SendActivity, PH } from "utils";
+import { CharacterAppearanceIsLayerIsHave, hookFunction, PatchHook, SendActivity, PH, SendLocalMessage } from "utils";
 import { TimerProcessInjector } from "./MTimerProcessInjector";
 import { DrawModule } from "./MDrawModule";
+import randomColor from 'randomcolor';
+
 
 type wombTattoosLayersName = "Zoom" | "Big" | "Bloom" | "BottomSpike" | "Flash" | "Fly" | "Grass" | "Grow" | "GrowHollow" | "HeartSmallOutline" | "Heartline" | "HeartSmall" | "HeartSolid" | "HeartWings" | "In" | "Leaves" | "MidSpike" | "Ribow" | "Sense" | "Shake" | "SideHearts" | "Swim" | "Thorn" | "ThornOut" | "TopSpike" | "Venom" | "Viper" | "Waves" | "WingSmall";
 //  VVVV========淫纹大修=========VVVV  //
@@ -277,7 +279,6 @@ export class WombTattoosModule extends BaseModule {
                     if (WombTattoosModule.HasWombTattoosEffect(Player, 'pinkShock')) {
                         if (Math.random() < 0.003) {
                             this.PinkShock();
-                            DrawModule.setFlash('#FF2ED9', 1000, 80);
                         }
                     }
                 }
@@ -285,16 +286,28 @@ export class WombTattoosModule extends BaseModule {
             trance: { // 迷幻 使用随机的 10 ~ 20 分钟 动态的时间间隔来控制时间间隔
                 name: 'trance',
                 layers: ['Bloom', 'Fly'],
+                defaultTimerCode: () => {
+                    if (WombTattoosModule.HasWombTattoosEffect(Player, 'trance') && this.IsTrancing) {
+                        if (Math.random() < 0.003) {
+                            ActivityOrgasmPrepare(Player, true);
+                            SendActivity(`${PH.s}被自己的淫纹影响，突然一阵剧烈的快感袭来，却仿佛梦幻般消失.....`, Player.MemberNumber!);
+                        }
+                        if (Math.random() < 0.02) {
+                            SendLocalMessage(this.getTranceMessage, 'trance-message', 1001);
+                        }
+                    }
+                },
                 customizeTimerCode: () => {
                     if (this.HasWombTattoosEffect(Player, 'trance')) {
                         // TODO: 迷幻演出
-                        SendActivity(`${PH.s}被自己的淫纹影响，大脑陷入了一阵恍惚之中.....`, Player.MemberNumber!);
-                        DrawModule.setFlash('#FF2ED9', 5000, 80);
+                        WombTattoosModule.Trance();
                     }
                 },
                 dynamicTimeInterval: (): number => ((Math.random() + 1) * 60000) ///////////////////////////////////////////// 测试使用1~2分钟 
             }
         }
+
+
 
     /**
      * 根据敏感等级处理进度参数----
@@ -358,7 +371,6 @@ export class WombTattoosModule extends BaseModule {
 
 
 
-
     public static PinkShock() {
         AudioPlayInstantSound("Audio/Shocks.mp3");
         SendActivity(`${PH.s}的淫纹突然发出一丝诱人的波动，释放出一道电流!`, Player.MemberNumber!);
@@ -371,7 +383,39 @@ export class WombTattoosModule extends BaseModule {
         } else {
             ActivitySetArousal(Player, addedProgress);
         }
+        DrawModule.setFlash('#FF2ED9', 1000, 500);
+    }
 
+    private static readonly tranceMessage: string[] = [
+        `${PH.s}的身体开始发软，大脑开始一片空白.....`,
+        `${PH.s}的意识突然变得模糊，似乎在进入一种未知的状态......`,
+        `${PH.s}的身体突然抖动一下，好像看到了什么...或感觉到了什么...`,
+        `${PH.s}的意识突然变得清晰，似乎恢复了正..?..正常么?`
+    ]
+    private static get getTranceMessage() {
+        return WombTattoosModule.tranceMessage[Math.floor(Math.random() * WombTattoosModule.tranceMessage.length)];
+    }
+
+    private static IsTrancing: boolean = false;
+    private static Trance() {
+        WombTattoosModule.IsTrancing = true;
+        SendActivity(`${PH.s}被自己的淫纹影响，大脑陷入了一阵恍惚之中.....`, Player.MemberNumber!);
+        const pt = Player.ArousalSettings?.ProgressTimer ?? 0;
+        if (Player.ArousalSettings?.ProgressTimer){
+            Player.ArousalSettings.ProgressTimer = pt + 25;
+        }
+        AudioPlayInstantSound("Audio/BellMedium.mp3");
+        // DrawModule.setFlash('#FF2ED9', 10000, 80, () => {
+        //     AudioPlayInstantSound("Audio/BellMedium.mp3", 0.5);
+        // });
+        DrawModule.setFlash(randomColor({
+            luminosity: 'light',
+            hue: 'pink',
+        }), 10000, 80, () => {
+            AudioPlayInstantSound("Audio/BellMedium.mp3", 0.5);
+            WombTattoosModule.IsTrancing = false;
+        });
+        DrawModule.setDrawBlur(10000, 50);
     }
 }
 //  ^^^^========淫纹大修=========^^^^  //
