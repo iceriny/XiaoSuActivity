@@ -41,18 +41,18 @@ export class TimerProcessInjector extends BaseModule {
     }
 
     /** 记录上次调用时间 & 时间间隔 的集合 */
-    private static TimerLastCycleCallSet: { [name: string]: {timerLastCycleCall: number, timeInterval: number, isDynamic: boolean, getTimeInterval?: () => number} } = {};
+    private static TimerLastCycleCallSet: { [name: string]: { timerLastCycleCall: number, timeInterval: number, isDynamic: boolean, getTimeInterval?: () => number } } = {};
 
     /**
      * 时序进程注入
      */
     private static ProcessInjection(): void {
         // 根据优先级排序 从小到大 priority越大越靠后
-        TimerProcessInjector.InjectionSort();
+        this.InjectionSort();
 
         // 设置计时器Set
         for (const c of this.processInjectionSequence) {
-            if (typeof c.timeInterval == 'number'){
+            if (typeof c.timeInterval == 'number') {
                 this.TimerLastCycleCallSet[c.name] = {
                     timerLastCycleCall: -1,
                     timeInterval: c.timeInterval,
@@ -66,7 +66,7 @@ export class TimerProcessInjector extends BaseModule {
                     getTimeInterval: c.timeInterval
                 }
             }
-            
+
         }
 
         conDebug(`[TimerProcessInjector] Injection Process... Injection Count: ${this.processInjectionSequence.length}`);
@@ -74,32 +74,40 @@ export class TimerProcessInjector extends BaseModule {
         hookFunction("TimerProcess", 100, (args, next) => {
             const currentTime = CommonTime();
             for (const c of this.processInjectionSequence) {
-                //conDebug(`[TimerProcessInjector] ${c.name} is Running...`);
+                if (c.name == 'RandomTrance'){
+                    conDebug(`[TimerProcessInjector] ${c.name} is Running...`);
+                }
 
                 // 初始化计时器
                 if (this.TimerLastCycleCallSet[c.name].timerLastCycleCall == -1) this.TimerLastCycleCallSet[c.name].timerLastCycleCall == currentTime;
 
+                if (c.name == 'RandomTrance'){
+                    conDebug(`[TimerProcessInjector]\n this.TimerLastCycleCallSet[c.name].timerLastCycleCall + this.TimerLastCycleCallSet[c.name].timeInterval:${this.TimerLastCycleCallSet[c.name].timerLastCycleCall + this.TimerLastCycleCallSet[c.name].timeInterval}\n currentTime: ${currentTime}\n`);
+                }
                 // 判定前置条件 && 时间间隔已到
                 if (c.preconditions() && this.TimerLastCycleCallSet[c.name].timerLastCycleCall + this.TimerLastCycleCallSet[c.name].timeInterval <= currentTime) {
+                    if (c.name == 'RandomTrance'){
+                        conDebug(`[TimerProcessInjector]\n 恍惚触发!!`);
+                    }
                     c.code();
-                    if ( typeof c.timeInterval !== 'number'){
+                    if (typeof c.timeInterval !== 'number') {
                         conDebug(`[TimerProcessInjector] ${c.name} is Dynamic... value: ${this.TimerLastCycleCallSet[c.name].timeInterval}.`);
                     }
-                    
+
                     this.TimerLastCycleCallSet[c.name].timerLastCycleCall = currentTime;
                     if (this.TimerLastCycleCallSet[c.name].isDynamic) {
                         this.TimerLastCycleCallSet[c.name].timeInterval = this.TimerLastCycleCallSet[c.name].getTimeInterval!();
                         conDebug(`[TimerProcessInjector] ${c.name} is Dynamic... value: ${this.TimerLastCycleCallSet[c.name].timeInterval}.`);
                     }
                 }
-                
+
                 //conDebug(`[TimerProcessInjector] ${c.name} is Done.`);
             }
 
             return next(args);
         });
 
-        
+
     }
 
     /**

@@ -2,7 +2,6 @@ import { BaseModule } from "./BaseModule";
 import { DataModule } from "./MData";
 import { hookFunction, patchFunction, SendActivity } from "utils";
 import { TimerProcessInjector } from "./MTimerProcessInjector";
-import { WombTattoosModule } from "./MWombTattoos";
 
 
 export class ArousalModule extends BaseModule {
@@ -52,7 +51,7 @@ export class ArousalModule extends BaseModule {
 
         hookFunction('ActivityOrgasmStart', 999, (args, next) => {
             const P = args[0] as Character;
-            if (P.IsPlayer() && WombTattoosModule.needActivityOrgasmRuined){
+            if (P.IsPlayer() && ArousalModule.needActivityOrgasmRuined) {
                 ActivityOrgasmRuined = true;
             }
             return next(args);
@@ -75,6 +74,8 @@ export class ArousalModule extends BaseModule {
         return this.descriptionOfEnduranceActivities[Math.floor(Math.random() * this.descriptionOfEnduranceActivities.length)];
     }
 
+
+    public static needActivityOrgasmRuined: boolean = false;
 
 
     /** 默认的输入框样式 */

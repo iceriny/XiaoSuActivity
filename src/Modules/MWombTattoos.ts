@@ -4,6 +4,7 @@ import { CharacterAppearanceIsLayerIsHave, hookFunction, PatchHook, SendActivity
 import { TimerProcessInjector } from "./MTimerProcessInjector";
 import { DrawModule } from "./MDrawModule";
 import randomColor from 'randomcolor';
+import { ArousalModule } from "./MArousal";
 
 
 type wombTattoosLayersName = "Zoom" | "Big" | "Bloom" | "BottomSpike" | "Flash" | "Fly" | "Grass" | "Grow" | "GrowHollow" | "HeartSmallOutline" | "Heartline" | "HeartSmall" | "HeartSolid" | "HeartWings" | "In" | "Leaves" | "MidSpike" | "Ribow" | "Sense" | "Shake" | "SideHearts" | "Swim" | "Thorn" | "ThornOut" | "TopSpike" | "Venom" | "Viper" | "Waves" | "WingSmall";
@@ -293,7 +294,7 @@ export class WombTattoosModule extends BaseModule {
                 defaultTimerCode: () => {
                     if (WombTattoosModule.HasWombTattoosEffect(Player, 'trance') && this.IsTrancing) {
                         if (Math.random() < 0.003) {
-                            this.needActivityOrgasmRuined = true;
+                            ArousalModule.needActivityOrgasmRuined = true;
                             ActivityOrgasmPrepare(Player);
                             SendActivity(`${PH.s}被自己的淫纹影响，突然一阵剧烈的快感袭来，却仿佛梦幻般消失.....`, Player.MemberNumber!);
                         }
@@ -303,16 +304,13 @@ export class WombTattoosModule extends BaseModule {
                     }
                 },
                 customizeTimerCode: () => {
-                    if (this.HasWombTattoosEffect(Player, 'trance')) {
                         // TODO: 迷幻演出
                         WombTattoosModule.Trance();
-                    }
                 },
-                dynamicTimeInterval: (): number => ((Math.random() + 1) * 60000) ///////////////////////////////////////////// 测试使用1~2分钟 
+                dynamicTimeInterval: (): number => ((Math.random() + 1) * 20000) //////////////////测试使用0.333分钟~1.333分钟/////////////// 十~二十 分钟触发一次 600000 
             }
         }
 
-        public static needActivityOrgasmRuined: boolean = false;
 
     /**
      * 根据敏感等级处理进度参数----
@@ -364,7 +362,7 @@ export class WombTattoosModule extends BaseModule {
             const asset = wombTattoos.Asset;
             if (InventoryChatRoomAllow(asset.Category as readonly ServerChatRoomBlockCategory[])) {
                 const typeRecord = wombTattoos.Property && wombTattoos.Property.TypeRecord;
-                const appliedLayers = asset.Layer.filter(layer => CharacterAppearanceIsLayerIsHave(C, layer, typeRecord)); // 这里有问题 如果当前姿势不可见的时候也会把那个图层过滤掉 // 尝试用新的函数
+                const appliedLayers = asset.Layer.filter(layer => CharacterAppearanceIsLayerIsHave(C, layer, typeRecord)); 
                 const results = appliedLayers.map(item => item.Name);
                 for (const name of results) {
                     if (name !== null) appliedLayersNames.push(name);
@@ -378,7 +376,7 @@ export class WombTattoosModule extends BaseModule {
 
     public static PinkShock() {
         AudioPlayInstantSound("Audio/Shocks.mp3");
-        SendActivity(`${PH.s}的淫纹突然发出一丝诱人的波动，释放出一道电流!`, Player.MemberNumber!);
+        SendActivity(`${PH.s}的淫纹突然发出一丝诱人的光芒，释放出一道奇异的粉色电流!`, Player.MemberNumber!);
         InventoryShockExpression(Player);
         const currentProgress = Player.ArousalSettings?.Progress;
         const addedProgress = (currentProgress ?? 0) + 30;
@@ -392,17 +390,19 @@ export class WombTattoosModule extends BaseModule {
     }
 
     private static readonly tranceMessage: string[] = [
-        `${PH.s}的身体开始发软，大脑开始一片空白.....`,
-        `${PH.s}的意识突然变得模糊，似乎在进入一种未知的状态......`,
-        `${PH.s}的身体突然抖动一下，好像看到了什么...或感觉到了什么...`,
-        `${PH.s}的意识突然变得清晰，似乎恢复了正..?..正常么?`
+        `你的身体开始发软，大脑开始一片空白.....`,
+        `你的意识突然变得模糊，似乎在进入一种未知的状态......`,
+        `你的身体突然抖动一下，好像看到了什么...或感觉到了什么...`,
+        `你的意识突然变得清晰，似乎恢复了正..?..正常么?`
     ]
     private static get getTranceMessage() {
         return WombTattoosModule.tranceMessage[Math.floor(Math.random() * WombTattoosModule.tranceMessage.length)];
     }
 
+    /** 在恍惚中  */
     public static IsTrancing: boolean = false;
-    private static Trance() {
+
+    private static Trance() {///////////////////////////////////BUG!!! 登录游戏会触发一次 检查条件
         WombTattoosModule.IsTrancing = true;
         SendActivity(`${PH.s}被自己的淫纹影响，大脑陷入了一阵恍惚之中.....`, Player.MemberNumber!);
         const pt = Player.ArousalSettings?.ProgressTimer ?? 0;

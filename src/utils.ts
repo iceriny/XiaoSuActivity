@@ -52,7 +52,6 @@ export function SendLocalMessage(msg: string, className: LocalMessageCSSName = n
     if (className !== null ){
         msg = `<div class="${className}">${msg}</div>`
     }
-    if (msg.includes('{source}'))msg.replaceAll("{source}", Player?.Nickname ?? "某人");
     if (timeout === 0) ChatRoomSendLocal(msg)
     else ChatRoomSendLocal(msg, timeout);
 }
