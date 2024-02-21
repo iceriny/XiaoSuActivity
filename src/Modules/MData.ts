@@ -100,6 +100,7 @@ export class DataModule extends BaseModule {
                 const afterVersion = Player.XSA.version;
                 if (afterVersion !== XSActivity_VERSION) {
                     this.IsModUpDate = true;
+                    Player.XSA.version = XSActivity_VERSION;
                 }
                 // 处理data
                 if (k === 'data'){
