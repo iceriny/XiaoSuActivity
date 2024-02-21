@@ -431,7 +431,7 @@ export class WombTattoosModule extends BaseModule {
             AudioPlayInstantSound("Audio/BellMedium.mp3", 0.5);
             WombTattoosModule.IsTrancing = false;
         });
-        DrawModule.setDrawBlur(10000, 50);
+        DrawModule.setDrawBlur(10000, 15);
     }
 }
 //  ^^^^========淫纹大修=========^^^^  //
