@@ -8,7 +8,7 @@ export class DrawModule extends BaseModule {
     public Load(): void {
 
         // 绘制闪光的hook
-        hookFunction("DrawProcessScreenFlash", 999, (args, next) => {
+        hookFunction("DrawProcessScreenFlash", -999, (args, next) => {
             DrawModule.DrawFlash();
             return next(args);
         });
