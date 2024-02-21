@@ -78,9 +78,9 @@ export const CHANGELOG: ChangeLogObj[] = [
     },
     {
         version: "0.2.0",
-        description: "淫纹大修!",
+        description: "淫纹大修!  待续!",
         type: ChangeType.main,
-        changes: ["淫纹大修! 输入 /xsa yw 查看功能.","高潮抵抗难度和温度计进度现在可以跨平台继承 换句话说 掉线也不会丢失相关数据"]
+        changes: ["淫纹大修! 输入 /xsa yw 查看功能.","高潮抵抗难度和温度计进度现在可以跨平台继承 换句话说 掉线也不会丢失相关数据", "取消了原来的边缘计数，现在边缘等级和抵抗难度使用同一变量"]
 
     }
 ]

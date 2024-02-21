@@ -282,7 +282,7 @@ export class WombTattoosModule extends BaseModule {
                 layers: ['Flash'],
                 defaultTimerCode: () => {
                     if (WombTattoosModule.HasWombTattoosEffect(Player, 'pinkShock')) {
-                        if (Math.random() < 0.003) {
+                        if (Math.random() < 0.0018) {
                             this.PinkShock();
                         }
                     }
@@ -291,6 +291,19 @@ export class WombTattoosModule extends BaseModule {
             trance: { // 迷幻 使用随机的 10 ~ 20 分钟 动态的时间间隔来控制时间间隔
                 name: 'trance',
                 layers: ['Bloom', 'Fly'],
+                hook: {
+                    'Player.GetSlowLevel': {
+                        priority: 20,
+                        hook: (args, next) => {
+                            if (Player.RestrictionSettings?.SlowImmunity)
+                                return 0;
+                            else if (this.IsTrancing) {
+                                return Math.floor((Math.random() * 3) + 1);
+                            }
+                            return next(args)
+                        }
+                    }
+                },
                 defaultTimerCode: () => {
                     if (WombTattoosModule.HasWombTattoosEffect(Player, 'trance') && this.IsTrancing) {
                         if (Math.random() < 0.003) {
@@ -299,15 +312,15 @@ export class WombTattoosModule extends BaseModule {
                             SendActivity(`${PH.s}被自己的淫纹影响，突然一阵剧烈的快感袭来，却仿佛梦幻般消失.....`, Player.MemberNumber!);
                         }
                         if (Math.random() < 0.02) {
-                            SendLocalMessage(this.getTranceMessage, 'trance-message', 10001);
+                            SendLocalMessage(this.getTranceMessage, 'trance-message', 20001);
                         }
                     }
                 },
                 customizeTimerCode: () => {
-                        // TODO: 迷幻演出
-                        WombTattoosModule.Trance();
+                    // TODO: 迷幻演出
+                    WombTattoosModule.Trance();
                 },
-                dynamicTimeInterval: (): number => ((Math.random() + 1) * 20000) //////////////////测试使用0.333分钟~1.333分钟/////////////// 十~二十 分钟触发一次 600000 
+                dynamicTimeInterval: (): number => ((Math.random() + 1) * 600000) //////////////////测试使用0.333分钟~1.333分钟/////////////// 十~二十 分钟触发一次 600000 
             }
         }
 
@@ -362,7 +375,7 @@ export class WombTattoosModule extends BaseModule {
             const asset = wombTattoos.Asset;
             if (InventoryChatRoomAllow(asset.Category as readonly ServerChatRoomBlockCategory[])) {
                 const typeRecord = wombTattoos.Property && wombTattoos.Property.TypeRecord;
-                const appliedLayers = asset.Layer.filter(layer => CharacterAppearanceIsLayerIsHave(C, layer, typeRecord)); 
+                const appliedLayers = asset.Layer.filter(layer => CharacterAppearanceIsLayerIsHave(C, layer, typeRecord));
                 const results = appliedLayers.map(item => item.Name);
                 for (const name of results) {
                     if (name !== null) appliedLayersNames.push(name);
@@ -410,13 +423,11 @@ export class WombTattoosModule extends BaseModule {
             Player.ArousalSettings.ProgressTimer = pt + 25;
         }
         AudioPlayInstantSound("Audio/BellMedium.mp3");
-        // DrawModule.setFlash('#FF2ED9', 10000, 80, () => {
-        //     AudioPlayInstantSound("Audio/BellMedium.mp3", 0.5);
-        // });
+
         DrawModule.setFlash(randomColor({
             luminosity: 'light',
             hue: 'pink',
-        }), 10000, 80, () => {
+        }), 20000, 80, () => {
             AudioPlayInstantSound("Audio/BellMedium.mp3", 0.5);
             WombTattoosModule.IsTrancing = false;
         });

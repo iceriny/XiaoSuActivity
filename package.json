@@ -1,6 +1,6 @@
 {
   "name": "xiao-su-activity",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "https://iceriny.github.io/XiaoSuActivity/userLoad.user.js",
   "main": "rollup.config.js",
   "keywords": [],
