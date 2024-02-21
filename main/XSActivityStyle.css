@@ -169,7 +169,7 @@
     background: linear-gradient(to right, rgba(208, 106, 255, 0.25), rgba(255, 59, 78, 0.25));
     filter: blur(1px);
 
-    animation: circleAnimation 10s ease-in-out infinite; /* 持续时间5秒，线性运动，无限循环 */
+    animation: circleAnimation 20s ease-in-out infinite; /* 持续时间5秒，线性运动，无限循环 */
 
     transition: all 0.3s ease;
 }
