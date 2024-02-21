@@ -81,9 +81,6 @@ export class TimerProcessInjector extends BaseModule {
                 // 初始化计时器
                 if (this.TimerLastCycleCallSet[c.name].timerLastCycleCall == -1) this.TimerLastCycleCallSet[c.name].timerLastCycleCall == currentTime;
 
-                if (c.name == 'RandomTrance'){
-                    conDebug(`[TimerProcessInjector]\n this.TimerLastCycleCallSet[c.name].timerLastCycleCall + this.TimerLastCycleCallSet[c.name].timeInterval:${this.TimerLastCycleCallSet[c.name].timerLastCycleCall + this.TimerLastCycleCallSet[c.name].timeInterval}\n currentTime: ${currentTime}\n`);
-                }
                 // 判定前置条件 && 时间间隔已到
                 if (c.preconditions() && this.TimerLastCycleCallSet[c.name].timerLastCycleCall + this.TimerLastCycleCallSet[c.name].timeInterval <= currentTime) {
                     if (c.name == 'RandomTrance'){
