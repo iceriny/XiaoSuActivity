@@ -332,16 +332,11 @@ export function sendLastChangeLog() {
     const type = c.type == ChangeType.main ? "主版本" : "开发版本";
     const description = c.description;
     const changes = c.changes;
-
-    let changesString = '<ul style="list-style-position: inside;  padding-left: 0;">';
     for (const s of changes) {
-        changesString += `<li>${s}</li>`;
+        content += s;
     }
-    changesString += '</ul>';
-
-    const backgroundColor = version == XSActivity_VERSION && (!DEBUG && type === "主版本") ? "#764460" : "#442E3A"
     const styleForP = 'style="font-weight: bold; margin: 0;"'
-    content += `<div style="background-color: ${backgroundColor}; display: flex; flex-direction: column;"> <p ${styleForP}>版本: ${version}</p> <p ${styleForP}>类型: ${type}</p> <p ${styleForP}>描述: ${description}</p><p>----</p> <p ${styleForP}>改动: ${changesString}</p><p>========</p></div>`
+    content += `<p ${styleForP}>版本: ${version}</p> <p ${styleForP}>类型: ${type}</p> <p ${styleForP}>描述: ${description}</p><p>----</p> <p ${styleForP}>改动: ${content}</p><p>========</p>`
 
     content += "<p>==当前页面显示时间30秒==</p>"
     ChatRoomSendLocal(content, 30000);

@@ -94,29 +94,20 @@ export class DataModule extends BaseModule {
         if (ExtensionStorage()) {
             // 处理XSASettingAndData的获取 从ExtensionStorage获取数据
             Player.XSA = JSON.parse(LZString.decompressFromBase64(ExtensionStorage()) ?? '') as XSASettingAndData
-
             // 如果没有获取到数据则读取默认数据
-            for (const k in Player.XSA){
-                const afterVersion = Player.XSA.version;
-                if (afterVersion !== XSActivity_VERSION) {
-                    this.IsModUpDate = true;
-                    Player.XSA.version = XSActivity_VERSION;
+            const afterVersion = Player.XSA.version;
+            if (afterVersion !== XSActivity_VERSION) {
+                this.IsModUpDate = true;
+                Player.XSA.version = XSActivity_VERSION;
+            }
+            for (const k2 in Player.XSA.data) {
+                if (Player.XSA.data[k2] === undefined) {
+                    Player.XSA.data[k2] = this.DefaultData[k2]
                 }
-                // 处理data
-                if (k === 'data'){
-                    for (const k2 in Player.XSA.data){
-                        if (Player.XSA.data[k2] === undefined){
-                            Player.XSA.data[k2] = this.DefaultData[k2]
-                        }
-                    }
-                }
-                // 处理settings
-                if (k === 'settings') {
-                    for (const k3 in Player.XSA.settings){
-                        if (Player.XSA.settings[k3] === undefined){
-                            Player.XSA.settings[k3] = this.DefaultSetting[k3]
-                        }
-                    }
+            }
+            for (const k3 in Player.XSA.settings) {
+                if (Player.XSA.settings[k3] === undefined) {
+                    Player.XSA.settings[k3] = this.DefaultSetting[k3]
                 }
             }
         } else {
