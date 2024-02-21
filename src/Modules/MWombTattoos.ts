@@ -189,6 +189,7 @@ export class WombTattoosModule extends BaseModule {
             // 若无，则调用移除子宫纹身效果的方法
             this.offHaveWombTattoos();
             WombTattoosModule.isCheckWombTattoosEffect = false;
+            DataModule.SaveData({wombTattoosAppliedEffects: [], sensitiveLevel: 0})
         }
     }
 
@@ -203,10 +204,10 @@ export class WombTattoosModule extends BaseModule {
     static wombTattoosLayersName: wombTattoosLayersName[] = [
         "Zoom", // 膨胀
         "Big", //大
-        "Bloom", // 开花 ::高潮渴望
+        "Bloom", // 开花 
         "BottomSpike", // 底部尖刺
         "Flash", // 爆炸
-        "Fly", // 飞  :开花 :: 恍惚 
+        "Fly", // 飞  :开花 
         "Grass", // 花托
         "Grow", // 卵巢
         "GrowHollow", // 卵巢-空心
@@ -306,13 +307,13 @@ export class WombTattoosModule extends BaseModule {
                 },
                 defaultTimerCode: () => {
                     if (WombTattoosModule.HasWombTattoosEffect(Player, 'trance') && this.IsTrancing) {
-                        if (Math.random() < 0.003) {
+                        if (Math.random() < 0.006) {
                             ArousalModule.needActivityOrgasmRuined = true;
                             ActivityOrgasmPrepare(Player);
                             SendActivity(`${PH.s}被自己的淫纹影响，突然一阵剧烈的快感袭来，却仿佛梦幻般消失.....`, Player.MemberNumber!);
                         }
-                        if (Math.random() < 0.02) {
-                            SendLocalMessage(this.getTranceMessage, 'trance-message', 20001);
+                        if (Math.random() < 0.015) {
+                            SendLocalMessage(this.getTranceMessage, 'trance-message', 6000);
                         }
                     }
                 },
