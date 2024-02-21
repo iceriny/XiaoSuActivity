@@ -1,4 +1,4 @@
-import { hookFunction } from "utils";
+import { hookFunction, sendLastChangeLog } from "utils";
 import { BaseModule } from "./BaseModule";
 import { CSShref } from "utils";
 
@@ -39,6 +39,8 @@ export class DataModule extends BaseModule {
      */
     static browserVersion = this.match ? parseInt(this.match[2]) : -1;
 
+    static IsModUpDate: boolean = false;
+
     public Load(): void {
         this.hookListHandle();
 
@@ -74,11 +76,12 @@ export class DataModule extends BaseModule {
             DataModule.allDataSave();
             return next(args);
         });
-        // hookFunction("ChatRoomSync", this.priority, (args, next) => {
-        //     return next(args);
-        // });
         hookFunction('ChatRoomSync', this.priority, (args, next) => {
             DataModule.allDataSave();
+            if (DataModule.IsModUpDate) {
+                sendLastChangeLog();
+                DataModule.IsModUpDate = false;
+            }
             return next(args);
         });
     }
@@ -91,8 +94,13 @@ export class DataModule extends BaseModule {
         if (ExtensionStorage()) {
             // 处理XSASettingAndData的获取 从ExtensionStorage获取数据
             Player.XSA = JSON.parse(LZString.decompressFromBase64(ExtensionStorage()) ?? '') as XSASettingAndData
+
             // 如果没有获取到数据则读取默认数据
             for (const k in Player.XSA){
+                const afterVersion = Player.XSA.version;
+                if (afterVersion !== XSActivity_VERSION) {
+                    this.IsModUpDate = true;
+                }
                 // 处理data
                 if (k === 'data'){
                     for (const k2 in Player.XSA.data){
@@ -117,6 +125,7 @@ export class DataModule extends BaseModule {
                 data: this.DefaultData,
                 settings: this.DefaultSetting
             }
+            this.IsModUpDate = true;
         }
 
         // 将获取到的数据输出到PlayerOnlineSharedSettingsStorage

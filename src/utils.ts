@@ -48,8 +48,8 @@ export function SendChat(msg: string | null) {
 }
 
 type LocalMessageCSSName = null | 'local-message' | 'trance-message'
-export function SendLocalMessage(msg: string, className: LocalMessageCSSName = null , timeout: number = 0) {
-    if (className !== null ){
+export function SendLocalMessage(msg: string, className: LocalMessageCSSName = null, timeout: number = 0) {
+    if (className !== null) {
         msg = `<div class="${className}">${msg}</div>`
     }
     if (timeout === 0) ChatRoomSendLocal(msg)
@@ -320,6 +320,31 @@ export function sendChangeLog() {
     }
     content += "<p>==当前页面显示时间1分钟==</p>"
     ChatRoomSendLocal(content, 60000);
+}
+
+/**
+ * 发送最新的更新信息到本地
+ */
+export function sendLastChangeLog() {
+    let content = '';
+    const c = CHANGELOG[CHANGELOG.length - 1];
+    const version = c.version;
+    const type = c.type == ChangeType.main ? "主版本" : "开发版本";
+    const description = c.description;
+    const changes = c.changes;
+
+    let changesString = '<ul style="list-style-position: inside;  padding-left: 0;">';
+    for (const s of changes) {
+        changesString += `<li>${s}</li>`;
+    }
+    changesString += '</ul>';
+
+    const backgroundColor = version == XSActivity_VERSION && (!DEBUG && type === "主版本") ? "#764460" : "#442E3A"
+    const styleForP = 'style="font-weight: bold; margin: 0;"'
+    content += `<div style="background-color: ${backgroundColor}; display: flex; flex-direction: column;"> <p ${styleForP}>版本: ${version}</p> <p ${styleForP}>类型: ${type}</p> <p ${styleForP}>描述: ${description}</p><p>----</p> <p ${styleForP}>改动: ${changesString}</p><p>========</p></div>`
+
+    content += "<p>==当前页面显示时间30秒==</p>"
+    ChatRoomSendLocal(content, 30000);
 }
 
 /**

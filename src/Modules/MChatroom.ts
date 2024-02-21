@@ -22,9 +22,6 @@ export class ChatroomModule extends BaseModule {
      * hook函数列表处理
      */
     hookListHandler(): void {
-        // hookFunction("ChatRoomSync", this.priority, (args, next) => {
-        //     return next(args);
-        // });
 
         hookFunction("ChatRoomLoad", this.priority, (args, next) => {
             const result = next(args);
@@ -278,7 +275,7 @@ export class ChatroomModule extends BaseModule {
     }
 
 
-    private static isKaomojiMenuCloseEventListenerAdded : boolean = false;
+    private static isKaomojiMenuCloseEventListenerAdded: boolean = false;
     /**
      * 构建表情按钮并返回按钮实例
      * @returns 创建的表情按钮
@@ -297,10 +294,10 @@ export class ChatroomModule extends BaseModule {
                 this.KaomojiShouldShow = false;
             }
         });
-        if(!this.isKaomojiMenuCloseEventListenerAdded){
+        if (!this.isKaomojiMenuCloseEventListenerAdded) {
             document.addEventListener('click', (event) => {
                 const target = event.target as HTMLElement; // 将事件目标转换为 HTMLElement 类型
-                if (!target.closest('#kaomoji-menu') && !target.closest('#kaomoji-button')  && this.KaomojiMenuObject.menu && this.KaomojiShouldShow) {
+                if (!target.closest('#kaomoji-menu') && !target.closest('#kaomoji-button') && this.KaomojiMenuObject.menu && this.KaomojiShouldShow) {
                     this.KaomojiMenuObject.menu!.style.display = "none";
                     this.KaomojiShouldShow = false;
                 }
@@ -320,8 +317,8 @@ export class ChatroomModule extends BaseModule {
      */
     private static ResizeKaomojiButton() {
         if (this.InputElement && this.KaomojiButton) {
-            this.KaomojiButton.style.top = parseInt(this.InputElement.style.top) - window.innerHeight*0.026 + "px";
-            this.KaomojiButton.style.left = parseInt(this.InputElement.style.left) - window.innerHeight*0.026 + "px";
+            this.KaomojiButton.style.top = parseInt(this.InputElement.style.top) - window.innerHeight * 0.026 + "px";
+            this.KaomojiButton.style.left = parseInt(this.InputElement.style.left) - window.innerHeight * 0.026 + "px";
         }
     }
     /**
@@ -332,7 +329,7 @@ export class ChatroomModule extends BaseModule {
     private static getKaomojiMenu(key: string): HTMLDivElement {
         // 获取表情菜单 如果不存在则创建
         const { kaomojiContainer, menu }
-        : { kaomojiContainer: HTMLDivElement; menu: HTMLDivElement; }
+            : { kaomojiContainer: HTMLDivElement; menu: HTMLDivElement; }
             = this.KaomojiMenuObject.menu
                 ? { kaomojiContainer: this.KaomojiMenuObject.container!, menu: this.KaomojiMenuObject.menu! }
                 : ChatroomModule.buildKaomojiMenu();
