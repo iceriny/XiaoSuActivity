@@ -54,7 +54,9 @@ export class ArousalModule extends BaseModule {
             if (P.IsPlayer() && ArousalModule.needActivityOrgasmRuined) {
                 ActivityOrgasmRuined = true;
             }
-            return next(args);
+            const result = next(args);
+            ArousalModule.needActivityOrgasmRuined = false;
+            return result;
         })
     }
 

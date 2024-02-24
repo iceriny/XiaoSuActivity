@@ -42,15 +42,11 @@ export class DataModule extends BaseModule {
     static IsModUpDate: boolean = false;
 
     public Load(): void {
-        this.hookListHandle();
 
         DataModule.allDataTake();
-
         DataModule.SyncDataForPlayer();
 
-        setTimeout(() => {
-            ActivityChatRoomArousalSync(Player);
-        }, 1000);
+        this.hookListHandle();
 
         this.Loaded = true;
     }
@@ -74,6 +70,11 @@ export class DataModule extends BaseModule {
     private hookListHandle(): void {
         hookFunction('ChatRoomLeave', this.priority, (args, next) => {
             DataModule.allDataSave();
+
+            setTimeout(() => {
+                ActivityChatRoomArousalSync(Player);
+            }, 1000);
+
             return next(args);
         });
         hookFunction('ChatRoomSync', this.priority, (args, next) => {
