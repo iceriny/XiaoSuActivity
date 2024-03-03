@@ -127,7 +127,7 @@ export class ChatroomModule extends BaseModule {
     stammerHandler(content: string, tenfoldStammeringProbability: number, isSegmentForCH: boolean, haveMoan: boolean): string {
         conDebug(`stammerHandler: content: ${content} tenfoldStammeringProbability: ${tenfoldStammeringProbability}`)
 
-        // 处理结巴程度，默认结巴程度为5
+        // 处理结巴程度，默认结巴程度为3
         if (Number.isNaN(tenfoldStammeringProbability)) tenfoldStammeringProbability = 3;
         const stammeringProbability = tenfoldStammeringProbability / 10;
 

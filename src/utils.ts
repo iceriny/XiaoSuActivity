@@ -348,15 +348,6 @@ export function sendLastChangeLog() {
  * @returns 返回处理后的字符串
  */
 export function segmentForCH(str: string): string[] | null {
-    conDebug({
-        name: "segmentForCHTest",
-        type: MSGType.DebugLog,
-        content: {
-            Intl: window.Intl ? true : false,
-            Segmenter: window.Intl.Segmenter ? true : false,
-            GAME_LANG: TranslationLanguage.toLowerCase()
-        }
-    })
     // 检查浏览器是否支持 Intl.Segmenter
     if (window.Intl && window.Intl.Segmenter && TranslationLanguage.toLowerCase() === "cn") {
         const segmenter = new Intl.Segmenter('zh', { granularity: 'word' }); // 创建分词器实例
