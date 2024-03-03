@@ -2,7 +2,7 @@
 /**
  * 完整模块数量
  */
-export const FullModCount = 8;
+export const FullModCount = 6; //8
 
 
 /**
@@ -16,6 +16,9 @@ export abstract class BaseModule {
     /** 是否加载完成 */
     Loaded: boolean = false;
 
+    constructor(moduleName: XS_ModuleName) {
+        this.moduleName = moduleName;
+    }
 
     /**
      * 初始化函数

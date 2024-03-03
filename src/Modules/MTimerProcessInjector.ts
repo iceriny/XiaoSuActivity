@@ -36,7 +36,6 @@ export class TimerProcessInjector extends BaseModule {
         this.Loaded = true;
     }
     public Init(): void {
-        this.moduleName = "TimerProcessInjector"
         this.priority = 999;
     }
 

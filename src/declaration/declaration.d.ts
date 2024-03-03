@@ -5,11 +5,13 @@ interface Window {
 	XSActivity_VERSION?: string;
 	BROWSER_NAME?: string;
 	BROWSER_VERSION?: number;
+	MODULES?: { [key: string]: unknown }
 }
 /**
  * mod模块名称定义
  */
-type XS_ModuleName = "Base" | "TimerProcessInjector" | "ActivityModule" | "ChatroomModule" | "CommandsModule" | "DataModule" | "ArousalModule" | 'WombTattoosModule' | 'DrawModule';
+type XS_ModuleName = "Base" | "TimerProcessInjector" | "ActivityModule"
+	| "ChatroomModule" | "CommandsModule" | "DataModule" | 'DrawModule'; // 'WombTattoosModule' | "ArousalModule"
 
 //  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv  //
 
