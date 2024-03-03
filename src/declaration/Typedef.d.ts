@@ -231,7 +231,7 @@ type AssetGroupItemName =
 	'ItemMouth3' | 'ItemNeck' | 'ItemNeckAccessories' | 'ItemNeckRestraints' |
 	'ItemNipples' | 'ItemNipplesPiercings' | 'ItemNose' | 'ItemPelvis' |
 	'ItemTorso' | 'ItemTorso2' | 'ItemVulva' | 'ItemVulvaPiercings' |
-	'ItemHandheld' | XSA_AssetGroupItemName
+	'ItemHandheld' 
 	;
 
 type AssetGroupScriptName = 'ItemScript';
@@ -949,13 +949,14 @@ type ActivityPrerequisite =
  * 小酥添加的额外动作
 */
 type XSA_ActivityName_onlyName =
-	"眯眼" | "眼神飘忽" | "恳求的看" | "恳求的摇头"
+	"眯眼" | "眼神飘忽" | "恳求的看" | "恳求的摇头" | "头蹭" | "脸蹭" | "鼻子蹭" | "看他" | "微微点头" | "微微摇头" | "身体颤抖的点头" | "身体颤抖的摇头"
 	| "甩头发" | "轻抚发梢" | "叼起头发" | "嗅头发" | "绕头发" | "大力甩头发"
-	| "抿住嘴巴" | "噘嘴" | "瘪嘴"
-	| "皱鼻子" | "打喷嚏" | "深呼吸"
-	| "低头" | "挺胸收腹" | "站直身体" | "坐直身体" | "身体一颤"
+	| "抿住嘴巴" | "噘嘴" | "瘪嘴" | "轻声喘气" | "脸红喘气" | "嘟囔着想说什么" | "慢慢伸出舌头" | "兴奋的伸出舌头" | "失神的伸出舌头"
+	| "皱鼻子" | "打喷嚏" | "深呼吸" | "呼吸紊乱" | "呼吸平复"
+	| "缩脖子" | "歪头疑惑"
+	| "低头" | "挺胸收腹" | "站直身体" | "坐直身体" | "身体一颤" | "扭动身体" | "活动四肢" | "兴奋的扭动"
 	| "活动手臂" | "活动大腿" | "绷紧膝盖" | "内八夹腿"
-	| "蜷缩脚趾" | "绷直脚踝" | "踮脚"
+	| "蜷缩脚趾" | "绷直脚踝" | "踮脚" | "跺脚"
 	;
 
 type XSA_ActivityName = `XSAct_${XSA_ActivityName_onlyName}`;
@@ -966,7 +967,7 @@ type XSA_ActivityNamePath = `Assets/Female3DCG/Activity/${ActivityName}.png`
  * 小酥添加的额外限定组
 */
 
-type XSA_ActivityPrerequisite = "ItemHoodCovered" | "TargetItemHoodCovered" | "ItemNoseCovered" | "Kneeling" | "NotKneeling";
+type XSA_ActivityPrerequisite = "ItemHoodCovered" | "TargetItemHoodCovered" | "ItemNoseCovered" | "Kneeling" | "NotKneeling" | "CanLook";
 
 type XSA_AssetGroupItemName = "NoseEmpty" | ""
 
