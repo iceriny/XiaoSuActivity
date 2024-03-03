@@ -1,5 +1,5 @@
 import bcModSDKRef from "bondage-club-mod-sdk";
-import { modules } from "Modules/ModulesDict";
+import { MODULES } from "Modules/ModulesDict";
 import { CHANGELOG, ChangeType } from "changeLogData";
 
 //   VVVVVVVVVVVVVVVVVVVVVVVVVVVVV  ----用得到的常数---- VVVVVVVVVVVVVVVVVVVVVVV    //
@@ -191,7 +191,7 @@ export function conDebug(msg: XSDebugMSG | string, color: string | null = null, 
  * @returns 已加载的模型实例
  */
 export function GetModule<T>(moduleName: XS_ModuleName): T {
-    return modules[moduleName] as T;
+    return MODULES[moduleName] as T;
 }
 
 /**
@@ -332,13 +332,19 @@ export function sendLastChangeLog() {
     const type = c.type == ChangeType.main ? "主版本" : "开发版本";
     const description = c.description;
     const changes = c.changes;
-    for (const s of changes) {
-        content += s;
-    }
     const styleForP = 'style="font-weight: bold; margin: 0;"'
-    content += `<p ${styleForP}>版本: ${version}</p> <p ${styleForP}>类型: ${type}</p> <p ${styleForP}>描述: ${description}</p><p>----</p> <p ${styleForP}>改动: ${content}</p><p>========</p>`
 
-    content += "<p>==当前页面显示时间30秒==</p>"
+    for (const s of changes) {
+        content += `<p ${styleForP}>${s}</p>`;
+    }
+    content = `<p ${styleForP}>版本: ${version}</p>
+    <p ${styleForP}>类型: ${type}</p>
+    <p ${styleForP}>描述: ${description}</p>
+    <p>----</p>
+    <p ${styleForP}>改动: ${content}</p>
+    <p>========</p>`
+
+    content += "<p>==当前页面显示时间30秒 再次查看请输入`/xsa new`==</p>"
     ChatRoomSendLocal(content, 30000);
 }
 

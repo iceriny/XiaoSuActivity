@@ -1,17 +1,17 @@
 import { conDebug } from "utils";
 import { BaseModule, FullModCount } from "./BaseModule";
 import { ActivityModule } from "./MActivity";
+// import { ArousalModule } from "./MArousal";
 import { ChatroomModule } from "./MChatroom";
 import { CommandsModule } from "./MCommand";
 import { DataModule } from "./MData";
-import { ArousalModule } from "./MArousal";
-import { TimerProcessInjector } from "./MTimerProcessInjector";
-import { WombTattoosModule } from "./MWombTattoos";
 import { DrawModule } from "./MDrawModule";
-import { modules } from "./ModulesDict";
+import { TimerProcessInjector } from "./MTimerProcessInjector";
+// import { WombTattoosModule } from "./MWombTattoos";
+import { MODULES } from "./ModulesDict";
 
 export class ModuleLoader {
-    public static modules: { [key: string]: BaseModule } = modules;
+    public static modules: { [key: string]: BaseModule } = MODULES;
     static mList: [BaseModule] | undefined;
     public static modulesLoadCount: number = 0;
     public static modulesInitCount: number = 0;
@@ -104,29 +104,29 @@ export class ModuleLoader {
             throw new Error("Base为模块的抽象类，请勿加载");
         },
         TimerProcessInjector: () => {
-            this.pushToModules(new TimerProcessInjector());
+            this.pushToModules(new TimerProcessInjector('TimerProcessInjector'));
         },
         ActivityModule: () => {
-            this.pushToModules(new ActivityModule());
+            this.pushToModules(new ActivityModule('ActivityModule'));
         },
         ChatroomModule: () => {
-            this.pushToModules(new ChatroomModule());
+            this.pushToModules(new ChatroomModule('ChatroomModule'));
         },
         CommandsModule: () => {
-            this.pushToModules(new CommandsModule());
+            this.pushToModules(new CommandsModule('CommandsModule'));
         },
         DataModule: () => {
-            this.pushToModules(new DataModule());
-        },
-        ArousalModule: () => {
-            this.pushToModules(new ArousalModule());
-        },
-        WombTattoosModule: () => {
-            this.pushToModules(new WombTattoosModule());
+            this.pushToModules(new DataModule('DataModule'));
         },
         DrawModule: () => {
-            this.pushToModules(new DrawModule());
-        }
+            this.pushToModules(new DrawModule('DrawModule'));
+        },
+        // ArousalModule: () => {
+        //     this.pushToModules(new ArousalModule());
+        // },
+        // WombTattoosModule: () => {
+        //     this.pushToModules(new WombTattoosModule());
+        // }
     }
 
 

@@ -10,7 +10,6 @@ export class ChatroomModule extends BaseModule {
         this.Loaded = true;
     }
     public Init(): void {
-        this.moduleName = "ChatroomModule";
         this.priority = 30;
 
     }

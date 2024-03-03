@@ -42,8 +42,8 @@ export class DataModule extends BaseModule {
     static IsModUpDate: boolean = false;
 
     public Load(): void {
-
         DataModule.allDataTake();
+        this.hookListHandle();
         DataModule.SyncDataForPlayer();
 
         this.hookListHandle();
@@ -51,8 +51,7 @@ export class DataModule extends BaseModule {
         this.Loaded = true;
     }
     public Init(): void {
-        this.moduleName = "DataModule";
-        this.priority = 0;
+        this.priority = 99;
 
         window.BROWSER_NAME = DataModule.browserName;
         window.BROWSER_VERSION = DataModule.browserVersion;
@@ -80,7 +79,9 @@ export class DataModule extends BaseModule {
         hookFunction('ChatRoomSync', this.priority, (args, next) => {
             DataModule.allDataSave();
             if (DataModule.IsModUpDate) {
-                sendLastChangeLog();
+                setTimeout(() => {
+                    sendLastChangeLog();
+                }, 2000);
                 DataModule.IsModUpDate = false;
             }
             return next(args);

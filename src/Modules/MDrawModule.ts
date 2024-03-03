@@ -25,7 +25,6 @@ export class DrawModule extends BaseModule {
         this.Loaded = true;
     }
     public Init(): void {
-        this.moduleName = "DrawModule";
         this.priority = 20;
     }
 

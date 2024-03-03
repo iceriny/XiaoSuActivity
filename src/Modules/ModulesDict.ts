@@ -1,3 +1,5 @@
 import type { BaseModule } from "./BaseModule";
 
-export const modules: { [key: string]: BaseModule } = {};
+export const MODULES: { [key: string]: BaseModule } = {};
+
+window.MODULES = MODULES;

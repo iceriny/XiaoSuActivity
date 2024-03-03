@@ -26,7 +26,6 @@ export class ActivityModule extends BaseModule {
 
 
     public Init(): void {
-        this.moduleName = "ActivityModule";
         this.priority = 50;
     }
     public Load(): void {
@@ -195,10 +194,6 @@ export class ActivityModule extends BaseModule {
             addedValues.push([`ActivityAct_${actName}`, `${nameWithoutPrefix}`]);
             addedValues.push([`Activity${actName}`, `${nameWithoutPrefix}`]);
             if (actTarget.length > 0) {
-                // for (const aT of actTarget) {
-                //     addedValues.push([`Label-ChatOther-${aT}-${actName}`, `${nameWithoutPrefix}`]);
-                //     addedValues.push([`ChatOther-${aT}-${actName}`, pendingActivity.descString[0]]);
-                // }
                 for (let i = 0; i < actTarget.length; i++) {
                     const aT = actTarget[i];
                     addedValues.push([`Label-ChatOther-${aT}-${actName}`,
@@ -274,6 +269,8 @@ export class ActivityModule extends BaseModule {
      * -------
      * @desc - desc默认需要为null,当活动初始化时,会自动添加文字描述
      * @descString - 两个元素的数组 [0]为如果目标为他人的描述，[1]为目标自己的描述
+     * @img - 指定的动作图片
+     * @isBase - 是否是基础动作 基础动作将会自动把名称中的 @bodyNamePlaceholder 换成 `{group}` 并在添加动作时动态的将其替换为目标部位的名称
     */
     activityToAddDict: { [ActivityIndex in XSA_ActivityName]: { act: Activity, desc: null | string[][], descString: [string, string], img: ActivityName, isBase?: true } } = {
         XSAct_眯眼: {
