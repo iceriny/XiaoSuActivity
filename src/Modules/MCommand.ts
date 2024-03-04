@@ -3,6 +3,7 @@ import { BaseModule } from "./BaseModule";
 import { conDebug, GetModule, timeRange, sendChangeLog, SendLocalMessage, sendLastChangeLog } from "utils";
 import { ChatroomModule } from "./MChatroom";
 import { ActivityModule } from "./MActivity";
+import { ChessModule } from "./MChess";
 
 const timeRangeRegex: RegExp = /^(((0|1)\d|2[0-3]):[0-5]\d)-(((0|1)\d|2[0-3]):[0-5]\d)$/;
 
@@ -145,6 +146,13 @@ export class CommandsModule extends BaseModule {
         //         `)
         //     }
         // }
+        chess: {
+            Tag: "chess",
+            Description: "开始一场棋局! 谁来迎战?",
+            Action: (args, msg, parsed) => {
+                GetModule<ChessModule>('ChessModule').SendAChess(Player.MemberNumber ?? 0,undefined, 0)
+            }
+        }
     }
 
     public Load(): void {

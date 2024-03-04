@@ -11,7 +11,7 @@ interface Window {
  * mod模块名称定义
  */
 type XS_ModuleName = "Base" | "TimerProcessInjector" | "ActivityModule"
-	| "ChatroomModule" | "CommandsModule" | "DataModule" | 'DrawModule'; // 'WombTattoosModule' | "ArousalModule"
+	| "ChatroomModule" | "CommandsModule" | "DataModule" | 'DrawModule' | 'ChessModule'; // 'WombTattoosModule' | "ArousalModule"
 
 //  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv  //
 

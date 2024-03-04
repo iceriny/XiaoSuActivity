@@ -94,7 +94,6 @@ export class ChatroomModule extends BaseModule {
                     }
                     return;
                 }
-
                 args[0] = msg;
                 return next(args);
             });
