@@ -227,10 +227,22 @@
 }
 
 .chessContainer .chessTable .chessCell {
-    width: 20px;
-    height: 20px;
-    transition: all 0.3s ease;
+    font-size: small;
+    width: 30px;
+    height: 30px;
+    max-height: 30px;
+    border: 1px solid rgb(128, 128, 128);
+    border-radius: 50%;
+    transition: all 1s ease;
 }
 .chessContainer .chessTable .chessCell:hover {
     background-color: rgba(65, 142, 91, 0.5);
+    transition: all 0.25s ease;
+}
+
+.chessContainer .chessTable .chessCellWhite {
+    background-color: rgb(255, 135, 135);
+}
+.chessContainer .chessTable .chessCellBlack {
+    background-color: rgb(135, 253, 212);
 }
