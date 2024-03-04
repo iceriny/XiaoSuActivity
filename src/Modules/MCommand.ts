@@ -150,7 +150,16 @@ export class CommandsModule extends BaseModule {
             Tag: "chess",
             Description: "开始一场棋局! 谁来迎战?",
             Action: (args, msg, parsed) => {
-                GetModule<ChessModule>('ChessModule').SendAChess(Player.MemberNumber ?? 0,undefined, 0)
+                GetModule<ChessModule>('ChessModule').ShowChessboard(
+                    {
+                        Player1: Player.MemberNumber ?? -1,
+                        Round: 0,
+                        Checkerboard: ChessModule.newCheckerboard,
+                        start: false,
+                        sender: Player.MemberNumber ?? -1
+                    },
+                    Player.MemberNumber ?? -1,
+                )
             }
         }
     }

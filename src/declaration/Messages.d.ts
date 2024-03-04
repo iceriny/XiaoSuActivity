@@ -668,7 +668,7 @@ interface ChessDictionaryEntry {
 	Round: number;
 	Checkerboard: Checkerboard;
 	start: boolean;
-	ISOver?: true;
+	sender: number;
 }
 type CheckerboardRow = [boolean | null,boolean | null,boolean | null,boolean | null,boolean | null,boolean | null,boolean | null,boolean | null,boolean | null,boolean | null,boolean | null,boolean | null,boolean | null,boolean | null,boolean | null,boolean | null,boolean | null,boolean | null,boolean | null,];
 type Checkerboard = [
