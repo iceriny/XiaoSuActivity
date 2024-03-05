@@ -664,7 +664,7 @@ type ChatMessageDictionaryEntry =
 
 interface ChessDictionaryEntry {
 	Player1: number;
-	Player2?: number;
+	Player2: number | null;
 	Round: number;
 	Checkerboard: Checkerboard;
 	start: boolean;

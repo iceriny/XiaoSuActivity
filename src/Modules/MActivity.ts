@@ -690,7 +690,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: []
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}的呼吸突然变得躁动起来.`],
+            descString: ["", `${selfPlaceholder}的呼吸渐渐紊乱起来，发出软软的鼻音.`],
             img: "Whisper"
         },
         XSAct_嘟囔着想说什么: {
@@ -853,7 +853,7 @@ export class ActivityModule extends BaseModule {
             act: {
                 Name: "XSAct_脸红喘气",
                 Target: [],
-                TargetSelf: ["ItemHead"],
+                TargetSelf: ["ItemMouth", "ItemMouth2", "ItemMouth3"],
                 MaxProgress: 20,
                 MaxProgressSelf: 20,
                 Prerequisite: []
@@ -866,7 +866,7 @@ export class ActivityModule extends BaseModule {
             act: {
                 Name: "XSAct_轻声喘气",
                 Target: [],
-                TargetSelf: ["ItemHead"],
+                TargetSelf: ["ItemMouth", "ItemMouth2", "ItemMouth3"],
                 MaxProgress: 20,
                 MaxProgressSelf: 20,
                 Prerequisite: []
@@ -879,7 +879,7 @@ export class ActivityModule extends BaseModule {
             act: {
                 Name: "XSAct_跺脚",
                 Target: [],
-                TargetSelf: ['ItemLegs'],
+                TargetSelf: ['ItemBoots'],
                 MaxProgress: 20,
                 MaxProgressSelf: 20,
                 Prerequisite: ['NotKneeling']
@@ -912,7 +912,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: []
             },
             desc: null,
-            descString: [`${selfPlaceholder}用自己的脸颊 蹭了蹭${targetPlaceholder}的${this.bodyNamePlaceholder}.`, ''],
+            descString: [`${selfPlaceholder}用自己的脸颊蹭了蹭${targetPlaceholder}的${this.bodyNamePlaceholder}.`, ''],
             img: "SiblingsCheekKiss",
             isBase: true
         },
@@ -929,6 +929,19 @@ export class ActivityModule extends BaseModule {
             descString: [`${selfPlaceholder}用自己的鼻子蹭了蹭${targetPlaceholder}的${this.bodyNamePlaceholder}.`, ''],
             img: "Nod",
             isBase: true
+        },
+        XSAct_埋怀里: {
+            act: {
+                Name: "XSAct_埋怀里",
+                Target: ['ItemBreast'],
+                TargetSelf: [],
+                MaxProgress: 20,
+                MaxProgressSelf: 20,
+                Prerequisite: ['MoveHead']
+            },
+            desc: null,
+            descString: [`${selfPlaceholder}把脑袋埋在${targetPlaceholder}的怀里.`, ''],
+            img: "SiblingsCheekKiss"
         }
     }
 
