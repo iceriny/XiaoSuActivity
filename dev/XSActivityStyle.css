@@ -222,12 +222,18 @@
     justify-content: center;
 }
 
+.chessContainer .chessTitle {
+    font-size: 30px;
+    font-weight: bold;
+    display: flex;
+}
+
 .chessContainer .chessTable {
     border-color: rgb(128, 128, 128);
 }
 
 .chessContainer .chessTable .chessCell {
-    font-size: small;
+    font-size: 25px;
     width: 30px;
     height: 30px;
     max-height: 30px;
@@ -235,6 +241,7 @@
     border-radius: 50%;
     transition: all 1s ease;
 }
+
 .chessContainer .chessTable .chessCell:hover {
     background-color: rgba(65, 142, 91, 0.5);
     transition: all 0.25s ease;
@@ -243,6 +250,7 @@
 .chessContainer .chessTable .chessCellWhite {
     background-color: rgb(255, 135, 135);
 }
+
 .chessContainer .chessTable .chessCellBlack {
     background-color: rgb(135, 253, 212);
 }
