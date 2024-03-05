@@ -64,6 +64,7 @@
 
     transition: all 0.3s ease;
 }
+
 .kaomoji-menu .kaomoji-title-close svg circle:hover {
     fill: rgba(100, 8, 25, 0.95);
 }
@@ -162,48 +163,94 @@
     color: rgb(178, 140, 200);
     font-size: 2.5em;
     font-style: italic;
-    vertical-align: middle; /* 垂直居中 */
+    vertical-align: middle;
+    /* 垂直居中 */
     min-height: 3em;
     height: auto;
     line-height: 1.2;
     background: linear-gradient(to right, rgba(208, 106, 255, 0.25), rgba(255, 59, 78, 0.25));
     filter: blur(1px);
 
-    animation: circleAnimation 20s ease-in-out infinite; /* 持续时间5秒，线性运动，无限循环 */
+    animation: circleAnimation 20s ease-in-out infinite;
+    /* 持续时间5秒，线性运动，无限循环 */
 
     transition: all 0.3s ease;
 }
+
 .ChatMessageLocalMessage .trance-message:hover {
     color: rgb(47, 32, 56);
-    background: linear-gradient(to right, rgba(208, 106, 255, 0.511),rgba(255, 59, 79, 0.538));
+    background: linear-gradient(to right, rgba(208, 106, 255, 0.511), rgba(255, 59, 79, 0.538));
     animation-play-state: paused;
 }
 
 @keyframes circleAnimation {
     0% {
-        transform:translateX(0) rotate(0deg);
+        transform: translateX(0) rotate(0deg);
         filter: blur(1px);
         opacity: 0;
     }
+
     15% {
         opacity: 1;
     }
+
     25% {
-        transform:translateX(-10px) rotate(-2deg);
+        transform: translateX(-10px) rotate(-2deg);
         filter: blur(.5px);
     }
+
     75% {
-        transform:translateX(10px) rotate(1deg);
+        transform: translateX(10px) rotate(1deg);
         filter: blur(3px);
         opacity: 0.9;
     }
+
     90% {
         opacity: 0.3;
         filter: blur(10px);
     }
+
     100% {
-        transform:translateX(0) rotate(0deg);
+        transform: translateX(0) rotate(0deg);
         filter: blur(1px);
         opacity: 0.0;
     }
+}
+
+.chessContainer {
+    align-items: center;
+    justify-content: center;
+}
+
+.chessContainer .chessTitle {
+    font-size: 30px;
+    font-weight: bold;
+    display: flex;
+}
+
+.chessContainer .chessTable {
+    border-color: rgb(128, 128, 128);
+}
+
+.chessContainer .chessTable .chessCell {
+    font-size: 25px;
+    width: 30px;
+    height: 30px;
+    max-height: 30px;
+    border: 1px solid rgb(128, 128, 128);
+    border-radius: 50%;
+    transition: all 1s ease;
+}
+
+.chessContainer .chessTable .chessCell:hover {
+    background-color: rgba(65, 142, 91, 0.5);
+    transition: all 0.25s ease;
+}
+
+.chessContainer .chessTable .chessCellWhite {
+    background-color: rgb(255, 135, 135);
+}
+
+.chessContainer .chessTable .chessCellBlack {
+    background-color: rgb(135, 253, 212);
 }

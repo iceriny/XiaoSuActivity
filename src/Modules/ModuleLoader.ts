@@ -7,6 +7,7 @@ import { CommandsModule } from "./MCommand";
 import { DataModule } from "./MData";
 import { DrawModule } from "./MDrawModule";
 import { TimerProcessInjector } from "./MTimerProcessInjector";
+import { ChessModule } from "./MChess";
 // import { WombTattoosModule } from "./MWombTattoos";
 import { MODULES } from "./ModulesDict";
 
@@ -120,6 +121,9 @@ export class ModuleLoader {
         },
         DrawModule: () => {
             this.pushToModules(new DrawModule('DrawModule'));
+        },
+        ChessModule: () => {
+            this.pushToModules(new ChessModule('ChessModule'));
         },
         // ArousalModule: () => {
         //     this.pushToModules(new ArousalModule());

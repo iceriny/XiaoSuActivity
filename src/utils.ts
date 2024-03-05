@@ -47,7 +47,7 @@ export function SendChat(msg: string | null) {
     ServerSend("ChatRoomChat", { Type: "Chat", Content: msg })
 }
 
-type LocalMessageCSSName = null | 'local-message' | 'trance-message'
+type LocalMessageCSSName = null | 'local-message' | 'trance-message' | 'XSA_Chess'
 export function SendLocalMessage(msg: string, className: LocalMessageCSSName = null, timeout: number = 0) {
     if (className !== null) {
         msg = `<div class="${className}">${msg}</div>`

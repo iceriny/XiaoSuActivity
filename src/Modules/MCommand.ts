@@ -3,6 +3,7 @@ import { BaseModule } from "./BaseModule";
 import { conDebug, GetModule, timeRange, sendChangeLog, SendLocalMessage, sendLastChangeLog } from "utils";
 import { ChatroomModule } from "./MChatroom";
 import { ActivityModule } from "./MActivity";
+import { ChessModule, Chess } from "./MChess";
 
 const timeRangeRegex: RegExp = /^(((0|1)\d|2[0-3]):[0-5]\d)-(((0|1)\d|2[0-3]):[0-5]\d)$/;
 
@@ -145,6 +146,41 @@ export class CommandsModule extends BaseModule {
         //         `)
         //     }
         // }
+        chess: {
+            Tag: "chess",
+            Description: "开始一场棋局! 谁来迎战?(输入 /xsa chess -h 以查看帮助)",
+            Action: (args, msg, parsed) => {
+                const params: string = this.getCommandParameters(parsed);
+                if (params === ''){
+                    GetModule<ChessModule>('ChessModule').ShowChessboard(
+                        {
+                            Player1: Player.MemberNumber ?? -1,
+                            Player2: null,
+                            Round: 0,
+                            Checkerboard: Chess.newCheckerboard,
+                            start: false,
+                            sender: Player.MemberNumber ?? -1
+                        },
+                        Player.MemberNumber ?? -1,
+                    );
+                } else if (params === 'h'){
+                    SendLocalMessage(`使用 /xsa chess 开启一场棋局， 这时其他玩家看不到棋盘。
+                    当点选一个格子，并点击发送按钮后，其他玩家将看到棋局情况。
+                    其他聊天室中任意的玩家可以点选一个格子，当任意玩家点击发送按钮后，游戏开始，这时其他不在玩家对局中的其他玩家将不能再交互第二个玩家发送的棋局。
+                    但第一个玩家发送时(发起者)的棋局，其他玩家还可以加入，换句话说，发送者可以同时与多名玩家对战。
+                    玩家可以在发送前修改自己已经落子的棋子，但不能修改对方的棋子。(可以修改自己所有的棋子，正常对局可不要作弊哦~)
+                    本插件不提供五子棋或围棋的胜负判断。
+                    围棋的吃子功能请被吃方手动从棋盘上删除。
+
+                    玩家点击发送按钮后 棋盘将在30秒后自动消失。
+                    但其他玩家仍能看到棋盘。其他玩家只能看到初始的棋局，进行中的棋局只能看到当前对局情况。
+
+                    目前仅支持同时拥有本插件时才能进行游玩和显示。
+                    `)
+                }
+                
+            }
+        }
     }
 
     public Load(): void {

@@ -93,5 +93,11 @@ export const CHANGELOG: ChangeLogObj[] = [
             "新Mod链接: [https://github.com/iceriny/XiaosuBCExpansion]",
             "等新Mod功能完善将会在此Mod更新中提示!",
             "新Mod的当前版本已完成: 高潮机制修改(本Mod移植)、边缘机制修改(本Mod移植)、\n高潮余韵系统(暂无介绍，请自行探索 将来的版本将完善介绍，以及淫纹大修将依赖于此功能)"]
+    },
+    {
+        version: "0.3.3",
+        description: "添加了五子棋围棋对局功能!",
+        type: ChangeType.main,
+        changes: ['五子棋或围棋的对局功能，详细介绍请输入 `/xsa chess -h` 查看。', '修复了部分bug。']
     }
 ]

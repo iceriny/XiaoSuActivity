@@ -2,7 +2,7 @@
 /**
  * 完整模块数量
  */
-export const FullModCount = 6; //8
+export const FullModCount = 7; //8
 
 
 /**
