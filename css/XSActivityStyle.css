@@ -227,6 +227,15 @@
     font-weight: bold;
     display: flex;
 }
+.chessContainer .ChatMessageButton {
+    background-color: #64c4a48c;
+    border-radius: 15%;
+    border-style: none;
+    transition: all 0.25s ease;
+}
+.chessContainer .ChatMessageButton:hover {
+    background-color: #54e3b3bf;
+}
 
 .chessContainer .chessTable {
     border-color: rgb(128, 128, 128);

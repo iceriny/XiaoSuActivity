@@ -280,7 +280,7 @@ export class ActivityModule extends BaseModule {
                 TargetSelf: ["ItemHead"],
                 MaxProgress: 20,
                 MaxProgressSelf: 20,
-                Prerequisite: []
+                Prerequisite: ['CanLook']
             },
             desc: null,
             descString: ["", `${selfPlaceholder}眯了眯眼.`],
@@ -293,7 +293,7 @@ export class ActivityModule extends BaseModule {
                 TargetSelf: ["ItemHead"],
                 MaxProgress: 20,
                 MaxProgressSelf: 20,
-                Prerequisite: []
+                Prerequisite: ['CanLook']
             },
             desc: null,
             descString: ["", `${selfPlaceholder}眼神飘忽的左看右看.`],
@@ -453,7 +453,7 @@ export class ActivityModule extends BaseModule {
                 TargetSelf: [],
                 MaxProgress: 20,
                 MaxProgressSelf: 20,
-                Prerequisite: ["TargetZoneNaked", "MoveHead"]
+                Prerequisite: ["CanLook"]
             },
             desc: null,
             descString: [`${selfPlaceholder}汪着眼睛恳求的看着${targetPlaceholder}.`, ""],
@@ -1029,7 +1029,7 @@ export class ActivityModule extends BaseModule {
             return !(acting as PlayerCharacter).IsKneeling();
         },
         CanLook: (acting: Character | PlayerCharacter): boolean => { // 是否可以看到
-            return (acting as PlayerCharacter).IsBlind();
+            return !(acting as PlayerCharacter).IsBlind();
         }
 
     }
