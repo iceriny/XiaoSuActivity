@@ -96,7 +96,7 @@ export class ChessModule extends BaseModule {
             sendButton.className = 'ChatMessageButton';
 
             sendButton.innerHTML = '发送';
-            sendButton.click = () => {
+            sendButton.addEventListener('click', () => {
                 // 点击后禁用交互
                 chess.Disable = true;
                 // 如果对局开始 并且 玩家1 是操作者 则回合数加1 换句话说 因为发起者总是玩家1 所以发起者发送信息后回合数加1 等从服务器接受到信息再发送 则回合数+1
@@ -114,7 +114,7 @@ export class ChessModule extends BaseModule {
                 setTimeout(() => {
                     div.remove();
                 }, 30000);
-            }
+            })
             // 添加按钮
             main.appendChild(sendButton);
         }
