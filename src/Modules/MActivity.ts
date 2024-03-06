@@ -833,7 +833,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ['CanLook']
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}看向了${targetPlaceholder}.`],
+            descString: [`${selfPlaceholder}看向了${targetPlaceholder}.`, ''],
             img: "SiblingsCheekKiss"
         },
         XSAct_缩脖子: {
