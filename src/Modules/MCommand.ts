@@ -5,7 +5,7 @@ import { ChatroomModule } from "./MChatroom";
 import { ActivityModule } from "./MActivity";
 import { ChessModule, Chess } from "./MChess";
 
-const timeRangeRegex: RegExp = /^(((0|1)\d|2[0-3]):[0-5]\d)-(((0|1)\d|2[0-3]):[0-5]\d)$/;
+const timeRangeRegex: RegExp = /^((0|1)\d|2[0-3]):[0-5]\d(:[0-5]\d)?-((0|1)\d|2[0-3]):[0-5]\d(:[0-5]\d)?$/;// 00:00(:00)-00:00(:00)
 
 export class CommandsModule extends BaseModule {
 

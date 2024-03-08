@@ -71,7 +71,10 @@ export class ChatroomModule extends BaseModule {
         // 让记录显示时间包含秒
         hookFunction("ChatRoomCurrentTime", 99, () => {
             const D = new Date();
-            return `${("0" + D.getHours()).substring(-2)}:${("0" + D.getMinutes()).substring(-2)}:${("0" + D.getSeconds()).substring(-2)}`;
+            const hStr = `0${D.getHours()}`;
+            const mStr = `0${D.getMinutes()}`;
+            const sStr = `0${D.getSeconds()}`;
+            return `${hStr.substring(hStr.length - 2)}:${mStr.substring(mStr.length - 2)}:${sStr.substring(sStr.length - 2)}`;
         });
 
         // 处理聊天室发送消息时 接受 " ` " 命令和 接受 " | " 命令
