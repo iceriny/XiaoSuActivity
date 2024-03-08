@@ -68,6 +68,12 @@ export class ChatroomModule extends BaseModule {
             return result;
         });
 
+        // 让记录显示时间包含秒
+        hookFunction("ChatRoomCurrentTime", 99, () => {
+            const D = new Date();
+            return `${("0" + D.getHours()).substring(-2)}:${("0" + D.getMinutes()).substring(-2)}:${("0" + D.getSeconds()).substring(-2)}`;
+        });
+
         // 处理聊天室发送消息时 接受 " ` " 命令和 接受 " | " 命令
         hookFunction("CommandParse", 0,
             (args, next) => {

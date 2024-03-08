@@ -23,8 +23,6 @@ const targetPlaceholder = "TargetCharacter";
  * - 接受特定动作的特殊效果 当前为瘙痒增加高潮抵抗难度
  */
 export class ActivityModule extends BaseModule {
-
-
     public Init(): void {
         this.priority = 50;
     }
@@ -33,10 +31,6 @@ export class ActivityModule extends BaseModule {
         this.hookListHandler();
         this.Loaded = true;
     }
-
-    // hook:
-
-
 
     /**
      * 狗子函数队列处理
