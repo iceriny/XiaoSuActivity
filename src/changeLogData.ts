@@ -99,5 +99,13 @@ export const CHANGELOG: ChangeLogObj[] = [
         description: "添加了五子棋围棋对局功能!",
         type: ChangeType.main,
         changes: ['五子棋或围棋的对局功能，详细介绍请输入 `/xsa chess -h` 查看。', '修复了部分bug。']
+    },
+    {
+        version: "0.3.4",
+        description: "导出聊天记录可以精确到秒了; 命令增加自动补全",
+        type: ChangeType.main,
+        changes: ['命令功能现在可以在输入首字母后自动补全了，例如，输入`/x`然后按Tab键将自动补全为`/xsa`，在`/xsa`后输入空格加`c`(即`/xsa c`)然后按下空格则自动补全为`/xsa chess`',
+        '现在聊天记录中的时间标记将显示精确到秒.', '现在按时间范围导出聊天记录的功能可以精确到秒了.']
+
     }
 ]

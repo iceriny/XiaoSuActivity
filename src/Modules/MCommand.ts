@@ -23,7 +23,7 @@ export class CommandsModule extends BaseModule {
             Action: (_args, _msg, parsed) => {
                 const params: string = this.getCommandParameters(parsed);
                 if (params == 'h') {
-                    ChatRoomSendLocal('输入: ‘/xsa export -[时间]’导出指定时间范围内的聊天记录.\n例如: ‘/xsa export -05:34-20:40’\n默认导出当前聊天室的全部聊天记录.\n注意! \n如果时间段过长例如第一天的05:34到第二天的06:00则可能出现导出错误.', 20000)
+                    ChatRoomSendLocal('输入: ‘/xsa export -[时间]’导出指定时间范围内的聊天记录.\n例如: ‘/xsa export -05:34-20:40’(可以包含秒)\n默认导出当前聊天室的全部聊天记录.\n注意! ', 20000)
                 } else if (params === '') {
                     // 导出当前聊天室的全部聊天记录
                     conDebug("导出当前聊天室的全部聊天记录");
@@ -151,7 +151,7 @@ export class CommandsModule extends BaseModule {
             Description: "开始一场棋局! 谁来迎战?(输入 /xsa chess -h 以查看帮助)",
             Action: (args, msg, parsed) => {
                 const params: string = this.getCommandParameters(parsed);
-                if (params === ''){
+                if (params === '') {
                     GetModule<ChessModule>('ChessModule').ShowChessboard(
                         {
                             Player1: Player.MemberNumber ?? -1,
@@ -163,7 +163,7 @@ export class CommandsModule extends BaseModule {
                         },
                         Player.MemberNumber ?? -1,
                     );
-                } else if (params === 'h'){
+                } else if (params === 'h') {
                     SendLocalMessage(`使用 /xsa chess 开启一场棋局， 这时其他玩家看不到棋盘。
                     当点选一个格子，并点击发送按钮后，其他玩家将看到棋局情况。
                     其他聊天室中任意的玩家可以点选一个格子，当任意玩家点击发送按钮后，游戏开始，这时其他不在玩家对局中的其他玩家将不能再交互第二个玩家发送的棋局。
@@ -178,7 +178,7 @@ export class CommandsModule extends BaseModule {
                     目前仅支持同时拥有本插件时才能进行游玩和显示。
                     `)
                 }
-                
+
             }
         }
     }
@@ -191,6 +191,32 @@ export class CommandsModule extends BaseModule {
                 Action: (args, msg, parsed) => {
                     if (parsed.length > 0) this.CommandHandler(parsed);
                     else this.DisplayHelp();
+                },
+                AutoComplete: (parsed, low, msg) => {
+                    let word: string = "";
+                    const commandsList: string[] = [];
+                    for (const c in this.commandsDict) {
+                        commandsList.push(c);
+                    }
+                    const foundCommands: string[] = [];
+                    commandsList.forEach(c => {
+                        if (c.startsWith(parsed[0])) {
+                            foundCommands.push(c);
+                        }
+                    });
+                    if (foundCommands.length === 1) {
+                        word = foundCommands[0];
+                        if(parsed.length > 1) ChatRoomSendLocal(`${this.commandsDict[word].Description}`, 3000);
+                    } if (foundCommands.length > 1) {
+                        let content: string = ``;
+                        for (const c of foundCommands) {
+                            content += `/xsa ${c} ${this.commandsDict[c].Description}\n`;
+                        }
+                        content += `小酥的活动模组 版本号: ${XSActivity_VERSION}\n`
+                        ChatRoomSendLocal(content, 3000);
+                    }
+                    if (word !== "") ElementValue("InputChat", CommandsKey + "xsa " + word);
+                    ElementFocus("InputChat");
                 }
             }
         )
@@ -213,7 +239,7 @@ export class CommandsModule extends BaseModule {
         return '';
     }
 
-    private DisplayHelp(msg: string | undefined = undefined): void {
+    private DisplayHelp(msg?: string): void {
         if (msg === undefined) {
             let content: string = ``;
             for (const c in this.commandsDict) {
