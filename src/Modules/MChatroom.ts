@@ -151,15 +151,19 @@ export class ChatroomModule extends BaseModule {
         });
     }
     private static Contextmenu: HTMLDivElement | null = null;
+    private static targetDiv: HTMLDivElement | null = null;
     private static readonly contextmenuText: string[] = ["回复", "复制", "悄悄话", "删除"];
     private static showContextmenu(e: MouseEvent) {
         const div = e.target as HTMLDivElement | null;
         if (!div) return;
+        this.targetDiv = div;
         // 创建右键菜单
-        if (!this.Contextmenu) ChatroomModule.buildNewContextmenu(e, div);
+        if (!this.Contextmenu) {
+            ChatroomModule.buildNewContextmenu(e);
+        }
         else {
             this.Contextmenu.style.display = "flex";
-            ChatroomModule.changeContextmenuPosition(e, this.Contextmenu);
+            ChatroomModule.changeContextmenuPosition(e);
         }
     }
 
@@ -167,11 +171,12 @@ export class ChatroomModule extends BaseModule {
         if (this.Contextmenu) this.Contextmenu.style.display = "none";
     }
 
-    private static buildNewContextmenu(e: MouseEvent, div: HTMLDivElement) {
+    private static buildNewContextmenu(e: MouseEvent) {
         const contextmenu = document.createElement('div');
         contextmenu.className = "xsa-contextmenu"; //className
         contextmenu.style.display = "none";
-        ChatroomModule.changeContextmenuPosition(e, contextmenu);
+        this.Contextmenu = contextmenu;
+        ChatroomModule.changeContextmenuPosition(e);
         for (let i = 0; i < 4; i++) {
             const contextmenuItem = document.createElement('div');
             contextmenuItem.className = "xsa-contextmenu-item"; //className
@@ -179,28 +184,28 @@ export class ChatroomModule extends BaseModule {
             contextmenuItem.addEventListener('click', () => {
                 switch (i) {
                     case 0:
-                        ElementValue("InputChat", `🪧回复*>${div.textContent}<*\n${ElementValue('InputChat')}`);
+                        ElementValue("InputChat", `🪧回复*>${ChatroomModule.targetDiv?.textContent}<*\n${ElementValue('InputChat')}`);
                         ElementFocus("InputChat");
                         break;
                     case 1:
-                        navigator.clipboard.writeText((div.textContent ?? ""));
+                        navigator.clipboard.writeText((ChatroomModule.targetDiv?.textContent ?? ""));
                         break;
                     case 2:
-                        ElementValue("InputChat", `/whisper ${div.getAttribute("data-sender")} ${ElementValue("InputChat").replace(/\/whisper\s*\d+ ?/u, '')}`);
+                        ElementValue("InputChat", `/whisper ${ChatroomModule.targetDiv?.getAttribute("data-sender")} ${ElementValue("InputChat").replace(/\/whisper\s*\d+ ?/u, '')}`);
                         ElementFocus("InputChat");
                         break;
                     case 3:
-                        div.remove();
+                        ChatroomModule.targetDiv?.remove();
                 }
             });
             contextmenu.appendChild(contextmenuItem);
         }
         contextmenu.style.display = "flex";
-        this.Contextmenu = contextmenu;
         document.body.appendChild(contextmenu);
     }
 
-    private static changeContextmenuPosition(e: MouseEvent, contextmenu: HTMLDivElement) {
+    private static changeContextmenuPosition(e: MouseEvent) {
+        if(!this.Contextmenu) return;
         let left = e.clientX;
         if (left + (window.screen.width * 0.06) > window.screen.width) {
             left = e.clientX - (window.screen.width * 0.06);
@@ -209,8 +214,8 @@ export class ChatroomModule extends BaseModule {
         if (top + (window.screen.height * 0.06) > window.screen.height) {
             top = e.clientY - (window.screen.height * 0.06);
         }
-        contextmenu.style.left = `${left}px`;
-        contextmenu.style.top = `${top}px`;
+        this.Contextmenu.style.left = `${left}px`;
+        this.Contextmenu.style.top = `${top}px`;
     }
     // -----------右键菜单END----------- //
 
