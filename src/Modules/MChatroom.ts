@@ -141,7 +141,8 @@ export class ChatroomModule extends BaseModule {
 
     // -----------右键菜单----------- //
     AddChatRightClickEvent(div: HTMLDivElement) {
-        if (!div.className.includes("ChatMessageChat")) return;
+        const divClassName = div.className;
+        if (!divClassName.includes("ChatMessageChat") && !divClassName.includes("ChatMessageEmote")) return;
         // 右键点击事件监听器
         div.addEventListener('contextmenu', function (event) {
             // 阻止默认的右键点击事件
@@ -197,7 +198,6 @@ export class ChatroomModule extends BaseModule {
         const contextmenu = document.createElement('div');
         contextmenu.className = "xsa-contextmenu"; // 设置菜单的类名
         contextmenu.style.display = "none"; // 初始时隐藏菜单
-        contextmenu.style.zIndex = '1000'; // 设置菜单的层级
 
         this.Contextmenu = contextmenu; // 将菜单对象赋值给类的上下文菜单属性
 
@@ -220,10 +220,17 @@ export class ChatroomModule extends BaseModule {
                     case 1: // 复制功能
                         navigator.clipboard.writeText((ChatroomModule.targetDiv?.textContent ?? ""));
                         break;
-                    case 2: // 私聊功能
-                        ElementValue("InputChat", `/whisper ${ChatroomModule.targetDiv?.getAttribute("data-sender")} ${ElementValue("InputChat").replace(/\/whisper\s*\d+ ?/u, '')}`);
+                    case 2: {
+                        // 私聊功能
+                        //ElementValue("InputChat", `/whisper ${ChatroomModule.targetDiv?.getAttribute("data-sender")} ${ElementValue("InputChat").replace(/\/whisper\s*\d+ ?/u, '')}`);
+                        const target = ChatroomModule.targetDiv?.getAttribute("data-sender");
+                        const targetNum = parseInt(target ?? "0");
+                        if (Number.isNaN(targetNum) || targetNum === Player.MemberNumber) return;
+                        ChatRoomSetTarget(targetNum);
+                        ChatRoomTarget();
                         ElementFocus("InputChat");
                         break;
+                    }
                     case 3: // 删除功能
                         ChatroomModule.targetDiv?.remove();
                 }
