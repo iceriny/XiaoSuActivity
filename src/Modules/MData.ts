@@ -228,9 +228,9 @@ export class DataModule extends BaseModule {
             const newPart = newVersionArray[i] ?? 0;
 
             if (oldPart < newPart) {
-                return -1; // 修改为-1，因为此时应该是旧版本号小于新版本号
+                return 1; // 修改为1，因为此时应该是旧版本号小于新版本号
             } else if (oldPart > newPart) {
-                return 1; // 此处保持不变，表示旧版本号大于新版本号
+                return -1; // 此处-1，表示旧版本号大于新版本号
             }
         }
         // 如果遍历完整个数组都没有找到差异，则认为两个版本号相等
