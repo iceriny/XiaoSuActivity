@@ -197,6 +197,7 @@ export class ChatroomModule extends BaseModule {
         const contextmenu = document.createElement('div');
         contextmenu.className = "xsa-contextmenu"; // 设置菜单的类名
         contextmenu.style.display = "none"; // 初始时隐藏菜单
+        contextmenu.style.zIndex = '1000'; // 设置菜单的层级
 
         this.Contextmenu = contextmenu; // 将菜单对象赋值给类的上下文菜单属性
 
