@@ -106,6 +106,11 @@ export const CHANGELOG: ChangeLogObj[] = [
         type: ChangeType.main,
         changes: ['命令功能现在可以在输入首字母后自动补全了，例如，输入`/x`然后按Tab键将自动补全为`/xsa`，在`/xsa`后输入空格加`c`(即`/xsa c`)然后按下空格则自动补全为`/xsa chess`',
         '现在聊天记录中的时间标记将显示精确到秒.', '现在按时间范围导出聊天记录的功能可以精确到秒了.']
-
+    },
+    {
+        version: "0.3.5",
+        description: "添加聊天室聊天记录的右键菜单",
+        type: ChangeType.main,
+        changes: ['右键聊天记录的条目可以呼出右键菜单', '如果有安装本插件 `回复` 功能显示特殊效果 如果没有安装被插件将显示为普通的正常说话的消息。']
     }
 ]
