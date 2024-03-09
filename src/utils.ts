@@ -332,12 +332,13 @@ export function sendLastChangeLog() {
     const type = c.type == ChangeType.main ? "主版本" : "开发版本";
     const description = c.description;
     const changes = c.changes;
-    const styleForP = 'style="font-size: 1.5em;font-weight: bold; margin: 0;"'
+    const styleForP = 'style="margin: 0;"'
+    const styleForTitle = 'style="font-size: 1.5em;font-weight: bold; margin: 0;"'
 
     for (const s of changes) {
         content += `<p ${styleForP}>${s}</p>`;
     }
-    content = `<p ${styleForP}>版本更新: ${version}</p>
+    content = `<p ${styleForTitle}>版本更新: ${version}</p>
     <p ${styleForP}>类型: ${type}</p>
     <p ${styleForP}>描述: ${description}</p>
     <p>----</p>
