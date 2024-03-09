@@ -5,7 +5,9 @@ interface Window {
 	XSActivity_VERSION?: string;
 	BROWSER_NAME?: string;
 	BROWSER_VERSION?: number;
-	MODULES?: { [key: string]: unknown }
+	MODULES?: { [key: string]: unknown };
+
+	AddChatRightClickEvent?: (div: HTMLDivElement) => void;
 }
 /**
  * mod模块名称定义

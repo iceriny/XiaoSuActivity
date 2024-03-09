@@ -216,7 +216,7 @@
         opacity: 0.0;
     }
 }
-
+/* chess */
 .chessContainer {
     align-items: center;
     justify-content: center;
@@ -229,7 +229,7 @@
 }
 .chessContainer .ChatMessageButton {
     background-color: #64c4a48c;
-    border-radius: 15%;
+    border-radius: 0.15em;
     border-style: none;
     transition: all 0.25s ease;
 }
@@ -245,9 +245,8 @@
     font-size: 25px;
     width: 30px;
     height: 30px;
-    max-height: 30px;
     border: 1px solid rgb(128, 128, 128);
-    border-radius: 50%;
+    border-radius: 15px;
     transition: all 1s ease;
 }
 
@@ -263,3 +262,32 @@
 .chessContainer .chessTable .chessCellBlack {
     background-color: rgb(135, 253, 212);
 }
+/* End chess */
+
+/* context menu */
+.xsa-contextmenu {
+    position: absolute;
+    width: 6%;
+    margin: 5px;
+    padding: 5px;
+
+    flex-direction: column;
+    font-size: medium;
+    color: #242424;
+    background-color: #e2cdd3d4;
+    border-radius: 0.5em;
+    box-shadow: 0 0 0.5em 0.1em rgba(0, 0, 0, 0.238);
+}
+.xsa-contextmenu .xsa-contextmenu-item {
+    cursor: pointer;
+    margin: 3px;
+    padding: 3px;
+    
+    border-radius: 10px;
+
+}
+.xsa-contextmenu .xsa-contextmenu-item:hover {
+    background-color: #ab7584d4;
+}
+
+/* End context menu */

@@ -1,15 +1,20 @@
 import { BaseModule } from "Modules/BaseModule";
-import { MSGType, SendChat, SendEmote, conDebug, copyAndDownloadHtmlElement, hookFunction, segmentForCH, timeRange } from "utils";
+import { MSGType, SendChat, SendEmote, conDebug, copyAndDownloadHtmlElement, hookFunction, patchFunction, segmentForCH, timeRange } from "utils";
 
 export class ChatroomModule extends BaseModule {
 
     // VVVV==========初始化与加载函数==========VVVV //
     public Load(): void {
         this.hookListHandler();
+        this.pathListHandler();
 
         this.Loaded = true;
     }
     public Init(): void {
+        if (!window.AddChatRightClickEvent) window.AddChatRightClickEvent = this.AddChatRightClickEvent;
+        document.addEventListener("click", ()=>{
+            ChatroomModule.HideContextmenu()
+        })
         this.priority = 30;
 
     }
@@ -77,6 +82,9 @@ export class ChatroomModule extends BaseModule {
             return `${hStr.substring(hStr.length - 2)}:${mStr.substring(mStr.length - 2)}:${sStr.substring(sStr.length - 2)}`;
         });
 
+
+
+
         // 处理聊天室发送消息时 接受 " ` " 命令和 接受 " | " 命令
         hookFunction("CommandParse", 0,
             (args, next) => {
@@ -106,8 +114,105 @@ export class ChatroomModule extends BaseModule {
                 args[0] = msg;
                 return next(args);
             });
+            // 处理聊天室接受消息时 的 " 🪧回复* " 命令显示
+            hookFunction("ChatRoomMessageDisplay", 10, (args, next) => {
+                const msg = args[1];
+                if (typeof msg === "string" && msg.startsWith("🪧回复*>")){
+                    const match = msg.match(/^🪧(回复\*>.+<\*)\s(.+)/)
+                    if (match) {
+                        args[1] = match[2];
+                        ChatRoomSendLocal(`--🪧--${match[1]}--🪧--`)
+                    }
+                }
+                next(args);
+            });
     }
 
+
+    pathListHandler(): void {
+        // 处理将消息添加右键菜单 (回复、复制、悄悄话、删除)
+        patchFunction("ChatRoomMessageDisplay", {
+            "div.innerHTML = displayMessage;": `
+            if (!!window.AddChatRightClickEvent) window.AddChatRightClickEvent(div);
+            div.innerHTML = displayMessage;
+            `
+        });
+    }
+
+    // -----------右键菜单----------- //
+    AddChatRightClickEvent(div: HTMLDivElement) {
+        if (!div.className.includes("ChatMessageChat")) return;
+        // 右键点击事件监听器
+        div.addEventListener('contextmenu', function (event) {
+            // 阻止默认的右键点击事件
+            event.preventDefault();
+            // 自定义逻辑
+            ChatroomModule.showContextmenu(event);
+        });
+    }
+    private static Contextmenu: HTMLDivElement | null = null;
+    private static readonly contextmenuText: string[] = ["回复", "复制", "悄悄话", "删除"];
+    private static showContextmenu(e: MouseEvent) {
+        const div = e.target as HTMLDivElement | null;
+        if (!div) return;
+        // 创建右键菜单
+        if (!this.Contextmenu) ChatroomModule.buildNewContextmenu(e, div);
+        else {
+            this.Contextmenu.style.display = "flex";
+            ChatroomModule.changeContextmenuPosition(e, this.Contextmenu);
+        }
+    }
+
+    private static HideContextmenu() {
+        if (this.Contextmenu) this.Contextmenu.style.display = "none";
+    }
+
+    private static buildNewContextmenu(e: MouseEvent, div: HTMLDivElement) {
+        const contextmenu = document.createElement('div');
+        contextmenu.className = "xsa-contextmenu"; //className
+        contextmenu.style.display = "none";
+        ChatroomModule.changeContextmenuPosition(e, contextmenu);
+        for (let i = 0; i < 4; i++) {
+            const contextmenuItem = document.createElement('div');
+            contextmenuItem.className = "xsa-contextmenu-item"; //className
+            contextmenuItem.innerText = ChatroomModule.contextmenuText[i];
+            contextmenuItem.addEventListener('click', () => {
+                switch (i) {
+                    case 0:
+                        ElementValue("InputChat", `🪧回复*>${div.textContent}<*\n${ElementValue('InputChat')}`);
+                        ElementFocus("InputChat");
+                        break;
+                    case 1:
+                        navigator.clipboard.writeText((div.textContent ?? ""));
+                        break;
+                    case 2:
+                        ElementValue("InputChat", `/whisper ${div.getAttribute("data-sender")} ${ElementValue("InputChat").replace(/\/whisper\s*\d+ ?/u, '')}`);
+                        ElementFocus("InputChat");
+                        break;
+                    case 3:
+                        div.remove();
+                }
+            });
+            contextmenu.appendChild(contextmenuItem);
+        }
+        contextmenu.style.display = "flex";
+        this.Contextmenu = contextmenu;
+        document.body.appendChild(contextmenu);
+    }
+
+    private static changeContextmenuPosition(e: MouseEvent, contextmenu: HTMLDivElement) {
+        let left = e.clientX;
+        if (left + (window.screen.width * 0.06) > window.screen.width) {
+            left = e.clientX - (window.screen.width * 0.06);
+        }
+        let top = e.clientY;
+        if (top + (window.screen.height * 0.06) > window.screen.height) {
+            top = e.clientY - (window.screen.height * 0.06);
+        }
+        contextmenu.style.left = `${left}px`;
+        contextmenu.style.top = `${top}px`;
+    }
+    // -----------右键菜单END----------- //
 
     // VVVV==========聊天记录模块==========VVVV //
     /**
