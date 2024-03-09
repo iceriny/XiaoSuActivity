@@ -90,7 +90,7 @@ export class DataModule extends BaseModule {
                     break;
                 case -1:
                     setTimeout(() => {
-                        SendLocalMessage('小酥的动作拓展:\n 你加载了更旧的版本。这一定是哪里出了什么问题。如果你是通过正常途径加载Mod一般不会出现这种情况。');
+                        SendLocalMessage('小酥的动作拓展:\n 你加载了更旧的版本。\n这一定是哪里出了什么问题。\n如果你是通过正常途径加载Mod一般不会出现这种情况。');
                     }, 2000);
                     DataModule.IsModUpDate = 0;
                     break;
