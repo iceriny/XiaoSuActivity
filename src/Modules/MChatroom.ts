@@ -12,7 +12,7 @@ export class ChatroomModule extends BaseModule {
     }
     public Init(): void {
         if (!window.AddChatRightClickEvent) window.AddChatRightClickEvent = this.AddChatRightClickEvent;
-        document.addEventListener("click", ()=>{
+        document.addEventListener("click", () => {
             ChatroomModule.HideContextmenu()
         })
         this.priority = 30;
@@ -114,18 +114,18 @@ export class ChatroomModule extends BaseModule {
                 args[0] = msg;
                 return next(args);
             });
-            // 处理聊天室接受消息时 的 " 🪧回复* " 命令显示
-            hookFunction("ChatRoomMessageDisplay", 10, (args, next) => {
-                const msg = args[1];
-                if (typeof msg === "string" && msg.startsWith("🪧回复*>")){
-                    const match = msg.match(/^🪧(回复\*>.+<\*)\s(.+)/)
-                    if (match) {
-                        args[1] = match[2];
-                        ChatRoomSendLocal(`--🪧--${match[1]}--🪧--`)
-                    }
+        // 处理聊天室接受消息时 的 " 🪧回复* " 命令显示
+        hookFunction("ChatRoomMessageDisplay", 10, (args, next) => {
+            const msg = args[1];
+            if (typeof msg === "string" && msg.startsWith("🪧回复*>")) {
+                const match = msg.match(/^🪧(回复\*>.+<\*)\s(.+)/)
+                if (match) {
+                    args[1] = match[2];
+                    ChatRoomSendLocal(`--🪧--${match[1]}--🪧--`)
                 }
-                next(args);
-            });
+            }
+            next(args);
+        });
     }
 
 
@@ -150,14 +150,29 @@ export class ChatroomModule extends BaseModule {
             ChatroomModule.showContextmenu(event);
         });
     }
+    /**     显示右键菜单      */
     private static Contextmenu: HTMLDivElement | null = null;
+    /** 显示右键菜单的div元素 */
     private static targetDiv: HTMLDivElement | null = null;
+    /** 右键菜单的内容 */
     private static readonly contextmenuText: string[] = ["回复", "复制", "悄悄话", "删除"];
+    /**
+     * 显示右键菜单的功能实现。
+     * 当用户在指定元素上右击时，此函数将显示一个右键菜单。
+     * @param e 触发显示菜单的鼠标事件对象。用于获取事件的详细信息。
+     * @returns void 无返回值。
+     */
     private static showContextmenu(e: MouseEvent) {
+        // 尝试将触发事件的目标元素转换为 HTMLDivElement
         const div = e.target as HTMLDivElement | null;
+        // 如果目标元素不是 HTMLDivElement，则不执行任何操作
         if (!div) return;
+        // 指定目标元素
         this.targetDiv = div;
-        // 创建右键菜单
+
+        // 检查右键菜单是否已经存在
+        // 如果不存在，则创建一个新的右键菜单
+        // 如果存在，则显示右键菜单并调整其位置
         if (!this.Contextmenu) {
             ChatroomModule.buildNewContextmenu(e);
         }
@@ -166,54 +181,83 @@ export class ChatroomModule extends BaseModule {
             ChatroomModule.changeContextmenuPosition(e);
         }
     }
-
+    /**
+     * 隐藏右键菜单
+     */
     private static HideContextmenu() {
         if (this.Contextmenu) this.Contextmenu.style.display = "none";
     }
 
+    /**
+     * 构建并显示一个新的右键菜单。
+     * @param e 鼠标事件，用于确定菜单的位置。
+     */
     private static buildNewContextmenu(e: MouseEvent) {
+        // 创建右键菜单的容器元素
         const contextmenu = document.createElement('div');
-        contextmenu.className = "xsa-contextmenu"; //className
-        contextmenu.style.display = "none";
-        this.Contextmenu = contextmenu;
+        contextmenu.className = "xsa-contextmenu"; // 设置菜单的类名
+        contextmenu.style.display = "none"; // 初始时隐藏菜单
+
+        this.Contextmenu = contextmenu; // 将菜单对象赋值给类的上下文菜单属性
+
+        // 调整菜单的位置
         ChatroomModule.changeContextmenuPosition(e);
+
+        // 循环创建菜单项
         for (let i = 0; i < 4; i++) {
-            const contextmenuItem = document.createElement('div');
-            contextmenuItem.className = "xsa-contextmenu-item"; //className
-            contextmenuItem.innerText = ChatroomModule.contextmenuText[i];
+            const contextmenuItem = document.createElement('div'); // 创建菜单项
+            contextmenuItem.className = "xsa-contextmenu-item"; // 设置菜单项的类名
+            contextmenuItem.innerText = ChatroomModule.contextmenuText[i]; // 设置菜单项的文本
+
+            // 给菜单项添加点击事件监听
             contextmenuItem.addEventListener('click', () => {
                 switch (i) {
-                    case 0:
+                    case 0: // 回复功能
                         ElementValue("InputChat", `🪧回复*>${ChatroomModule.targetDiv?.textContent}<*\n${ElementValue('InputChat')}`);
                         ElementFocus("InputChat");
                         break;
-                    case 1:
+                    case 1: // 复制功能
                         navigator.clipboard.writeText((ChatroomModule.targetDiv?.textContent ?? ""));
                         break;
-                    case 2:
+                    case 2: // 私聊功能
                         ElementValue("InputChat", `/whisper ${ChatroomModule.targetDiv?.getAttribute("data-sender")} ${ElementValue("InputChat").replace(/\/whisper\s*\d+ ?/u, '')}`);
                         ElementFocus("InputChat");
                         break;
-                    case 3:
+                    case 3: // 删除功能
                         ChatroomModule.targetDiv?.remove();
                 }
             });
-            contextmenu.appendChild(contextmenuItem);
+
+            contextmenu.appendChild(contextmenuItem); // 将菜单项添加到菜单容器
         }
-        contextmenu.style.display = "flex";
-        document.body.appendChild(contextmenu);
+
+        contextmenu.style.display = "flex"; // 显示菜单
+        document.body.appendChild(contextmenu); // 将菜单添加到文档体中
     }
 
+    /**
+     * 根据鼠标事件改变右键菜单的位置
+     * @param e 鼠标事件对象，用于获取鼠标位置
+     */
     private static changeContextmenuPosition(e: MouseEvent) {
-        if(!this.Contextmenu) return;
+        // 如果不存在右键菜单，则直接返回
+        if (!this.Contextmenu) return;
+
+        // 计算右键菜单的水平位置
         let left = e.clientX;
+        // 如果菜单位置超出屏幕右侧，则将菜单向左移动
         if (left + (window.screen.width * 0.06) > window.screen.width) {
             left = e.clientX - (window.screen.width * 0.06);
         }
+
+        // 计算右键菜单的垂直位置
         let top = e.clientY;
+        // 如果菜单位置超出屏幕下侧，则将菜单向上移动
         if (top + (window.screen.height * 0.06) > window.screen.height) {
             top = e.clientY - (window.screen.height * 0.06);
         }
+
+        // 设置菜单的最终位置
         this.Contextmenu.style.left = `${left}px`;
         this.Contextmenu.style.top = `${top}px`;
     }
