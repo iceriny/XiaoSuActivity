@@ -2,6 +2,7 @@
 .kaomoji-menu {
     display: flex;
     position: absolute;
+    z-index: 1000;
     right: 5%;
     bottom: 15%;
     width: 40%;
