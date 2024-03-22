@@ -44,10 +44,10 @@ function initWait() {
     }
 }
 
-export function init() {
+export async function init() {
     if (window.XSActivity_Loaded) return;
 
-    Localization.init();
+    await Localization.init();
 
     const InitModuleCount = ModuleLoader.InitModules();
 

@@ -2,7 +2,7 @@ export class Localization {
     private static readonly LINK: string = DEBUG ? 'https://iceriny.github.io/XiaoSuActivity/dev/' : 'https://iceriny.github.io/XiaoSuActivity/main/'
     public static STRINGS: IString;
 
-    public static init() {
+    public static async init() {
         const lang = TranslationLanguage;
 
         const href = this.LINK + `${lang}.json`
