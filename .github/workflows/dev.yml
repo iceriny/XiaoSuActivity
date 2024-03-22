@@ -28,6 +28,9 @@ jobs:
     - name: Copy css to dist
       run: cp css/* dist/dev/
 
+    - name: Copy lang to dist
+      run: cp translation/* dist/dev/
+
     - name: Deploy dev to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:

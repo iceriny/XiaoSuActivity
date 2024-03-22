@@ -1,5 +1,6 @@
 import { conDebug, hookFunction, MSGType, SendActivity } from "utils";
 import { BaseModule } from "./BaseModule";
+import {Localization as L} from "localization";
 
 /*
  * 动作的限定条件信息对象
@@ -179,7 +180,7 @@ export class ActivityModule extends BaseModule {
             const pendingActivity = this.activityToAddDict[a as XSA_ActivityName];
 
             const actName = pendingActivity.act.Name;
-            const nameWithoutPrefix = actName.substring(6);
+            const nameWithoutPrefix = L.get("Activity", actName.substring(6) as XSA_ActivityName_onlyName);
             const actTarget = pendingActivity.act.Target;
             const actTargetSelf = pendingActivity.act.TargetSelf;
 
@@ -1032,7 +1033,8 @@ export class ActivityModule extends BaseModule {
     public getAllAct(): XSA_ActivityName_onlyName[] {
         const result: XSA_ActivityName_onlyName[] = []
         for (const a in this.activityToAddDict) {
-            const suffix = a.substring(6) as XSA_ActivityName_onlyName; // 从索引为 6 的位置开始截取到字符串末尾
+            const suffix = this.getActName(a).substring(6) as XSA_ActivityName_onlyName; // 从索引为 6 的位置开始截取到字符串末尾
+            
             result.push(suffix); // 输出：XXXX
         }
         conDebug({
@@ -1041,5 +1043,14 @@ export class ActivityModule extends BaseModule {
             type: MSGType.DebugLog
         });
         return result;
+    }
+
+    private getActName(act: string): string {
+        try {
+            return this.activityToAddDict[`${act}` as keyof typeof this.activityToAddDict].act.Name
+        } catch (error) {
+            conDebug({ content: `${act}`, name: "getActName", type: MSGType.DebugLog }, true)
+            throw error;
+        }
     }
 }

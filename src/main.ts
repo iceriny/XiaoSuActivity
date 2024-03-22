@@ -1,5 +1,6 @@
 import { conDebug, hookFunction, MSGType } from "./utils";
 import { ModuleLoader } from "Modules/ModuleLoader";
+import { Localization } from "localization";
 
 function initWait() {
     conDebug({
@@ -44,8 +45,9 @@ function initWait() {
 }
 
 export function init() {
-    if (window.XSActivity_Loaded)
-        return;
+    if (window.XSActivity_Loaded) return;
+
+    Localization.init();
 
     const InitModuleCount = ModuleLoader.InitModules();
 

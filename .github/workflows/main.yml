@@ -30,6 +30,9 @@ jobs:
     - name: Copy css to dist
       run: cp css/* dist/
 
+    - name: Copy language to dist
+      run: cp translation/* dist/
+
     - name: Deploy mian to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:

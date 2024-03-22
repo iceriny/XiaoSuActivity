@@ -158,7 +158,7 @@ export enum MSGType {
  * @param style 可选的css风格参数
  * @returns 无
  */
-export function conDebug(msg: XSDebugMSG | string, color: string | null = null, style: string | null = null) {
+export function conDebug(msg: XSDebugMSG | string, isError: boolean = false, color: string | null = null, style: string | null = null) {
     if (DEBUG === false) return;
 
 
@@ -178,10 +178,14 @@ export function conDebug(msg: XSDebugMSG | string, color: string | null = null, 
     if (style) {
         console.debug("%c小酥的模组信息: ", style, result);
     } else {
-        if (color) {
-            style = `background-color: ${color}; font-weight: bold;`
+        let theColor = 'rgba(191, 154, 175, 1)';
+        if (isError) {
+            theColor = 'rgba(255, 0, 0, 1)'
         }
-        console.debug("%c小酥的模组信息: ", 'background-color: rgba(191, 154, 175, 1); font-weight: bold;', result);
+        if (color) {
+            theColor = color
+        }
+        console.debug("%c小酥的模组信息: ", `background-color: ${theColor}; font-weight: bold;`, result);
     }
 }
 
