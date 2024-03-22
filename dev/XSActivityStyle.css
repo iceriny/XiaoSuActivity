@@ -2,6 +2,7 @@
 .kaomoji-menu {
     display: flex;
     position: absolute;
+    z-index: 1000;
     right: 5%;
     bottom: 15%;
     width: 40%;
@@ -132,6 +133,7 @@
     cursor: pointer;
     width: 2.5vh;
     height: 2.5vh;
+    z-index: 1000;
     align-items: center;
     background-color: rgba(200, 175, 189, 0.251);
     border-style: none;
@@ -270,6 +272,7 @@
     width: 6%;
     margin: 5px;
     padding: 5px;
+    z-index: 1000;
 
     flex-direction: column;
     font-size: medium;
