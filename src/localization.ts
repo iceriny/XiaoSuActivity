@@ -1,9 +1,19 @@
+import { hookFunction } from "utils";
+
 export class Localization {
     private static readonly LINK: string = DEBUG ? 'https://iceriny.github.io/XiaoSuActivity/dev/' : 'https://iceriny.github.io/XiaoSuActivity/main/'
     public static STRINGS: IString;
 
     public static async init() {
-        const lang = TranslationLanguage;
+        hookFunction("TranslationNextLanguage", 0, (args, next) => {
+            next(args);
+            Localization.init();
+        })
+
+
+
+        const L = localStorage.getItem("BondageClubLanguage");
+        const lang = L ?? "EN";
 
         const href = this.LINK + `${lang}.json`
 

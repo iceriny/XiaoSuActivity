@@ -3,6 +3,8 @@ import { ModuleLoader } from "Modules/ModuleLoader";
 import { Localization } from "localization";
 
 function initWait() {
+    Localization.init();
+    
     conDebug({
         name: "Start Init",
         type: MSGType.Workflow_Log,
@@ -44,10 +46,9 @@ function initWait() {
     }
 }
 
-export async function init() {
+export function init() {
     if (window.XSActivity_Loaded) return;
 
-    await Localization.init();
 
     const InitModuleCount = ModuleLoader.InitModules();
 
