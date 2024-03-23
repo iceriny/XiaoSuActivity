@@ -178,7 +178,7 @@ export class ActivityModule extends BaseModule {
      * 初始化活动的文字描述。
      */
     activityDictAdd() {
-        const outputDesc: { [key in string]: string } = {};
+        // const outputDesc: { [key in string]: string } = {};
 
         for (const a in this.activityToAddDict) {
             const pendingActivity = this.activityToAddDict[a as XSA_ActivityName];
@@ -198,7 +198,8 @@ export class ActivityModule extends BaseModule {
                     addedValues.push([`Label-ChatOther-${aT}-${actName}`,
                     `${nameWithoutPrefix}${pendingActivity.isBase ? L.get("Activity", aT) : ''}`]);
                     addedValues.push([`ChatOther-${aT}-${actName}`,
-                    pendingActivity.descString[0].replace(this.bodyNamePlaceholder, L.get("Activity", aT))]);
+                    this.getStr(`${nameWithoutPrefix}_Desc_0`, selfPlaceholder, targetPlaceholder, L.get("Activity", aT))]);
+                    //pendingActivity.descString[0].replace(this.bodyNamePlaceholder, L.get("Activity", aT))]);
                 }
             }
             if (typeof actTargetSelf !== 'undefined' && typeof actTargetSelf !== 'boolean' && actTargetSelf.length > 0) {
@@ -206,16 +207,17 @@ export class ActivityModule extends BaseModule {
                     addedValues.push([`Label-ChatSelf-${aTS}-${actName}`,
                     `${nameWithoutPrefix}${pendingActivity.isBase ? L.get("Activity", aTS) : ''}`]);
                     addedValues.push([`ChatSelf-${aTS}-${actName}`,
-                    pendingActivity.descString[1].replace(this.bodyNamePlaceholder, L.get("Activity", aTS))]);
+                    this.getStr(`${nameWithoutPrefix}_Desc_1`, selfPlaceholder, targetPlaceholder, L.get("Activity", aTS))]);
+                    // pendingActivity.descString[1].replace(this.bodyNamePlaceholder, L.get("Activity", aTS))]);
                 }
             }
             pendingActivity.desc = addedValues;
 
-            outputDesc[`${nameWithoutPrefix}_Desc_0`] = pendingActivity.descString[0]
-            outputDesc[`${nameWithoutPrefix}_Desc_1`] = pendingActivity.descString[1]
-            console.log(nameWithoutPrefix)
+            // outputDesc[`${nameWithoutPrefix}_Desc_0`] = pendingActivity.descString[0]
+            // outputDesc[`${nameWithoutPrefix}_Desc_1`] = pendingActivity.descString[1]
+            // console.log(nameWithoutPrefix)
         }
-        console.log(outputDesc)
+        // console.log(outputDesc)
     }
     // private readonly groupNameDict: { [name in AssetGroupItemName]: string } = {
     //     'ItemAddon': '身体(附加)', 'ItemArms': '手臂', 'ItemBoots': '脚', 'ItemBreast': '乳房',
@@ -226,7 +228,7 @@ export class ActivityModule extends BaseModule {
     //     'ItemNipplesPiercings': '乳头', 'ItemNose': '鼻子', 'ItemPelvis': '小腹', 'ItemTorso': '肋部', 'ItemTorso2': '肋部',
     //     'ItemVulva': '阴道', 'ItemVulvaPiercings': '阴蒂'
     // }
-    private readonly bodyNamePlaceholder = '{group}'
+    // private readonly bodyNamePlaceholder = '{group}'
     /**
      * 将传入的活动对象载入
      * @param activity 将要载入的活动对象
@@ -260,7 +262,8 @@ export class ActivityModule extends BaseModule {
      * @img - 指定的动作图片
      * @isBase - 是否是基础动作 基础动作将会自动把名称中的 @bodyNamePlaceholder 换成 `{group}` 并在添加动作时动态的将其替换为目标部位的名称
     */
-    activityToAddDict: { [ActivityIndex in XSA_ActivityName]: { act: Activity, desc: null | string[][], descString: [string, string], img: ActivityName, isBase?: true } } = {
+    activityToAddDict: { [ActivityIndex in XSA_ActivityName]:
+        { act: Activity, desc: null | string[][], /*descString: [string, string],*/ img: ActivityName, isBase?: true } } = {
         XSAct_眯眼: {
             act: {
                 Name: "XSAct_眯眼",
@@ -271,7 +274,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ['CanLook']
             },
             desc: null,
-            descString: ["", L.get("Activity", "眯眼_Desc_1", selfPlaceholder)],
+            // descString: ["", L.get("Activity", "眯眼_Desc_1", selfPlaceholder)],
             img: "RestHead"
         },
         XSAct_眼神飘忽: {
@@ -284,7 +287,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ['CanLook']
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}眼神飘忽的左看右看.`],
+            // descString: ["", `${selfPlaceholder}眼神飘忽的左看右看.`],
             img: "RestHead"
         },
         XSAct_甩头发: {
@@ -297,7 +300,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ["ItemHoodCovered"]
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}甩动着头发.`],
+            // descString: ["", `${selfPlaceholder}甩动着头发.`],
             img: "RestHead"
         },
         XSAct_大力甩头发: {
@@ -310,7 +313,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ["ItemHoodCovered"]
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}连连摇头，慌乱的甩动着头发.`],
+            // descString: ["", `${selfPlaceholder}连连摇头，慌乱的甩动着头发.`],
             img: "RestHead"
         },
         XSAct_轻抚发梢: {
@@ -323,7 +326,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ["ItemHoodCovered", "TargetItemHoodCovered", "UseArms"]
             },
             desc: null,
-            descString: [`${selfPlaceholder}轻柔抚动着${targetPlaceholder}的头发.`, `${selfPlaceholder}轻柔抚动着自己的头发.`],
+            // descString: [`${selfPlaceholder}轻柔抚动着${targetPlaceholder}的头发.`, `${selfPlaceholder}轻柔抚动着自己的头发.`],
             img: "RestHead"
         },
         XSAct_叼起头发: {
@@ -337,7 +340,7 @@ export class ActivityModule extends BaseModule {
                 StimulationAction: "Talk"
             },
             desc: null,
-            descString: [`${selfPlaceholder}轻轻咬起${targetPlaceholder}的头发.`, `${selfPlaceholder}轻轻咬起自己的头发.`],
+            // descString: [`${selfPlaceholder}轻轻咬起${targetPlaceholder}的头发.`, `${selfPlaceholder}轻轻咬起自己的头发.`],
             img: "SiblingsCheekKiss"
         },
         XSAct_嗅头发: {
@@ -351,7 +354,7 @@ export class ActivityModule extends BaseModule {
                 StimulationAction: "Talk"
             },
             desc: null,
-            descString: [`${selfPlaceholder}在${targetPlaceholder}的发间嗅着，鼻息弥漫着${targetPlaceholder}的发香.`, `${selfPlaceholder}撩起自己的头发轻轻嗅着.`],
+            // descString: [`${selfPlaceholder}在${targetPlaceholder}的发间嗅着，鼻息弥漫着${targetPlaceholder}的发香.`, `${selfPlaceholder}撩起自己的头发轻轻嗅着.`],
             img: "SiblingsCheekKiss"
         },
         XSAct_绕头发: {
@@ -364,7 +367,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ["UseArms", "ItemHoodCovered", "TargetItemHoodCovered"]
             },
             desc: null,
-            descString: [`${selfPlaceholder}勾起一缕${targetPlaceholder}的发丝，在指尖绕来绕去.`, `${selfPlaceholder}勾起自己的一缕头发在指尖绕来绕去.`],
+            // descString: [`${selfPlaceholder}勾起一缕${targetPlaceholder}的发丝，在指尖绕来绕去.`, `${selfPlaceholder}勾起自己的一缕头发在指尖绕来绕去.`],
             img: "SiblingsCheekKiss"
         },
         XSAct_皱鼻子: {
@@ -377,7 +380,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ["ItemHoodCovered", "ItemNoseCovered"]
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}皱了皱自己的鼻头.`],
+            // descString: ["", `${selfPlaceholder}皱了皱自己的鼻头.`],
             img: "RestHead"
         },
         XSAct_打喷嚏: {
@@ -391,7 +394,7 @@ export class ActivityModule extends BaseModule {
                 StimulationAction: "Talk"
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}打了个喷嚏.`],
+            // descString: ["", `${selfPlaceholder}打了个喷嚏.`],
             img: "Kiss"
         },
         XSAct_深呼吸: {
@@ -405,7 +408,7 @@ export class ActivityModule extends BaseModule {
                 StimulationAction: "Talk"
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}深深的吸了口气.`],
+            // descString: ["", `${selfPlaceholder}深深的吸了口气.`],
             img: "Kiss"
         },
         XSAct_低头: {
@@ -418,7 +421,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ["ItemHoodCovered", "MoveHead"]
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}红润着脸蛋低头逃避.`],
+            // descString: ["", `${selfPlaceholder}红润着脸蛋低头逃避.`],
             img: "RestHead"
         },
         XSAct_恳求的摇头: {
@@ -431,7 +434,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ["MoveHead"]
             },
             desc: null,
-            descString: [`${selfPlaceholder}对着${targetPlaceholder}的方向恳求的摇头.`, ``],
+            // descString: [`${selfPlaceholder}对着${targetPlaceholder}的方向恳求的摇头.`, ``],
             img: "RestHead"
         },
         XSAct_恳求的看: {
@@ -444,7 +447,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ["CanLook"]
             },
             desc: null,
-            descString: [`${selfPlaceholder}汪着眼睛恳求的看着${targetPlaceholder}.`, ""],
+            // descString: [`${selfPlaceholder}汪着眼睛恳求的看着${targetPlaceholder}.`, ""],
             img: "RestHead"
         },
         XSAct_内八夹腿: {
@@ -457,7 +460,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: []
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}通红的脸蛋忍耐着快感，大腿紧紧夹起来，摆出着内八的姿势，身体微微颤抖.`],
+            // descString: ["", `${selfPlaceholder}通红的脸蛋忍耐着快感，大腿紧紧夹起来，摆出着内八的姿势，身体微微颤抖.`],
             img: "Kick"
         },
         XSAct_噘嘴: {
@@ -470,7 +473,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ["UseMouth"]
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}有些不满的噘起嘴巴.`],
+            // descString: ["", `${selfPlaceholder}有些不满的噘起嘴巴.`],
             img: "PoliteKiss"
         },
         XSAct_抿住嘴巴: {
@@ -483,7 +486,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ["UseMouth"]
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}抿住嘴巴.`],
+            // descString: ["", `${selfPlaceholder}抿住嘴巴.`],
             img: "PoliteKiss"
         },
         XSAct_瘪嘴: {
@@ -496,7 +499,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ["UseMouth"]
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}瘪着嘴巴，一副委屈的样子.`],
+            // descString: ["", `${selfPlaceholder}瘪着嘴巴，一副委屈的样子.`],
             img: "PoliteKiss"
         },
         XSAct_坐直身体: {
@@ -509,7 +512,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: []
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}挺直了腰，坐直了身体.`],
+            // descString: ["", `${selfPlaceholder}挺直了腰，坐直了身体.`],
             img: "Kick"
         },
         XSAct_挺胸收腹: {
@@ -522,7 +525,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: []
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}挺起胸部，微收下巴，腹部用力收腰.`],
+            // descString: ["", `${selfPlaceholder}挺起胸部，微收下巴，腹部用力收腰.`],
             img: "Kick"
         },
         XSAct_站直身体: {
@@ -535,7 +538,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ["NotKneeling"]
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}挺胸收腹，努力绷紧小腿，站直了身体.`],
+            // descString: ["", `${selfPlaceholder}挺胸收腹，努力绷紧小腿，站直了身体.`],
             img: "Kick"
         },
         XSAct_身体一颤: {
@@ -548,7 +551,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: []
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}的身体猛然颤抖了一下.`],
+            // descString: ["", `${selfPlaceholder}的身体猛然颤抖了一下.`],
             img: "Kick"
         },
         XSAct_活动大腿: {
@@ -561,7 +564,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: []
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}尝试活动了一下腿部.`],
+            // descString: ["", `${selfPlaceholder}尝试活动了一下腿部.`],
             img: "Kick"
         },
         XSAct_活动手臂: {
@@ -574,7 +577,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ["CantUseArms"]
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}一边按摩一边活动着手臂.`],
+            // descString: ["", `${selfPlaceholder}一边按摩一边活动着手臂.`],
             img: "MasturbateHand"
         },
         XSAct_绷紧膝盖: {
@@ -587,7 +590,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ["NotKneeling"]
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}努力的绷紧膝盖，尽可能站的更直.`],
+            // descString: ["", `${selfPlaceholder}努力的绷紧膝盖，尽可能站的更直.`],
             img: "Kick"
         },
         XSAct_绷直脚踝: {
@@ -600,7 +603,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: [],
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}不自觉的用力绷直脚踝，释放涌来的快感.`],
+            // descString: ["", `${selfPlaceholder}不自觉的用力绷直脚踝，释放涌来的快感.`],
             img: "Kick"
         },
         XSAct_蜷缩脚趾: {
@@ -613,7 +616,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: [],
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}脚趾互相纠结，又时而蜷缩，忍耐着快感袭来.`],
+            // descString: ["", `${selfPlaceholder}脚趾互相纠结，又时而蜷缩，忍耐着快感袭来.`],
             img: "Kick"
         },
         XSAct_踮脚: {
@@ -626,7 +629,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ["CantUseFeet"],
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}努力的踮起脚.`],
+            // descString: ["", `${selfPlaceholder}努力的踮起脚.`],
             img: "Kick"
         },
         XSAct_兴奋的伸出舌头: {
@@ -639,7 +642,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ["UseMouth"]
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}兴奋的伸出舌头.}`],
+            // descString: ["", `${selfPlaceholder}兴奋的伸出舌头.}`],
             img: "MasturbateTongue"
         },
         XSAct_兴奋的扭动: {
@@ -652,7 +655,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: []
             },
             desc: null,
-            descString: ['', `${selfPlaceholder}兴奋的扭动着身体.`],
+            // descString: ['', `${selfPlaceholder}兴奋的扭动着身体.`],
             img: 'Wiggle'
         },
         XSAct_呼吸平复: {
@@ -665,7 +668,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: []
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}的呼吸渐渐平复.`],
+            // descString: ["", `${selfPlaceholder}的呼吸渐渐平复.`],
             img: "PoliteKiss"
         },
         XSAct_呼吸紊乱: {
@@ -678,7 +681,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: []
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}的呼吸渐渐紊乱起来，发出软软的鼻音.`],
+            // descString: ["", `${selfPlaceholder}的呼吸渐渐紊乱起来，发出软软的鼻音.`],
             img: "Whisper"
         },
         XSAct_嘟囔着想说什么: {
@@ -691,7 +694,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ["UseMouth"]
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}嘟囔着想说什么.`],
+            // descString: ["", `${selfPlaceholder}嘟囔着想说什么.`],
             img: "Whisper"
         },
         XSAct_失神的伸出舌头: {
@@ -704,7 +707,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ["UseMouth"]
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}失神的伸出自己的舌头.`],
+            // descString: ["", `${selfPlaceholder}失神的伸出自己的舌头.`],
             img: "MasturbateTongue"
         },
         XSAct_慢慢伸出舌头: {
@@ -717,7 +720,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ["UseMouth"]
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}慢慢的伸出了自己的舌头.`],
+            // descString: ["", `${selfPlaceholder}慢慢的伸出了自己的舌头.`],
             img: "MasturbateTongue"
         },
         XSAct_微微摇头: {
@@ -730,7 +733,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ['MoveHead']
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}微微的摇了摇头.`],
+            // descString: ["", `${selfPlaceholder}微微的摇了摇头.`],
             img: "Suck"
         },
         XSAct_微微点头: {
@@ -743,7 +746,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ['MoveHead']
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}微微的点了点头.`],
+            // descString: ["", `${selfPlaceholder}微微的点了点头.`],
             img: "Nod"
         },
         XSAct_身体颤抖的摇头: {
@@ -756,7 +759,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ['MoveHead']
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}浑身颤抖的摇了摇头.`],
+            // descString: ["", `${selfPlaceholder}浑身颤抖的摇了摇头.`],
             img: "Suck"
         },
         XSAct_身体颤抖的点头: {
@@ -769,7 +772,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ['MoveHead']
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}浑身颤抖的点了点头.`],
+            // descString: ["", `${selfPlaceholder}浑身颤抖的点了点头.`],
             img: "Nod"
         },
         XSAct_歪头疑惑: {
@@ -782,7 +785,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ['MoveHead']
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}歪着脑袋一副疑惑的样子.`],
+            // descString: ["", `${selfPlaceholder}歪着脑袋一副疑惑的样子.`],
             img: "Suck"
         },
         XSAct_扭动身体: {
@@ -795,7 +798,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: []
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}扭动着身体.`],
+            // descString: ["", `${selfPlaceholder}扭动着身体.`],
             img: "Wiggle"
         },
         XSAct_活动四肢: {
@@ -808,7 +811,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ["CantUseArms", "CantUseFeet"]
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}活动了下自己的四肢.`],
+            // descString: ["", `${selfPlaceholder}活动了下自己的四肢.`],
             img: "Slap"
         },
         XSAct_看他: {
@@ -821,7 +824,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ['CanLook']
             },
             desc: null,
-            descString: [`${selfPlaceholder}看向了${targetPlaceholder}.`, ''],
+            // descString: [`${selfPlaceholder}看向了${targetPlaceholder}.`, ''],
             img: "SiblingsCheekKiss"
         },
         XSAct_缩脖子: {
@@ -834,7 +837,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: []
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}缩了下自己的脖子.`],
+            // descString: ["", `${selfPlaceholder}缩了下自己的脖子.`],
             img: "Suck"
         },
         XSAct_脸红喘气: {
@@ -847,7 +850,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: []
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}面色潮红的喘着气.`],
+            // descString: ["", `${selfPlaceholder}面色潮红的喘着气.`],
             img: "Whisper"
         },
         XSAct_轻声喘气: {
@@ -860,7 +863,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: []
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}轻声喘着气.`],
+            // descString: ["", `${selfPlaceholder}轻声喘着气.`],
             img: "Whisper"
         },
         XSAct_跺脚: {
@@ -873,7 +876,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ['NotKneeling']
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}跺了跺脚.`],
+            // descString: ["", `${selfPlaceholder}跺了跺脚.`],
             img: "Step"
         },
         XSAct_头蹭: {
@@ -886,7 +889,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: []
             },
             desc: null,
-            descString: [`${selfPlaceholder}用自己的脑袋蹭了蹭${targetPlaceholder}的${this.bodyNamePlaceholder}.`, ''],
+            // descString: [`${selfPlaceholder}用自己的脑袋蹭了蹭${targetPlaceholder}的${this.bodyNamePlaceholder}.`, ''],
             img: "SiblingsCheekKiss",
             isBase: true
         },
@@ -900,7 +903,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: []
             },
             desc: null,
-            descString: [`${selfPlaceholder}用自己的脸颊蹭了蹭${targetPlaceholder}的${this.bodyNamePlaceholder}.`, ''],
+            // descString: [`${selfPlaceholder}用自己的脸颊蹭了蹭${targetPlaceholder}的${this.bodyNamePlaceholder}.`, ''],
             img: "SiblingsCheekKiss",
             isBase: true
         },
@@ -914,7 +917,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ['MoveHead']
             },
             desc: null,
-            descString: [`${selfPlaceholder}用自己的鼻子蹭了蹭${targetPlaceholder}的${this.bodyNamePlaceholder}.`, ''],
+            // descString: [`${selfPlaceholder}用自己的鼻子蹭了蹭${targetPlaceholder}的${this.bodyNamePlaceholder}.`, ''],
             img: "Nod",
             isBase: true
         },
@@ -928,7 +931,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ['MoveHead']
             },
             desc: null,
-            descString: [`${selfPlaceholder}把脑袋埋在${targetPlaceholder}的怀里.`, ''],
+            // descString: [`${selfPlaceholder}把脑袋埋在${targetPlaceholder}的怀里.`, ''],
             img: "SiblingsCheekKiss"
         }
     }
