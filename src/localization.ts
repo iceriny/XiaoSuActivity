@@ -1,14 +1,16 @@
-import { hookFunction } from "utils";
+import { conDebug, hookFunction } from "utils";
 
 export class Localization {
     private static readonly LINK: string = DEBUG ? 'https://iceriny.github.io/XiaoSuActivity/dev/' : 'https://iceriny.github.io/XiaoSuActivity/main/'
     public static STRINGS: IString;
 
     public static init() {
+        conDebug("本地化模块初始化.");
         hookFunction("TranslationNextLanguage", 0, (args, next) => {
             next(args);
             Localization.init();
         })
+        window.XSA_STRINGS = this.STRINGS
         this.getLangJson();
     }
 
@@ -20,6 +22,8 @@ export class Localization {
 
         const href = this.LINK + `${lang}.json`;
 
+        conDebug("开始获取本地化文件.");
+        conDebug(`获取地址: ${href}`);
         fetch(href)
             .then((response) => {
                 return response.json();
@@ -27,6 +31,7 @@ export class Localization {
             .then((data) => {
                 this.getCount = 0;
                 this.STRINGS = data;
+                conDebug("本地化文件加载完成.", data);
             })
             .catch((error) => {
                 this.getCount++;
@@ -61,7 +66,11 @@ class STR<T extends FirstStringKey> {
     }
 
     public constructor(firstKey: T, key: strKey<T>) {
-        this.str = Localization.STRINGS[firstKey][key] as string;
+        if (Localization.STRINGS && Localization.STRINGS[firstKey] && Localization.STRINGS[firstKey][key]) {
+            this.str = Localization.STRINGS[firstKey][key] as string;
+        } else {
+            this.str = "[STRING_RETRIEVAL_FAILED!!]";
+        }
         return this;
     }
 
@@ -70,8 +79,9 @@ class STR<T extends FirstStringKey> {
             const index = parseInt(digits, 10); // 将匹配到的数字字符串转换为数字索引
             try {
                 return (param[index] as string).toString();
-            } catch {
-                throw new Error(`Index ${index} out of range in parameters array.`);
+            } catch (error) {
+                console.error(`Index ${index} out of range in parameters array.`, error);
+                return match;
             }
         });
         return this;
@@ -79,7 +89,12 @@ class STR<T extends FirstStringKey> {
 
     public Personalize(): STR<T> {
         this.str = this.str.replace(/\{(he|her|it|they)\}/g, (match, pronoun) => {
-            return Localization.STRINGS.Other[pronoun as strKey<'Other'>] as string;
+            try {
+                return Localization.STRINGS.Other[pronoun as strKey<'Other'>] as string;
+            } catch (error) {
+                console.error(`未获取到人称代词。`, error);
+                return match;
+            }
         });
         return this;
     }

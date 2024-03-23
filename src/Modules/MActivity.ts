@@ -1,6 +1,6 @@
 import { conDebug, hookFunction, MSGType, SendActivity } from "utils";
 import { BaseModule } from "./BaseModule";
-import {Localization as L} from "localization";
+import { Localization as L } from "localization";
 
 /*
  * 动作的限定条件信息对象
@@ -134,7 +134,7 @@ export class ActivityModule extends BaseModule {
                         // 增加抵抗难度
                         ActivityOrgasmGameResistCount++;
                         // 发送活动消息
-                        SendActivity(`{target}紧闭双眼尽力抵抗着高潮，但被{source}的瘙痒干扰，从嘴巴里泄露出一声压抑的呻吟，不知是否还能忍住.`, SourceCharacter, TargetCharacter)
+                        SendActivity(L.get("Activity", "XSAct_Tickle_Resist"), SourceCharacter, TargetCharacter)
                         // 打断当前高潮
                         ActivityOrgasmStop(Player, 99.5);
                         // 触发新的高潮
@@ -175,6 +175,7 @@ export class ActivityModule extends BaseModule {
      * 初始化活动的文字描述。
      */
     activityDictAdd() {
+        const outputDesc: { [key in string]: string } = {};
 
         for (const a in this.activityToAddDict) {
             const pendingActivity = this.activityToAddDict[a as XSA_ActivityName];
@@ -192,41 +193,41 @@ export class ActivityModule extends BaseModule {
                 for (let i = 0; i < actTarget.length; i++) {
                     const aT = actTarget[i];
                     addedValues.push([`Label-ChatOther-${aT}-${actName}`,
-                    `${nameWithoutPrefix}${pendingActivity.isBase ? this.groupNameDict[aT as AssetGroupItemName] : ''}`]);
+                    `${nameWithoutPrefix}${pendingActivity.isBase ? L.get("Activity", aT) : ''}`]);
                     addedValues.push([`ChatOther-${aT}-${actName}`,
-                    pendingActivity.descString[0].replace(this.bodyNamePlaceholder, this.groupNameDict[aT as AssetGroupItemName])]);
+                    // pendingActivity.descString[0].replace(this.bodyNamePlaceholder, L.get("Activity", aT))]);
+                    L.get("Activity", `${nameWithoutPrefix}_Desc_0` as strKey<'Activity'>, selfPlaceholder, targetPlaceholder)
+                        .replace(this.bodyNamePlaceholder, L.get("Activity", aT))]);
+
                 }
             }
             if (typeof actTargetSelf !== 'undefined' && typeof actTargetSelf !== 'boolean' && actTargetSelf.length > 0) {
                 for (const aTS of actTargetSelf) {
                     addedValues.push([`Label-ChatSelf-${aTS}-${actName}`,
-                    `${nameWithoutPrefix}${pendingActivity.isBase ? this.groupNameDict[aTS as AssetGroupItemName] : ''}`]);
+                    `${nameWithoutPrefix}${pendingActivity.isBase ? L.get("Activity", aTS) : ''}`]);
                     addedValues.push([`ChatSelf-${aTS}-${actName}`,
-                    pendingActivity.descString[1].replace(this.bodyNamePlaceholder, this.groupNameDict[aTS as AssetGroupItemName])]);
+                    // pendingActivity.descString[1].replace(this.bodyNamePlaceholder, L.get("Activity", aTS))]);
+                    L.get("Activity", `${nameWithoutPrefix}_Desc_1` as strKey<'Activity'>, selfPlaceholder, targetPlaceholder)
+                        .replace(this.bodyNamePlaceholder, L.get("Activity", aTS))]);
                 }
             }
 
+            pendingActivity.descString.forEach((d, i) => {
+                outputDesc[`${nameWithoutPrefix}_Desc_` + i] = d;
+            });
             pendingActivity.desc = addedValues;
         }
+        console.log(outputDesc)
     }
-    /*
-        'ItemAddon' | 'ItemArms' | 'ItemBoots' | 'ItemBreast' | 'ItemButt' |
-        'ItemDevices' | 'ItemEars' | 'ItemFeet' | 'ItemHands' | 'ItemHead' |
-        'ItemHood' | 'ItemLegs' | 'ItemMisc' | 'ItemMouth' | 'ItemMouth2' |
-        'ItemMouth3' | 'ItemNeck' | 'ItemNeckAccessories' | 'ItemNeckRestraints' |
-        'ItemNipples' | 'ItemNipplesPiercings' | 'ItemNose' | 'ItemPelvis' |
-        'ItemTorso' | 'ItemTorso2' | 'ItemVulva' | 'ItemVulvaPiercings' |
-        'ItemHandheld'
-    */
-    private readonly groupNameDict: { [name in AssetGroupItemName]: string } = {
-        'ItemAddon': '身体(附加)', 'ItemArms': '手臂', 'ItemBoots': '脚', 'ItemBreast': '乳房',
-        'ItemButt': '屁股', 'ItemDevices': '身体(装置)', 'ItemEars': '耳朵', 'ItemFeet': '小腿',
-        'ItemHandheld': '手', 'ItemHands': '手', 'ItemHead': '头', 'ItemHood': '头发', 'ItemLegs': '大腿',
-        'ItemMisc': '身体(杂项)', "ItemMouth": '嘴巴', 'ItemMouth2': '嘴巴', 'ItemMouth3': '嘴巴',
-        'ItemNeck': '脖子', 'ItemNeckAccessories': '脖子', 'ItemNeckRestraints': '脖子', 'ItemNipples': '乳头',
-        'ItemNipplesPiercings': '乳头', 'ItemNose': '鼻子', 'ItemPelvis': '小腹', 'ItemTorso': '肋部', 'ItemTorso2': '肋部',
-        'ItemVulva': '阴道', 'ItemVulvaPiercings': '阴蒂'
-    }
+    // private readonly groupNameDict: { [name in AssetGroupItemName]: string } = {
+    //     'ItemAddon': '身体(附加)', 'ItemArms': '手臂', 'ItemBoots': '脚', 'ItemBreast': '乳房',
+    //     'ItemButt': '屁股', 'ItemDevices': '身体(装置)', 'ItemEars': '耳朵', 'ItemFeet': '小腿',
+    //     'ItemHandheld': '手', 'ItemHands': '手', 'ItemHead': '头', 'ItemHood': '头发', 'ItemLegs': '大腿',
+    //     'ItemMisc': '身体(杂项)', "ItemMouth": '嘴巴', 'ItemMouth2': '嘴巴', 'ItemMouth3': '嘴巴',
+    //     'ItemNeck': '脖子', 'ItemNeckAccessories': '脖子', 'ItemNeckRestraints': '脖子', 'ItemNipples': '乳头',
+    //     'ItemNipplesPiercings': '乳头', 'ItemNose': '鼻子', 'ItemPelvis': '小腹', 'ItemTorso': '肋部', 'ItemTorso2': '肋部',
+    //     'ItemVulva': '阴道', 'ItemVulvaPiercings': '阴蒂'
+    // }
     private readonly bodyNamePlaceholder = '{group}'
     /**
      * 将传入的活动对象载入
@@ -240,13 +241,7 @@ export class ActivityModule extends BaseModule {
 
     //============================================================
 
-    //     ActivityNameXiaosu_onlyName =
-    //     "眯眼" | "眼神飘忽" | "甩头发" | "轻抚发梢" | "叼起头发" | "嗅头发" |  "绕头发" | "大力甩头发" | "抿住嘴巴" | "恳求的看" | "恳求的摇头"
-    //   | "皱鼻子" | "打喷嚏" | "深呼吸" 
-    //   | "低头" | "挺胸收腹" | "站直身体" | "坐直身体" | "身体一颤"
-    //   | "活动手臂" | "活动大腿" | "绷紧膝盖" | "内八夹腿"
-    //   | "蜷缩脚趾" | "绷直脚踝" | "踮脚"
-    // ;
+
     // SourceCharacter 为动作发起人  TargetCharacter 为动作目标人
     /**
      * 将要添加的动作字典
@@ -278,7 +273,7 @@ export class ActivityModule extends BaseModule {
                 Prerequisite: ['CanLook']
             },
             desc: null,
-            descString: ["", `${selfPlaceholder}眯了眯眼.`],
+            descString: ["", L.get("Activity", "眯眼_Desc_1", selfPlaceholder)],
             img: "RestHead"
         },
         XSAct_眼神飘忽: {
@@ -1034,7 +1029,7 @@ export class ActivityModule extends BaseModule {
         const result: XSA_ActivityName_onlyName[] = []
         for (const a in this.activityToAddDict) {
             const suffix = this.getActName(a).substring(6) as XSA_ActivityName_onlyName; // 从索引为 6 的位置开始截取到字符串末尾
-            
+
             result.push(suffix); // 输出：XXXX
         }
         conDebug({
