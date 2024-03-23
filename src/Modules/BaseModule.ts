@@ -10,7 +10,7 @@ export const FullModCount = 7; //8
  */
 export abstract class BaseModule {
     /** 模块名 */
-    moduleName: XS_ModuleName = "Base";
+    moduleName: XS_ModuleName;
     /** 模块优先级 数越大越靠后加载 */
     priority: number = 0;
     /** 是否加载完成 */
@@ -28,4 +28,6 @@ export abstract class BaseModule {
      * 加载函数
      */
     public abstract Load(): void
+
+    // protected abstract getSelfString(key: string, ...params: unknown[]): string;
 }

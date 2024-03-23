@@ -33,6 +33,10 @@ export class ActivityModule extends BaseModule {
         this.Loaded = true;
     }
 
+    private getStr(key: string, ...params: unknown[]): string {
+        return L.get("Activity", key as strKey<"Activity">, ...params);
+    }
+
     /**
      * 狗子函数队列处理
      */
@@ -154,11 +158,10 @@ export class ActivityModule extends BaseModule {
     LoadActivity(): void {
         conDebug("加载自定义活动");
         let actLength = 0;
+        this.activityDictAdd();
         for (const aN in this.activityToAddDict) { // a 为活动名
 
             this.pushToActivity(this.activityToAddDict[aN as XSA_ActivityName].act);
-
-            this.activityDictAdd();
 
             //加载文字描述
             const activityDesc = this.activityToAddDict[aN as XSA_ActivityName].desc;
@@ -195,10 +198,7 @@ export class ActivityModule extends BaseModule {
                     addedValues.push([`Label-ChatOther-${aT}-${actName}`,
                     `${nameWithoutPrefix}${pendingActivity.isBase ? L.get("Activity", aT) : ''}`]);
                     addedValues.push([`ChatOther-${aT}-${actName}`,
-                    // pendingActivity.descString[0].replace(this.bodyNamePlaceholder, L.get("Activity", aT))]);
-                    L.get("Activity", `${nameWithoutPrefix}_Desc_0` as strKey<'Activity'>, selfPlaceholder, targetPlaceholder)
-                        .replace(this.bodyNamePlaceholder, L.get("Activity", aT))]);
-
+                    pendingActivity.descString[0].replace(this.bodyNamePlaceholder, L.get("Activity", aT))]);
                 }
             }
             if (typeof actTargetSelf !== 'undefined' && typeof actTargetSelf !== 'boolean' && actTargetSelf.length > 0) {
@@ -206,16 +206,14 @@ export class ActivityModule extends BaseModule {
                     addedValues.push([`Label-ChatSelf-${aTS}-${actName}`,
                     `${nameWithoutPrefix}${pendingActivity.isBase ? L.get("Activity", aTS) : ''}`]);
                     addedValues.push([`ChatSelf-${aTS}-${actName}`,
-                    // pendingActivity.descString[1].replace(this.bodyNamePlaceholder, L.get("Activity", aTS))]);
-                    L.get("Activity", `${nameWithoutPrefix}_Desc_1` as strKey<'Activity'>, selfPlaceholder, targetPlaceholder)
-                        .replace(this.bodyNamePlaceholder, L.get("Activity", aTS))]);
+                    pendingActivity.descString[1].replace(this.bodyNamePlaceholder, L.get("Activity", aTS))]);
                 }
             }
-
-            pendingActivity.descString.forEach((d, i) => {
-                outputDesc[`${nameWithoutPrefix}_Desc_` + i] = d;
-            });
             pendingActivity.desc = addedValues;
+
+            outputDesc[`${nameWithoutPrefix}_Desc_0`] = pendingActivity.descString[0]
+            outputDesc[`${nameWithoutPrefix}_Desc_1`] = pendingActivity.descString[1]
+            console.log(nameWithoutPrefix)
         }
         console.log(outputDesc)
     }

@@ -10,7 +10,7 @@ export class Localization {
             next(args);
             Localization.init();
         })
-        window.XSA_STRINGS = this.STRINGS
+        
         this.getLangJson();
     }
 
@@ -31,7 +31,11 @@ export class Localization {
             .then((data) => {
                 this.getCount = 0;
                 this.STRINGS = data;
-                conDebug("本地化文件加载完成.", data);
+                window.XSA_STRINGS = this.STRINGS
+                conDebug({
+                    name: "本地化文件加载完成.",
+                    content: data
+                });
             })
             .catch((error) => {
                 this.getCount++;
