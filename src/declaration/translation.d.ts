@@ -231,7 +231,7 @@ type IString = {
         "KaomojiTitle.ar": "生气",
         "KaomojiTitle.ap": "惊讶",
         "KaomojiTitle.cf": "困惑",
-        "KaomojiTitle.nt": "搞怪顽皮"
+        "KaomojiTitle.nt": "顽皮"
     },
     "Chess": {
         "not_started_identification": "未开始",
