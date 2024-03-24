@@ -353,27 +353,7 @@ export function sendLastChangeLog() {
     ChatRoomSendLocal(content, 30000);
 }
 
-/**
- * 处理结巴效果基于segmenter.segment()分词
- * @param str 传入的字符串
- * @returns 返回处理后的字符串
- */
-export function segmentForCH(str: string): string[] | null {
-    // 检查浏览器是否支持 Intl.Segmenter
-    if (window.Intl && window.Intl.Segmenter && TranslationLanguage.toLowerCase() === "cn") {
-        const segmenter = new Intl.Segmenter('zh', { granularity: 'word' }); // 创建分词器实例
-        const segmenterResult = segmenter.segment(str); // 对文本进行分词
-        const results: string[] = []
-        for (const segment of segmenterResult) {
-            results.push(segment.segment);
-        }
 
-        conDebug(`segmentForCH: ${results}`)
-        return results;
-    } else {
-        return null;
-    }
-}
 /**
  * 检测数字是否被整除
  * @param num 要检测的数字

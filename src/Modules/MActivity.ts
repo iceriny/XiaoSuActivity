@@ -138,7 +138,7 @@ export class ActivityModule extends BaseModule {
                         // 增加抵抗难度
                         ActivityOrgasmGameResistCount++;
                         // 发送活动消息
-                        SendActivity(L.get("Activity", "XSAct_Tickle_Resist"), SourceCharacter, TargetCharacter)
+                        SendActivity(L.get("Activity", "XSAct.Tickle.Resist"), SourceCharacter, TargetCharacter)
                         // 打断当前高潮
                         ActivityOrgasmStop(Player, 99.5);
                         // 触发新的高潮
@@ -198,7 +198,7 @@ export class ActivityModule extends BaseModule {
                     addedValues.push([`Label-ChatOther-${aT}-${actName}`,
                     `${nameWithoutPrefix}${pendingActivity.isBase ? L.get("Activity", aT) : ''}`]);
                     addedValues.push([`ChatOther-${aT}-${actName}`,
-                    this.getStr(`${nameWithoutPrefix}_Desc_0`, selfPlaceholder, targetPlaceholder, L.get("Activity", aT))]);
+                    this.getStr(`${nameWithoutPrefix}.Desc.0`, selfPlaceholder, targetPlaceholder, L.get("Activity", aT))]);
                     //pendingActivity.descString[0].replace(this.bodyNamePlaceholder, L.get("Activity", aT))]);
                 }
             }
@@ -207,7 +207,7 @@ export class ActivityModule extends BaseModule {
                     addedValues.push([`Label-ChatSelf-${aTS}-${actName}`,
                     `${nameWithoutPrefix}${pendingActivity.isBase ? L.get("Activity", aTS) : ''}`]);
                     addedValues.push([`ChatSelf-${aTS}-${actName}`,
-                    this.getStr(`${nameWithoutPrefix}_Desc_1`, selfPlaceholder, targetPlaceholder, L.get("Activity", aTS))]);
+                    this.getStr(`${nameWithoutPrefix}.Desc.1`, selfPlaceholder, targetPlaceholder, L.get("Activity", aTS))]);
                     // pendingActivity.descString[1].replace(this.bodyNamePlaceholder, L.get("Activity", aTS))]);
                 }
             }
@@ -262,7 +262,7 @@ export class ActivityModule extends BaseModule {
      * @img - 指定的动作图片
      * @isBase - 是否是基础动作 基础动作将会自动把名称中的 @bodyNamePlaceholder 换成 `{group}` 并在添加动作时动态的将其替换为目标部位的名称
     */
-    activityToAddDict: { [ActivityIndex in XSA_ActivityName]:
+    activityToAddDict: { [ActivityIndex in XSA_ActivityName]: 
         { act: Activity, desc: null | string[][], /*descString: [string, string],*/ img: ActivityName, isBase?: true } } = {
         XSAct_眯眼: {
             act: {

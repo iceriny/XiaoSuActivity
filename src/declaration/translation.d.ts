@@ -3,11 +3,15 @@ type IString = {
         "he": "他",
         "her": "她",
         "it": "它",
-        "they": "他们"
+        "they": "他们",
+
+        "~~~": "VV 用于分词的语言代码 VV",
+        "cn": "zh",
+        "en": "en"
     },
     "Activity": {
         "眯眼": "眯眼",
-        "眯眼_Desc_1": "{0}眯了眯眼.",
+        "眯眼.Desc.1": "{0}眯了眯眼.",
         "眼神飘忽": "眼神飘忽",
         "甩头发": "甩头发",
         "大力甩头发": "大力甩头发",
@@ -88,7 +92,44 @@ type IString = {
         "ItemVulva": "阴道", 
         "ItemVulvaPiercings": "阴蒂",
 
-        "XSAct_Tickle_Resist":"{target}紧闭双眼尽力抵抗着高潮，但被{source}的瘙痒干扰，从嘴巴里泄露出一声压抑的呻吟，不知是否还能忍住."
+        "XSAct.Tickle.Resist":"{target}紧闭双眼尽力抵抗着高潮，但被{source}的瘙痒干扰，从嘴巴里泄露出一声压抑的呻吟，不知是否还能忍住.",
+    },
+    "Chatroom": {
+        "Prefix.reply": "回复",
+        "Contextmenu.Button.reply": "回复",
+        "Contextmenu.Button.copy": "复制",
+        "Contextmenu.Button.whisper": "悄悄话",
+        "Contextmenu.Button.delete": "删除",
+        "kaomoji.doesNotExist.tips": "该颜文字表情包不存在，请重新输入或输入 |help 查看参数",
+
+        "moan.0": " 嗯~❤..",
+        "moan.1": " 昂~❤哈啊..",
+        "moan.2": " --唔~呜..",
+        "moan.3": " 姆嗯~❤...",
+        "moan.4": " --嘶-啊~",
+        "moan.5": " 唔..❤啊~",
+        "moan.6": " --❤嘶哈~",
+        "moan.7": " ❤呀~",
+        "moan.8": " ❤...呀嗯..",
+        "moan.9": " ❤.哦~嗯~.",
+
+        "kaomojiHelp.0":"all ==> 全部表情",
+        "kaomojiHelp.1":"hp ==> 开心",
+        "kaomojiHelp.2":"sd ==> 伤心",
+        "kaomojiHelp.3":"sy ==> 害羞",
+        "kaomojiHelp.4":"ar ==> 生气",
+        "kaomojiHelp.5":"ap ==> 惊讶",
+        "kaomojiHelp.6":"cf ==> 困惑",
+        "kaomojiHelp.7":"nt ==> 搞怪顽皮",
+
+        "KaomojiTitle.all": "全部",
+        "KaomojiTitle.hp": "开心",
+        "KaomojiTitle.sd": "伤心",
+        "KaomojiTitle.sy": "害羞",
+        "KaomojiTitle.ar": "生气",
+        "KaomojiTitle.ap": "惊讶",
+        "KaomojiTitle.cf": "困惑",
+        "KaomojiTitle.nt": "搞怪顽皮"
     }
 }
 
