@@ -1,5 +1,6 @@
 import { BaseModule } from "Modules/BaseModule";
-import { MSGType, SendChat, SendEmote, conDebug, copyAndDownloadHtmlElement, hookFunction, patchFunction, segmentForCH, timeRange } from "utils";
+import { MSGType, SendChat, SendEmote, conDebug, copyAndDownloadHtmlElement, hookFunction, patchFunction, timeRange } from "utils";
+import { Localization as L } from "localization";
 
 export class ChatroomModule extends BaseModule {
 
@@ -17,6 +18,21 @@ export class ChatroomModule extends BaseModule {
         })
         this.priority = 30;
 
+        ChatroomModule.contextmenuText = [
+            L.get("Chatroom", "Contextmenu.Button.reply"),
+            L.get("Chatroom", "Contextmenu.Button.whisper"),
+            L.get("Chatroom", "Contextmenu.Button.copy"),
+            L.get("Chatroom", "Contextmenu.Button.delete")
+        ]
+
+        for (let i = 0; i <= 9; i++){
+            this.moan.push(L.get("Chatroom", `moan.${i}` as strKey<"Chatroom">))
+        }
+
+        for (let i = 0; i <= 7; i++){
+            ChatroomModule.kaomojiSet.help.push(L.get("Chatroom", `kaomojiHelp.${i}` as strKey<"Chatroom">))
+        }
+        
     }
 
 
@@ -93,8 +109,8 @@ export class ChatroomModule extends BaseModule {
                 // 匹配[ ` ]开头的命令 处理结巴系统
                 const match = msg.match(/^`([1-9])?(m)?( )? (.*)/);
                 if (match) {
-                    msg = match[2] != "m" ? this.stammerHandler(match[4], parseInt(match[1]), match[3] ? false : true, false) :
-                        this.stammerHandler(match[4], parseInt(match[1]), match[3] ? false : true, true);
+                    msg = match[2] != "m" ? this.stammerHandler(match[4], parseInt(match[1]), true, false) :
+                        this.stammerHandler(match[4], parseInt(match[1]), true, true);
                 }
 
                 // 匹配[ | ]的颜文字命令 处理表情系统
@@ -105,7 +121,7 @@ export class ChatroomModule extends BaseModule {
                         const inputElement: HTMLInputElement = document.getElementById('InputChat') as HTMLInputElement;
                         inputElement.value = "";
                     } else {
-                        ChatRoomSendLocal("该颜文字表情包不存在，请重新输入或输入 |help 查看参数", 5000)
+                        ChatRoomSendLocal(L.get("Chatroom", "kaomoji.doesNotExist.tips"), 5000)
                         const inputElement: HTMLInputElement = document.getElementById('InputChat') as HTMLInputElement;
                         inputElement.value = "|";
                     }
@@ -117,8 +133,9 @@ export class ChatroomModule extends BaseModule {
         // 处理聊天室接受消息时 的 " 🪧回复* " 命令显示
         hookFunction("ChatRoomMessageDisplay", 10, (args, next) => {
             const msg = args[1];
-            if (typeof msg === "string" && msg.startsWith("🪧回复*>")) {
-                const match = msg.match(/^🪧(回复\*>.+<\*)\s(.+)/)
+            const matchWord = L.get("Chatroom", "Prefix.reply");// 
+            if (typeof msg === "string" && msg.startsWith(`🪧${matchWord}*>`)) {
+                const match = msg.match(new RegExp(`^🪧(${matchWord}*>.+<*)s(.+)`))
                 if (match) {
                     args[1] = match[2];
                     ChatRoomSendLocal(`--🪧--${match[1]}--🪧--`)
@@ -156,7 +173,7 @@ export class ChatroomModule extends BaseModule {
     /** 显示右键菜单的div元素 */
     private static targetDiv: HTMLDivElement | null = null;
     /** 右键菜单的内容 */
-    private static readonly contextmenuText: string[] = ["回复", "复制", "悄悄话", "删除"];
+    private static contextmenuText: [string, string, string, string]; // [] = ["回复", "悄悄话", "复制", "删除"]
     /**
      * 显示右键菜单的功能实现。
      * 当用户在指定元素上右击时，此函数将显示一个右键菜单。
@@ -210,11 +227,13 @@ export class ChatroomModule extends BaseModule {
             contextmenuItem.className = "xsa-contextmenu-item"; // 设置菜单项的类名
             contextmenuItem.innerText = ChatroomModule.contextmenuText[i]; // 设置菜单项的文本
 
+            const replyPrefix = L.get("Chatroom", "Prefix.reply");
+
             // 给菜单项添加点击事件监听
             contextmenuItem.addEventListener('click', () => {
                 switch (i) {
                     case 0: // 回复功能
-                        ElementValue("InputChat", `🪧回复*>${ChatroomModule.targetDiv?.textContent}<*\n${ElementValue('InputChat')}`);
+                        ElementValue("InputChat", `🪧${replyPrefix}*>${ChatroomModule.targetDiv?.textContent}<*\n${ElementValue('InputChat')}`);
                         ElementFocus("InputChat");
                         break;
                     case 1: // 复制功能
@@ -301,7 +320,7 @@ export class ChatroomModule extends BaseModule {
         const stammeringProbability = tenfoldStammeringProbability / 10;
 
         // 使用segmentForCH进行分词，传入参数取消掉空白字符
-        const segmentList = isSegmentForCH ? segmentForCH(content.replace(/\s/g, "")) : undefined;
+        const segmentList = isSegmentForCH ? this.segmentForCH(TranslationLanguage === "CN" ? content.replace(/\s/g, "") : content) : undefined;
 
         // 如果segmentForCH没有返回内容，则使用源字符串通过空格分词
         const stringArray: string[] = segmentList ? segmentList : content.split(' ');
@@ -309,19 +328,30 @@ export class ChatroomModule extends BaseModule {
         return this.stammerForList(stringArray, stammeringProbability, haveMoan);
     }
 
+    /**
+     * 处理结巴效果基于segmenter.segment()分词
+     * @param str 传入的字符串
+     * @returns 返回处理后的字符串
+     */
+    private segmentForCH(str: string): string[] | null {
+        // 检查浏览器是否支持 Intl.Segmenter
+        if (window.Intl && window.Intl.Segmenter) {
+            const segmenter = new Intl.Segmenter(L.get("Other", TranslationLanguage.toLowerCase() as strKey<"Other">), { granularity: 'word' }); // 创建分词器实例
+            const segmenterResult = segmenter.segment(str); // 对文本进行分词
+            const results: string[] = []
+            for (const segment of segmenterResult) {
+                results.push(segment.segment);
+            }
+
+            conDebug(`segmentForCH: ${results}`)
+            return results;
+        } else {
+            return null;
+        }
+    }
+
     /** 呻吟词库 */
-    moan: string[] = [
-        " 嗯~❤..",
-        " 昂~❤哈啊..",
-        " --唔~呜..",
-        " 姆嗯~❤...",
-        " --嘶-啊~",
-        " 唔..❤啊~",
-        " --❤嘶哈~",
-        " ❤呀~",
-        " ❤...呀嗯..",
-        " ❤.哦~嗯~."
-    ];
+    moan: string[] = [];
     /**
      * 将分词后的句子添加效果并返回完整句子.
      * @param messageList 经过分词后的字符串列表
@@ -400,14 +430,14 @@ export class ChatroomModule extends BaseModule {
 
     /** 表情菜单标题元素 */
     private static menuTitleTextSet: { [key: string]: HTMLDivElement } = {
-        全部: document.createElement('div'),
-        开心: document.createElement('div'),
-        难过: document.createElement('div'),
-        害羞: document.createElement('div'),
-        生气: document.createElement('div'),
-        惊讶: document.createElement('div'),
-        困惑: document.createElement('div'),
-        搞怪: document.createElement('div')
+        all: document.createElement('div'),
+        hp: document.createElement('div'),
+        sd: document.createElement('div'),
+        sy: document.createElement('div'),
+        ar: document.createElement('div'),
+        ap: document.createElement('div'),
+        cf: document.createElement('div'),
+        nt: document.createElement('div')
     }
 
     /** 表情按钮 */
@@ -427,7 +457,7 @@ export class ChatroomModule extends BaseModule {
 
     /** 表情库 */
     private static kaomojiSet: { [groupName: string]: string[] } = {
-        help: ["all ==> 全部表情", "hp ==> 开心", "sd ==> 伤心", "sy ==> 害羞", "ar ==> 生气", "ap ==> 惊讶", "cf ==> 困惑", "nt ==> 搞怪顽皮"],
+        help: [],
         hp: ["ヾ(❀╹◡╹)ﾉ~", " (๑>؂<๑）", "(｡･ω･｡)ﾉ♡", "(◍ ´꒳` ◍)", "(￣w￣)ノ", "Hi~ o(*￣▽￣*)ブ", "(≧∇≦)ﾉ", "o(^▽^)o", "(￣︶￣)↗", "<(￣︶￣)↗[GO!]", "o(*￣▽￣*)o", "(p≧w≦q)", "ㄟ(≧◇≦)ㄏ", "(/≧▽≦)/", "(　ﾟ∀ﾟ) ﾉ♡", "(●'◡'●)", "ヽ(✿ﾟ▽ﾟ)ノ",
             "o(*￣︶￣*)o", "(๑¯∀¯๑)", "(≧∀≦)ゞ", "φ(≧ω≦*)♪", "╰(*°▽°*)╯", "(*^▽^*)", "(๑•̀ㅂ•́)و✧", "(੭*ˊᵕˋ)੭*ଘ*", "(o゜▽゜)o☆[BINGO!]", "(^▽^ )", "<(*￣▽￣*)/", "┌|*´∀｀|┘",
             "♪(´∇`*)", "(｡◕ฺˇε ˇ◕ฺ｡）", " ✌︎( ᐛ )✌︎", "(*・ω・)ﾉ", "(„• ֊ •„)"],
@@ -587,7 +617,7 @@ export class ChatroomModule extends BaseModule {
             /** 获取菜单标题元素的索引key key为中文菜单的字符串在这里{@link menuTitleTextSet} */
 
             // 赋值菜单选择按钮的内容
-            menuTitleTextSet[key].innerHTML = key;
+            menuTitleTextSet[key].innerHTML = L.get("Chatroom", `KaomojiTitle.${key}` as strKey<"Chatroom">);
             // 类名
             menuTitleTextSet[key].className = 'kaomoji-title-text';
             // 添加到菜单标题元素中
@@ -595,9 +625,7 @@ export class ChatroomModule extends BaseModule {
 
             // 为按钮添加点击事件
             menuTitleTextSet[key].addEventListener('click', () => {
-                /** 获取选择的key 这里的处理只是为了让中文的key变为表情库的key */
-                const selectKey = this.getKaomojiSelectKey(key);
-                this.selectKaomojiTitle(kaomojiContainer, selectKey)
+                this.selectKaomojiTitle(kaomojiContainer, key)
             })
         }
 
@@ -614,7 +642,7 @@ export class ChatroomModule extends BaseModule {
 
     /**
      * 将菜单的样式设置成当前选择的样式
-     * @param selectKey 表情库的中文key
+     * @param selectKey 表情库的key
      */
     private static selectMenuTitleStyleHandle(selectKey: string) {
         const _className = 'kaomoji-title-text-active';
@@ -628,79 +656,43 @@ export class ChatroomModule extends BaseModule {
         }
     }
 
-    /**
-     * 将中文key变为表情库的key
-     * @param key 将中文key变为表情库的key
-     * @returns 返回表情库key
-     */
-    private static getKaomojiSelectKey(key: string): string {
-        /** 获取选择的key 这里的处理只是为了让中文的key变为表情库的key */
-        let selectKey: string | null = null;
-        switch (key) {
-            case '开心':
-                selectKey = 'hp';
-                break;
-            case '难过':
-                selectKey = 'sd';
-                break;
-            case '害羞':
-                selectKey = 'sy';
-                break;
-            case '生气':
-                selectKey = 'ar';
-                break;
-            case '惊讶':
-                selectKey = 'sp';
-                break;
-            case '困惑':
-                selectKey = 'cf';
-                break;
-            case '搞怪':
-                selectKey = 'nt';
-                break;
-            default:
-                selectKey = 'all';
-                break;
-        }
-        return selectKey;
-    }
+    // /**
+    //  * 将中文key变为表情库的key
+    //  * @param key 将中文key变为表情库的key
+    //  * @returns 返回表情库key
+    //  */
+    // private static getKaomojiSelectKey(key: string): string {
+    //     /** 获取选择的key 这里的处理只是为了让中文的key变为表情库的key */
+    //     let selectKey: string | null = null;
+    //     switch (key) {
+    //         case '开心':
+    //             selectKey = 'hp';
+    //             break;
+    //         case '难过':
+    //             selectKey = 'sd';
+    //             break;
+    //         case '害羞':
+    //             selectKey = 'sy';
+    //             break;
+    //         case '生气':
+    //             selectKey = 'ar';
+    //             break;
+    //         case '惊讶':
+    //             selectKey = 'sp';
+    //             break;
+    //         case '困惑':
+    //             selectKey = 'cf';
+    //             break;
+    //         case '搞怪':
+    //             selectKey = 'nt';
+    //             break;
+    //         default:
+    //             selectKey = 'all';
+    //             break;
+    //     }
+    //     return selectKey;
+    // }
 
-    /**
-     * 将表情库的key变为中文菜单key
-     * @param selectKey 将中文key变为表情库的key
-     * @returns 返回表情库key
-     */
-    private static getKaomojiKey(selectKey: string): string {
-        /** 获取选择的key 这里的处理只是为了让中文的key变为表情库的key */
-        let key: string | null = null;
-        switch (selectKey) {
-            case 'hp':
-                key = '开心';
-                break;
-            case 'sd':
-                key = '难过';
-                break;
-            case 'sy':
-                key = '害羞';
-                break;
-            case 'ar':
-                key = '生气';
-                break;
-            case 'sp':
-                key = '惊讶';
-                break;
-            case 'cf':
-                key = '困惑';
-                break;
-            case 'nt':
-                key = '搞怪';
-                break;
-            default:
-                key = '全部';
-                break;
-        }
-        return key;
-    }
 
     /**
      * 选择标题按钮时触发的方法
@@ -714,7 +706,7 @@ export class ChatroomModule extends BaseModule {
         // 设置表情菜单内容
         kaomojiContainer.innerHTML = '';
         const kaomojiClassName = 'kaomoji';
-        this.selectMenuTitleStyleHandle(this.getKaomojiKey(key));
+        this.selectMenuTitleStyleHandle(key);
 
         for (const kaomoji of kaomojiList) {
             const kaomojiElement: HTMLDivElement = document.createElement('div');

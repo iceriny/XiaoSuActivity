@@ -6,6 +6,7 @@ interface Window {
 	BROWSER_NAME?: string;
 	BROWSER_VERSION?: number;
 	MODULES?: { [key: string]: unknown };
+	XSA_STRINGS?: unknown;
 
 	AddChatRightClickEvent?: (div: HTMLDivElement) => void;
 }

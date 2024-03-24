@@ -1,7 +1,10 @@
 import { conDebug, hookFunction, MSGType } from "./utils";
 import { ModuleLoader } from "Modules/ModuleLoader";
+import { Localization } from "localization";
 
 function initWait() {
+    Localization.init();
+    
     conDebug({
         name: "Start Init",
         type: MSGType.Workflow_Log,
@@ -44,8 +47,8 @@ function initWait() {
 }
 
 export function init() {
-    if (window.XSActivity_Loaded)
-        return;
+    if (window.XSActivity_Loaded) return;
+
 
     const InitModuleCount = ModuleLoader.InitModules();
 

@@ -158,7 +158,7 @@ export enum MSGType {
  * @param style 可选的css风格参数
  * @returns 无
  */
-export function conDebug(msg: XSDebugMSG | string, color: string | null = null, style: string | null = null) {
+export function conDebug(msg: XSDebugMSG | string, isError: boolean = false, color: string | null = null, style: string | null = null) {
     if (DEBUG === false) return;
 
 
@@ -178,10 +178,14 @@ export function conDebug(msg: XSDebugMSG | string, color: string | null = null, 
     if (style) {
         console.debug("%c小酥的模组信息: ", style, result);
     } else {
-        if (color) {
-            style = `background-color: ${color}; font-weight: bold;`
+        let theColor = 'rgba(191, 154, 175, 1)';
+        if (isError) {
+            theColor = 'rgba(255, 0, 0, 1)'
         }
-        console.debug("%c小酥的模组信息: ", 'background-color: rgba(191, 154, 175, 1); font-weight: bold;', result);
+        if (color) {
+            theColor = color
+        }
+        console.debug("%c小酥的模组信息: ", `background-color: ${theColor}; font-weight: bold;`, result);
     }
 }
 
@@ -349,27 +353,7 @@ export function sendLastChangeLog() {
     ChatRoomSendLocal(content, 30000);
 }
 
-/**
- * 处理结巴效果基于segmenter.segment()分词
- * @param str 传入的字符串
- * @returns 返回处理后的字符串
- */
-export function segmentForCH(str: string): string[] | null {
-    // 检查浏览器是否支持 Intl.Segmenter
-    if (window.Intl && window.Intl.Segmenter && TranslationLanguage.toLowerCase() === "cn") {
-        const segmenter = new Intl.Segmenter('zh', { granularity: 'word' }); // 创建分词器实例
-        const segmenterResult = segmenter.segment(str); // 对文本进行分词
-        const results: string[] = []
-        for (const segment of segmenterResult) {
-            results.push(segment.segment);
-        }
 
-        conDebug(`segmentForCH: ${results}`)
-        return results;
-    } else {
-        return null;
-    }
-}
 /**
  * 检测数字是否被整除
  * @param num 要检测的数字
