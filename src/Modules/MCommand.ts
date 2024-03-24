@@ -4,6 +4,7 @@ import { conDebug, GetModule, timeRange, sendChangeLog, SendLocalMessage, sendLa
 import { ChatroomModule } from "./MChatroom";
 import { ActivityModule } from "./MActivity";
 import { ChessModule, Chess } from "./MChess";
+import { Localization as L } from "localization";
 
 const timeRangeRegex: RegExp = /^((0|1)\d|2[0-3]):[0-5]\d(:[0-5]\d)?-((0|1)\d|2[0-3]):[0-5]\d(:[0-5]\d)?$/;// 00:00(:00)-00:00(:00)
 
@@ -12,18 +13,18 @@ export class CommandsModule extends BaseModule {
     commandsDict: { [CommandName: string]: ICommand } = {
         help: {
             Tag: "help",
-            Description: "显示 [小酥的活动模组] 的相关命令.",
+            Description: L.get("Command", "desc.help"),
             Action: (_args, _msg, _parsed) => {
                 this.DisplayHelp();
             }
         },
         export: {
             Tag: "export",
-            Description: "导出当前聊天室的聊天记录. 输入: ‘/xsa export -h’ 显示导出命令的使用方法.",
+            Description: L.get("Command", "desc.export"),
             Action: (_args, _msg, parsed) => {
                 const params: string = this.getCommandParameters(parsed);
                 if (params == 'h') {
-                    ChatRoomSendLocal('输入: ‘/xsa export -[时间]’导出指定时间范围内的聊天记录.\n例如: ‘/xsa export -05:34-20:40’(可以包含秒)\n默认导出当前聊天室的全部聊天记录.\n注意! ', 20000)
+                    ChatRoomSendLocal(L.get("Command", "help.export"), 20000)
                 } else if (params === '') {
                     // 导出当前聊天室的全部聊天记录
                     conDebug("导出当前聊天室的全部聊天记录");
@@ -50,21 +51,21 @@ export class CommandsModule extends BaseModule {
         },
         v: {
             Tag: "v",
-            Description: "显示 [小酥的活动模组] 的版本信息.",
+            Description: L.get("Command", "desc.v"),
             Action: (_args, _msg, _parsed) => {
                 sendChangeLog();
             }
         },
         new: {
             Tag: "new",
-            Description: "显示 [小酥的活动模组] 的最新更新日志.",
+            Description: L.get("Command", "desc.new"),
             Action: (_args, _msg, _parsed) => {
                 sendLastChangeLog()
             }
         },
         act: {
             Tag: "act",
-            Description: "显示 [小酥的活动模组] 所添加的全部动作列表.",
+            Description: L.get("Command", "desc.act"),
             Action: (_args, _msg, _parsed) => {
                 let content = ''
                 GetModule<ActivityModule>("ActivityModule").getAllAct().forEach((item) => {
@@ -77,11 +78,11 @@ export class CommandsModule extends BaseModule {
         },
         jieba: {
             Tag: "jieba",
-            Description: "显示 自动结巴效果 的命令帮助.",
+            Description: L.get("Command", "desc.jieba"),
             Action: (_args, _msg, _parsed) => {
                 const stressStyle = "style='word-wrap: break-word;list-style: square;color: #FFCEE9;background-color: #AB6B8E;border-radius: 3px;padding: .2em .6em;margin: .2em .6em;'"
                 const weakStyle = "style='word-wrap: break-word;list-style: square;color: #B0809B;background-color: #AB6B8E;border-radius: 3px;padding: .2em .6em;margin: .2em .6em;'"
-                ChatRoomSendLocal(`输入: <span ${stressStyle}>\`</span><span ${stressStyle}>空格</span><span ${weakStyle}>空格</span> 开头的话将以口吃结巴的形式发出.\n结巴生效位置有两种方式: 如果键入两个<span ${stressStyle}>空格</span> 将会在空格位置概率产生结巴效果.\n如果键入一个<span ${stressStyle}>空格</span>将会使用分词系统进行结巴效果.\n该命令有一个可选参数:\n如果以<span ${stressStyle}>\`</span><span ${stressStyle}>[1-9]</span> 的形式作为开头，数字代表结巴程度，默认为3，越高将越口吃.\n不带结巴程度参数的例子:\n<span ${stressStyle}>\`</span> [要说 的 话]\n处理之后的效果就可能是:  「 要说...-的-的话... 」=>注意空格的位置.\n带参数的命令方法:\n<span ${stressStyle}>\`</span>3 [要说 的 话]\n此处的3就是结巴等级，代表着每处句子中的空格位置的词段都将有30%的概率发生结巴.上面的话就意味着发生了3等级的结巴效果.\n如果有两个空格: <span ${stressStyle}>\`</span>  [要说的话]\n💡另外: 如果数字后跟<span ${stressStyle}>m</span>结尾，则会在结巴处根据当前兴奋程度添加呻吟效果.`)
+                ChatRoomSendLocal(L.get("Command", "help.jieba", stressStyle, weakStyle))
             }
         },
         // edge: {
@@ -103,25 +104,11 @@ export class CommandsModule extends BaseModule {
         // },
         kaomoji: {
             Tag: "kaomoji",
-            Description: "显示 快速颜文字 的使用说明.",
+            Description: L.get("Command", "desc.kaomoji"),
             Action: () => {
                 const stressStyle = "style='word-wrap: break-word;list-style: square;color: #FFCEE9;background-color: #AB6B8E;border-radius: 3px;padding: .2em .6em;margin: .2em .6em;'"
                 const weakStyle = "style='word-wrap: break-word;list-style: square;color: #B0809B;background-color: #AB6B8E;border-radius: 3px;padding: .2em .6em;margin: .2em .6em;'"
-                ChatRoomSendLocal(`输入<span ${stressStyle}>|</span>+<span ${weakStyle}>参数</span>，或点击聊天室输入栏下方的小按钮，显示颜文字面板。
-                左键点击表情: 将表情插入到输入栏的光标当前位置;
-                右键点击表情: 将表情以**星号消息的形式直接发出;
-                中键点击表情: 将表情以普通消息发出.
-                当前的参数有:
-                <span ${stressStyle}>help</span>显示所有的参数作用。
-                <span ${stressStyle}>all</span>显示全部表情包。
-                <span ${stressStyle}>hp</span>显示开心的颜文字包。
-                <span ${stressStyle}>sd</span>显示伤心的颜文字包。
-                <span ${stressStyle}>sy</span>显示害羞的颜文字包。
-                <span ${stressStyle}>ar</span>显示生气的颜文字包。
-                <span ${stressStyle}>sp</span>显示惊讶的颜文字包。
-                <span ${stressStyle}>cf</span>显示疑惑的颜文字包。
-                <span ${stressStyle}>nt</span>显示顽皮搞怪的颜文字包。
-                `)
+                ChatRoomSendLocal(L.get("Command", "help.kaomoji", stressStyle, weakStyle))
             }
         },
         // yw: {
@@ -148,7 +135,7 @@ export class CommandsModule extends BaseModule {
         // }
         chess: {
             Tag: "chess",
-            Description: "开始一场棋局! 谁来迎战?(输入 /xsa chess -h 以查看帮助)",
+            Description: L.get("Command", "desc.chess"),
             Action: (args, msg, parsed) => {
                 const params: string = this.getCommandParameters(parsed);
                 if (params === '') {
@@ -164,19 +151,7 @@ export class CommandsModule extends BaseModule {
                         Player.MemberNumber ?? -1,
                     );
                 } else if (params === 'h') {
-                    SendLocalMessage(`使用 /xsa chess 开启一场棋局， 这时其他玩家看不到棋盘。
-                    当点选一个格子，并点击发送按钮后，其他玩家将看到棋局情况。
-                    其他聊天室中任意的玩家可以点选一个格子，当任意玩家点击发送按钮后，游戏开始，这时其他不在玩家对局中的其他玩家将不能再交互第二个玩家发送的棋局。
-                    但第一个玩家发送时(发起者)的棋局，其他玩家还可以加入，换句话说，发送者可以同时与多名玩家对战。
-                    玩家可以在发送前修改自己已经落子的棋子，但不能修改对方的棋子。(可以修改自己所有的棋子，正常对局可不要作弊哦~)
-                    本插件不提供五子棋或围棋的胜负判断。
-                    围棋的吃子功能请被吃方手动从棋盘上删除。
-
-                    玩家点击发送按钮后 棋盘将在30秒后自动消失。
-                    但其他玩家仍能看到棋盘。其他玩家只能看到初始的棋局，进行中的棋局只能看到当前对局情况。
-
-                    目前仅支持同时拥有本插件时才能进行游玩和显示。
-                    `)
+                    SendLocalMessage(L.get("Command", "help.chess"))
                 }
 
             }
@@ -187,7 +162,7 @@ export class CommandsModule extends BaseModule {
         CommandCombine(
             {
                 Tag: "xsa",
-                Description: "显示 [小酥的活动模组] 的相关命令.",
+                Description: L.get("Command", "desc.mainCommand"),
                 Action: (args, msg, parsed) => {
                     if (parsed.length > 0) this.CommandHandler(parsed);
                     else this.DisplayHelp();
@@ -212,7 +187,7 @@ export class CommandsModule extends BaseModule {
                         for (const c of foundCommands) {
                             content += `/xsa ${c} ${this.commandsDict[c].Description}\n`;
                         }
-                        content += `小酥的活动模组 版本号: ${XSActivity_VERSION}\n`
+                        content += `${L.get("Command", "desc.version")}: ${XSActivity_VERSION}\n`
                         ChatRoomSendLocal(content, 3000);
                     }
                     if (word !== "") ElementValue("InputChat", CommandsKey + "xsa " + word);
@@ -245,7 +220,7 @@ export class CommandsModule extends BaseModule {
             for (const c in this.commandsDict) {
                 content += `/xsa ${c} ${this.commandsDict[c].Description}\n`;
             }
-            content += `小酥的活动模组 版本号: ${XSActivity_VERSION}\n`
+            content += `${L.get("Command", "desc.version")}: ${XSActivity_VERSION}\n`
             ChatRoomSendLocal(content, 10000);
         } else {
             ChatRoomSendLocal(msg, 10000)
