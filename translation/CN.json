@@ -196,7 +196,7 @@
         "ItemVulva": "阴道",
         "ItemVulvaPiercings": "阴蒂",
 
-        "XSAct.Tickle.Resist": "{target}紧闭双眼尽力抵抗着高潮，但被{source}的瘙痒干扰，从嘴巴里泄露出一声压抑的呻吟，不知是否还能忍住."
+        "XSAct.Tickle.Resist": "{1}紧闭双眼尽力抵抗着高潮，但被{0}的瘙痒干扰，从嘴巴里泄露出一声压抑的呻吟，不知是否还能忍住."
     },
     "Chatroom": {
         "Prefix.reply": "回复",
