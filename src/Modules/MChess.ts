@@ -1,5 +1,6 @@
 import { hookFunction } from "utils";
 import { BaseModule } from "./BaseModule";
+import { Localization as L } from "localization";
 
 
 export class ChessModule extends BaseModule {
@@ -95,7 +96,7 @@ export class ChessModule extends BaseModule {
             const sendButton: HTMLButtonElement = document.createElement('button');
             sendButton.className = 'ChatMessageButton';
 
-            sendButton.innerHTML = '发送';
+            sendButton.innerHTML = L.get("Chess", "button.send");
             sendButton.addEventListener('click', () => {
                 // 点击后禁用交互
                 chess.Disable = true;
@@ -157,7 +158,7 @@ export class Chess {
         this.canChange1 = false;
 
         this.player2MemberNumber = null;
-        this.player2Name = '未开始';
+        this.player2Name = L.get("Chess", "not_started_identification");
         this.canChange2 = false;
 
         this.checkerboard = Chess.newCheckerboard;
@@ -203,7 +204,7 @@ export class Chess {
     private getPlayer1Name(): string {
         const P1 = this.getPlayer1();
 
-        return P1 ? ((P1.Nickname === '' || !P1.Nickname) ? P1.Name : P1.Nickname) : '丢失'
+        return P1 ? ((P1.Nickname === '' || !P1.Nickname) ? P1.Name : P1.Nickname) : L.get("Chess", "lost_identification")
     }
     /**
      * 在聊天室中寻找 player2 如果未找到则返回null
@@ -219,8 +220,8 @@ export class Chess {
      */
     private getPlayer2Name(): string {
         const P2 = this.getPlayer2();
-        if (this.player2MemberNumber === null) return '未开始'
-        return P2 ? ((P2.Nickname === '' || !P2.Nickname) ? P2.Name : P2.Nickname) : '丢失';
+        if (this.player2MemberNumber === null) return L.get("Chess", "not_started_identification");
+        return P2 ? ((P2.Nickname === '' || !P2.Nickname) ? P2.Name : P2.Nickname) : L.get("Chess", "lost_identification");
     }
 
     /** 获取一个新的棋盘数据结构 */
@@ -245,7 +246,11 @@ export class Chess {
         // 标题
         const title: HTMLDivElement = document.createElement('div');
         title.className = 'chessTitle';
-        title.innerHTML = `|---玩家1: ${this.player1Name} 🆚 玩家2: ${this.player2Name}---|---回合: ${this.Round}---|`;
+        const playerSymbol = L.get("Chess", "symbol.player")
+
+        title.innerHTML =
+        `|---${playerSymbol}1: ${this.player1Name} 🆚 ${playerSymbol}2: ${this.player2Name}---|---${L.get("Chess","symbol.round")}: ${this.Round}---|`;
+
         main.appendChild(title);
 
         // 棋盘

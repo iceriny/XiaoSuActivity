@@ -130,6 +130,13 @@ type IString = {
         "KaomojiTitle.ap": "惊讶",
         "KaomojiTitle.cf": "困惑",
         "KaomojiTitle.nt": "搞怪顽皮"
+    },
+    "Chess": {
+        "not_started_identification": "未开始",
+        "lost_identification": "丢失",
+        "button.send": "发送",
+        "symbol.player":"玩家",
+        "symbol.round": "回合"
     }
 }
 
