@@ -112,5 +112,11 @@ export const CHANGELOG: ChangeLogObj[] = [
         description: "添加聊天室聊天记录的右键菜单",
         type: ChangeType.main,
         changes: ['右键聊天记录的条目可以呼出右键菜单', '如果有安装本插件 `回复` 功能显示特殊效果 如果没有安装被插件将显示为普通的正常说话的消息。']
+    },
+    {
+        version: "0.4.0",
+        description: "添加本地化框架，添加英文翻译(Added English translation.)",
+        type: ChangeType.main,
+        changes: ['Added English translation. Please go to: https://github.com/iceriny/XiaoSuActivity/issues for translation corrections']
     }
 ]
