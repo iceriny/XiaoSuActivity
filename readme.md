@@ -22,7 +22,8 @@
 javascript:(()=>{fetch('https://iceriny.github.io/XiaoSuActivity/main/userLoad.user.js').then(r=>r.text()).then(r=>eval(r));})();
 ```
 
-## 翻译协作这说明: 
+## 翻译协作说明: 
 - 如果你想帮助完成你使用的语言的翻译，请提交一个PR，在`/translation/`目录下添加一个json文件，文件名格式为`XX.json`，`XX`为语言代码，例如`CN.json`。
+- 你可以把现有的`CN.json`文件复制一份，然后修改文件名和其中的值，然后提交PR。
 - json文件格式参考[/translation/CN.json](https://github.com/iceriny/XiaoSuActivity/blob/dev/translation/CN.json)。
 - 如果你不知道你使用的语言的语言代码，请在游戏页面打开控制台(`F12`)，输入`TranslationLanguage`，然后返回的值就是你的语言代码。

@@ -435,7 +435,7 @@ export class ChatroomModule extends BaseModule {
         sd: document.createElement('div'),
         sy: document.createElement('div'),
         ar: document.createElement('div'),
-        ap: document.createElement('div'),
+        sp: document.createElement('div'),
         cf: document.createElement('div'),
         nt: document.createElement('div')
     }

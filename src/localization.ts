@@ -14,7 +14,6 @@ export class Localization {
         this.getLangJson();
     }
 
-
     private static getCount = 0;
     private static getLangJson(langCode?: string) {
         const L = langCode ? langCode : localStorage.getItem("BondageClubLanguage");
@@ -75,7 +74,6 @@ class STR<T extends FirstStringKey> {
         } else {
             this.str = "[STRING_RETRIEVAL_FAILED!!]";
         }
-        return this;
     }
 
     public SlotReplace(...param: unknown[]): STR<T> {
