@@ -4,7 +4,7 @@ import { Localization } from "localization";
 
 function initWait() {
     Localization.init();
-    
+
     conDebug({
         name: "Start Init",
         type: MSGType.Workflow_Log,
@@ -14,7 +14,8 @@ function initWait() {
         // 修改WombTattoos为非cosplay物品
         hookFunction('LoginResponse', 999, (args, next) => {
             const response = args[0];
-            if (response && typeof response.Name === 'string' && typeof response.AccountName === 'string') {
+            if (response && typeof response !== 'string' && typeof response.Name === 'string' && 'AccountName' in response) {
+                
                 for (const group of AssetFemale3DCG as AssetGroupDefinition.Appearance[]) {
                     if (group.Group === 'ClothAccessory') {
                         for (const item of group.Asset as AssetDefinition.Appearance[]) {
@@ -38,7 +39,10 @@ function initWait() {
                 type: MSGType.Workflow_Log
             });
             const response = args[0];
-            if (response && typeof response.Name === 'string' && typeof response.AccountName === 'string' || !ModuleLoader.CompleteLoadingSuccessful) {
+            if (response && typeof response !== 'string'
+                && typeof response.Name === 'string'
+                && 'AccountName' in response
+                || !ModuleLoader.CompleteLoadingSuccessful) {
                 init();
             }
             return result;

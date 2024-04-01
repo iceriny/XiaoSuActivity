@@ -47,9 +47,11 @@ export class ActivityModule extends BaseModule {
          * - 即替换原本的描述
          */
         hookFunction("ServerSend", 5, (args, next) => { // ServerSend 只能检测自己发出的聊天信息 可以用来替换自己发出去的文字
-            if (args[0] == "ChatRoomChat" && args[1]?.Type == "Activity") {
-                const data = args[1];
-                const actName = data.Dictionary[3]?.ActivityName ?? "";
+            const data = args[1] as ServerChatRoomMessage;
+            if (args[0] === "ChatRoomChat" && data.Type === "Activity" && data.Dictionary) {
+                // const actName = data.Dictionary?[3].ActivityName ?? "";
+                const activityNameDictEntry  = data.Dictionary.find(d => 'ActivityName' in d) as ActivityNameDictionaryEntry | undefined;
+                const actName = activityNameDictEntry?.ActivityName ?? "";
                 if (actName.indexOf("XSAct_") == 0) { // 这个条件表示只有当消息中包含以 "XSAct_" 开头的自定义活动时,才会执行下面的操作
                     // 拦截自定义活动的发送并执行自定义操作
                     const { substitutions } = ChatRoomMessageRunExtractors(data, Player)
@@ -113,10 +115,15 @@ export class ActivityModule extends BaseModule {
                 content: data
             });
             // 确定是否是活动消息
-            if (data.Type == "Activity") {
-                const actName = data.Dictionary[3]?.ActivityName as string;
-                const SourceCharacter = data.Dictionary[0]?.SourceCharacter as number;
-                const TargetCharacter = data.Dictionary[1]?.TargetCharacter as number;
+            if (data.Type == "Activity" && data.Dictionary) {
+                
+                const activityNameDictEntry  = data.Dictionary.find(d => 'ActivityName' in d) as ActivityNameDictionaryEntry | undefined;
+                const sc = data.Dictionary.find(d => "SourceCharacter" in d) as SourceCharacterDictionaryEntry | undefined
+                const tc = data.Dictionary.find(d => "TargetCharacter" in d) as TargetCharacterDictionaryEntry | undefined;
+
+                const actName = activityNameDictEntry?.ActivityName as string;
+                const SourceCharacter = sc?.SourceCharacter as number;
+                const TargetCharacter = tc?.TargetCharacter as number;
                 if (actName == "Tickle" && !Number.isNaN(TargetCharacter) && TargetCharacter == Player?.MemberNumber) {// 瘙痒动作且目标为自己
                     conDebug({
                         type: MSGType.DebugLog,

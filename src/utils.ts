@@ -1,4 +1,5 @@
 import bcModSDKRef from "bondage-club-mod-sdk";
+import { PatchHook, GetDotedPathType } from "bondage-club-mod-sdk";
 import { MODULES } from "Modules/ModulesDict";
 import { CHANGELOG, ChangeType } from "changeLogData";
 
@@ -17,9 +18,9 @@ export const bcModSDK = bcModSDKRef.registerMod({
     repository: "https://github.com/iceriny/XiaoSuActivity"
 });
 
-export type PatchHook = (args: any[], next: (args: any[]) => any) => any;
-export function hookFunction<TFunctionName extends string>(target: TFunctionName, priority: number, hook: PatchHook): () => void {
-    // @ts-expect-error: 抑制1.1.0版本时的PatchHook类型不兼容
+// export type PatchHook = (args: any[], next: (args: any[]) => any) => any;
+export function hookFunction<TFunctionName extends string>(target: TFunctionName, priority: number, hook: PatchHook<GetDotedPathType<typeof globalThis, TFunctionName>>): () => void {
+    // *@ts-expect-error: 抑制1.1.0版本时的PatchHook类型不兼容
     const removeCallback = bcModSDK.hookFunction(target, priority, hook);
     return removeCallback;
 }
