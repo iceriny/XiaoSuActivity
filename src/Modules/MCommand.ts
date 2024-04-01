@@ -159,7 +159,7 @@ export class CommandsModule extends BaseModule {
     }
 
     public Load(): void {
-        CommandCombine(
+        CommandCombine([
             {
                 Tag: "xsa",
                 Description: L.get("Command", "desc.mainCommand"),
@@ -181,7 +181,7 @@ export class CommandsModule extends BaseModule {
                     });
                     if (foundCommands.length === 1) {
                         word = foundCommands[0];
-                        if(parsed.length > 1) ChatRoomSendLocal(`${this.commandsDict[word].Description}`, 3000);
+                        if (parsed.length > 1) ChatRoomSendLocal(`${this.commandsDict[word].Description}`, 3000);
                     } if (foundCommands.length > 1) {
                         let content: string = ``;
                         for (const c of foundCommands) {
@@ -194,6 +194,7 @@ export class CommandsModule extends BaseModule {
                     ElementFocus("InputChat");
                 }
             }
+        ]
         )
 
         this.Loaded = true;

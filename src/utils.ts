@@ -18,11 +18,21 @@ export const bcModSDK = bcModSDKRef.registerMod({
 });
 
 export type PatchHook = (args: any[], next: (args: any[]) => any) => any;
-export function hookFunction(target: string, priority: number, hook: PatchHook): () => void {
+export function hookFunction<TFunctionName extends string>(target: TFunctionName, priority: number, hook: PatchHook): () => void {
+    // @ts-expect-error: 抑制1.1.0版本时的PatchHook类型不兼容
     const removeCallback = bcModSDK.hookFunction(target, priority, hook);
     return removeCallback;
 }
 
+/*
+export type PatchHook<TFunction extends AnyFunction = AnyFunction> = (args: [...Parameters<TFunction>], next: (args: [...Parameters<TFunction>]) => ReturnType<TFunction>) => ReturnType<TFunction>;
+export type AnyFunction = (...args: any) => any;
+export type GetDotedPathType<Base, DotedKey extends string> = DotedKey extends `${infer Key1}.${infer Key2}` ? GetDotedPathType<GetDotedPathType<Base, Key1>, Key2> : DotedKey extends keyof Base ? Base[DotedKey] : never;
+export function hookFunction<TFunctionName extends string>(target: TFunctionName, priority: number, hook: PatchHook<GetDotedPathType<typeof globalThis, TFunctionName>>): () => void {
+    const removeCallback = bcModSDK.hookFunction(target, priority, hook);
+    return removeCallback;
+}
+*/
 export function patchFunction(functionName: string, patches: Record<string, string | null>): void {
     bcModSDK.patchFunction(functionName, patches);
 }
