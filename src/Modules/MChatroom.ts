@@ -19,10 +19,10 @@ export class ChatroomModule extends BaseModule {
         this.priority = 30;
 
         ChatroomModule.contextmenuText = [
-            L.get("Chatroom", "Contextmenu.Button.reply"),
-            L.get("Chatroom", "Contextmenu.Button.whisper"),
-            L.get("Chatroom", "Contextmenu.Button.copy"),
-            L.get("Chatroom", "Contextmenu.Button.delete")
+            ['reply', L.get("Chatroom", "Contextmenu.Button.reply")],
+            ['whisper', L.get("Chatroom", "Contextmenu.Button.whisper")],
+            ['copy', L.get("Chatroom", "Contextmenu.Button.copy")],
+            ['delete', L.get("Chatroom", "Contextmenu.Button.delete")]
         ]
 
         for (let i = 0; i <= 9; i++){
@@ -173,7 +173,7 @@ export class ChatroomModule extends BaseModule {
     /** 显示右键菜单的div元素 */
     private static targetDiv: HTMLDivElement | null = null;
     /** 右键菜单的内容 */
-    private static contextmenuText: [string, string, string, string]; // [] = ["回复", "悄悄话", "复制", "删除"]
+    private static contextmenuText: [[string, string], [string, string], [string, string], [string, string]]; // [] = ["回复", "悄悄话", "复制", "删除"]
     /**
      * 显示右键菜单的功能实现。
      * 当用户在指定元素上右击时，此函数将显示一个右键菜单。
@@ -223,23 +223,24 @@ export class ChatroomModule extends BaseModule {
 
         // 循环创建菜单项
         for (let i = 0; i < 4; i++) {
+            const buttonInfo = ChatroomModule.contextmenuText[i]
             const contextmenuItem = document.createElement('div'); // 创建菜单项
             contextmenuItem.className = "xsa-contextmenu-item"; // 设置菜单项的类名
-            contextmenuItem.innerText = ChatroomModule.contextmenuText[i]; // 设置菜单项的文本
+            contextmenuItem.innerText = buttonInfo[1]; // 设置菜单项的文本
 
             const replyPrefix = L.get("Chatroom", "Prefix.reply");
 
             // 给菜单项添加点击事件监听
             contextmenuItem.addEventListener('click', () => {
-                switch (i) {
-                    case 0: // 回复功能
+                switch (buttonInfo[0]) {
+                    case 'reply': // 回复功能
                         ElementValue("InputChat", `🪧${replyPrefix}*>${ChatroomModule.targetDiv?.textContent}<*\n${ElementValue('InputChat')}`);
                         ElementFocus("InputChat");
                         break;
-                    case 1: // 复制功能
+                    case 'copy': // 复制功能
                         navigator.clipboard.writeText((ChatroomModule.targetDiv?.textContent ?? ""));
                         break;
-                    case 2: {
+                    case 'whisper': {
                         // 私聊功能
                         //ElementValue("InputChat", `/whisper ${ChatroomModule.targetDiv?.getAttribute("data-sender")} ${ElementValue("InputChat").replace(/\/whisper\s*\d+ ?/u, '')}`);
                         const target = ChatroomModule.targetDiv?.getAttribute("data-sender");
@@ -250,7 +251,7 @@ export class ChatroomModule extends BaseModule {
                         ElementFocus("InputChat");
                         break;
                     }
-                    case 3: // 删除功能
+                    case 'delete': // 删除功能
                         ChatroomModule.targetDiv?.remove();
                 }
             });
