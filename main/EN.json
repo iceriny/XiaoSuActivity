@@ -218,7 +218,7 @@
         "moan.8": " ❤... Ah Mm..",
         "moan.9": " ❤. Oh~ Mm~",
 
-        "kaomojiHelp.0": "all ==> all emoji",
+        "kaomojiHelp.0": "all ==> all kaomoji",
         "kaomojiHelp.1": "hp ==> happy",
         "kaomojiHelp.2": "sd ==> sad",
         "kaomojiHelp.3": "sy ==> shy",
@@ -227,14 +227,14 @@
         "kaomojiHelp.6": "cf ==> puzzled",
         "kaomojiHelp.7": "nt ==> funny",
 
-        "KaomojiTitle.all": "all",
-        "KaomojiTitle.hp": "happy",
-        "KaomojiTitle.sd": "sad",
-        "KaomojiTitle.sy": "shy",
-        "KaomojiTitle.ar": "angry",
-        "KaomojiTitle.sp": "surprise",
-        "KaomojiTitle.cf": "puzzled",
-        "KaomojiTitle.nt": "funny"
+        "KaomojiTitle.all": "All",
+        "KaomojiTitle.hp": "Happy",
+        "KaomojiTitle.sd": "Sad",
+        "KaomojiTitle.sy": "Shy",
+        "KaomojiTitle.ar": "Angry",
+        "KaomojiTitle.sp": "Surprise",
+        "KaomojiTitle.cf": "Puzzled",
+        "KaomojiTitle.nt": "Funny"
     },
     "Chess": {
         "not_started_identification": "not started yet",
