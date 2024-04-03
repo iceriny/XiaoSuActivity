@@ -134,7 +134,7 @@ export class ChatroomModule extends BaseModule {
         hookFunction("ChatRoomMessageDisplay", 10, (args, next) => {
             const msg = args[1];
             const matchWord = L.get("Chatroom", "Prefix.reply");// 
-            if (typeof msg === "string" && msg.startsWith(`🪧${matchWord}*>`)) {
+            if (msg.startsWith(`🪧${matchWord}*>`)) {
                 const match = msg.match(new RegExp(`^🪧(${matchWord}*>.+<*)s(.+)`))
                 if (match) {
                     args[1] = match[2];
