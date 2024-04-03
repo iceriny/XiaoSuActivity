@@ -50,7 +50,7 @@ export class ActivityModule extends BaseModule {
             const data = args[1] as ServerChatRoomMessage;
             if (args[0] === "ChatRoomChat" && data.Type === "Activity" && data.Dictionary) {
                 // const actName = data.Dictionary?[3].ActivityName ?? "";
-                const activityNameDictEntry  = data.Dictionary.find(d => 'ActivityName' in d) as ActivityNameDictionaryEntry | undefined;
+                const activityNameDictEntry = data.Dictionary.find(d => 'ActivityName' in d) as ActivityNameDictionaryEntry | undefined;
                 const actName = activityNameDictEntry?.ActivityName ?? "";
                 if (actName.indexOf("XSAct_") == 0) { // 这个条件表示只有当消息中包含以 "XSAct_" 开头的自定义活动时,才会执行下面的操作
                     // 拦截自定义活动的发送并执行自定义操作
@@ -116,8 +116,8 @@ export class ActivityModule extends BaseModule {
             });
             // 确定是否是活动消息
             if (data.Type == "Activity" && data.Dictionary) {
-                
-                const activityNameDictEntry  = data.Dictionary.find(d => 'ActivityName' in d) as ActivityNameDictionaryEntry | undefined;
+
+                const activityNameDictEntry = data.Dictionary.find(d => 'ActivityName' in d) as ActivityNameDictionaryEntry | undefined;
                 const sc = data.Dictionary.find(d => "SourceCharacter" in d) as SourceCharacterDictionaryEntry | undefined
                 const tc = data.Dictionary.find(d => "TargetCharacter" in d) as TargetCharacterDictionaryEntry | undefined;
 
@@ -269,679 +269,679 @@ export class ActivityModule extends BaseModule {
      * @img - 指定的动作图片
      * @isBase - 是否是基础动作 基础动作将会自动把名称中的 @bodyNamePlaceholder 换成 `{group}` 并在添加动作时动态的将其替换为目标部位的名称
     */
-    activityToAddDict: { [ActivityIndex in XSA_ActivityName]: 
+    activityToAddDict: { [ActivityIndex in XSA_ActivityName]:
         { act: Activity, desc: null | string[][], /*descString: [string, string],*/ img: ActivityName, isBase?: true } } = {
-        XSAct_眯眼: {
-            act: {
-                Name: "XSAct_眯眼",
-                Target: [],
-                TargetSelf: ["ItemHead"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ['CanLook']
+            XSAct_眯眼: {
+                act: {
+                    Name: "XSAct_眯眼",
+                    Target: [],
+                    TargetSelf: ["ItemHead"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ['CanLook']
+                },
+                desc: null,
+                // descString: ["", L.get("Activity", "眯眼_Desc_1", selfPlaceholder)],
+                img: "RestHead"
             },
-            desc: null,
-            // descString: ["", L.get("Activity", "眯眼_Desc_1", selfPlaceholder)],
-            img: "RestHead"
-        },
-        XSAct_眼神飘忽: {
-            act: {
-                Name: "XSAct_眼神飘忽",
-                Target: [],
-                TargetSelf: ["ItemHead"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ['CanLook']
+            XSAct_眼神飘忽: {
+                act: {
+                    Name: "XSAct_眼神飘忽",
+                    Target: [],
+                    TargetSelf: ["ItemHead"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ['CanLook']
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}眼神飘忽的左看右看.`],
+                img: "RestHead"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}眼神飘忽的左看右看.`],
-            img: "RestHead"
-        },
-        XSAct_甩头发: {
-            act: {
-                Name: "XSAct_甩头发",
-                Target: [],
-                TargetSelf: ["ItemHood"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ["ItemHoodCovered"]
+            XSAct_甩头发: {
+                act: {
+                    Name: "XSAct_甩头发",
+                    Target: [],
+                    TargetSelf: ["ItemHood"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ["ItemHoodCovered"]
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}甩动着头发.`],
+                img: "RestHead"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}甩动着头发.`],
-            img: "RestHead"
-        },
-        XSAct_大力甩头发: {
-            act: {
-                Name: "XSAct_大力甩头发",
-                Target: [],
-                TargetSelf: ["ItemHood"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ["ItemHoodCovered"]
+            XSAct_大力甩头发: {
+                act: {
+                    Name: "XSAct_大力甩头发",
+                    Target: [],
+                    TargetSelf: ["ItemHood"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ["ItemHoodCovered"]
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}连连摇头，慌乱的甩动着头发.`],
+                img: "RestHead"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}连连摇头，慌乱的甩动着头发.`],
-            img: "RestHead"
-        },
-        XSAct_轻抚发梢: {
-            act: {
-                Name: "XSAct_轻抚发梢",
-                Target: ["ItemHood"],
-                TargetSelf: ["ItemHood"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ["ItemHoodCovered", "TargetItemHoodCovered", "UseArms"]
+            XSAct_轻抚发梢: {
+                act: {
+                    Name: "XSAct_轻抚发梢",
+                    Target: ["ItemHood"],
+                    TargetSelf: ["ItemHood"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ["ItemHoodCovered", "TargetItemHoodCovered", "UseArms"]
+                },
+                desc: null,
+                // descString: [`${selfPlaceholder}轻柔抚动着${targetPlaceholder}的头发.`, `${selfPlaceholder}轻柔抚动着自己的头发.`],
+                img: "RestHead"
             },
-            desc: null,
-            // descString: [`${selfPlaceholder}轻柔抚动着${targetPlaceholder}的头发.`, `${selfPlaceholder}轻柔抚动着自己的头发.`],
-            img: "RestHead"
-        },
-        XSAct_叼起头发: {
-            act: {
-                Name: "XSAct_叼起头发",
-                Target: ["ItemHood"],
-                TargetSelf: ["ItemHood"],
-                MaxProgress: 50,
-                MaxProgressSelf: 20,
-                Prerequisite: ["UseMouth", "ItemHoodCovered", "TargetItemHoodCovered"],
-                StimulationAction: "Talk"
+            XSAct_叼起头发: {
+                act: {
+                    Name: "XSAct_叼起头发",
+                    Target: ["ItemHood"],
+                    TargetSelf: ["ItemHood"],
+                    MaxProgress: 50,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ["UseMouth", "ItemHoodCovered", "TargetItemHoodCovered"],
+                    StimulationAction: "Talk"
+                },
+                desc: null,
+                // descString: [`${selfPlaceholder}轻轻咬起${targetPlaceholder}的头发.`, `${selfPlaceholder}轻轻咬起自己的头发.`],
+                img: "SiblingsCheekKiss"
             },
-            desc: null,
-            // descString: [`${selfPlaceholder}轻轻咬起${targetPlaceholder}的头发.`, `${selfPlaceholder}轻轻咬起自己的头发.`],
-            img: "SiblingsCheekKiss"
-        },
-        XSAct_嗅头发: {
-            act: {
-                Name: "XSAct_嗅头发",
-                Target: ["ItemHood"],
-                TargetSelf: ["ItemHood"],
-                MaxProgress: 30,
-                MaxProgressSelf: 30,
-                Prerequisite: ["ItemHoodCovered", "TargetItemHoodCovered", "ItemNoseCovered"],
-                StimulationAction: "Talk"
+            XSAct_嗅头发: {
+                act: {
+                    Name: "XSAct_嗅头发",
+                    Target: ["ItemHood"],
+                    TargetSelf: ["ItemHood"],
+                    MaxProgress: 30,
+                    MaxProgressSelf: 30,
+                    Prerequisite: ["ItemHoodCovered", "TargetItemHoodCovered", "ItemNoseCovered"],
+                    StimulationAction: "Talk"
+                },
+                desc: null,
+                // descString: [`${selfPlaceholder}在${targetPlaceholder}的发间嗅着，鼻息弥漫着${targetPlaceholder}的发香.`, `${selfPlaceholder}撩起自己的头发轻轻嗅着.`],
+                img: "SiblingsCheekKiss"
             },
-            desc: null,
-            // descString: [`${selfPlaceholder}在${targetPlaceholder}的发间嗅着，鼻息弥漫着${targetPlaceholder}的发香.`, `${selfPlaceholder}撩起自己的头发轻轻嗅着.`],
-            img: "SiblingsCheekKiss"
-        },
-        XSAct_绕头发: {
-            act: {
-                Name: "XSAct_绕头发",
-                Target: ["ItemHood"],
-                TargetSelf: ["ItemHood"],
-                MaxProgress: 30,
-                MaxProgressSelf: 30,
-                Prerequisite: ["UseArms", "ItemHoodCovered", "TargetItemHoodCovered"]
+            XSAct_绕头发: {
+                act: {
+                    Name: "XSAct_绕头发",
+                    Target: ["ItemHood"],
+                    TargetSelf: ["ItemHood"],
+                    MaxProgress: 30,
+                    MaxProgressSelf: 30,
+                    Prerequisite: ["UseArms", "ItemHoodCovered", "TargetItemHoodCovered"]
+                },
+                desc: null,
+                // descString: [`${selfPlaceholder}勾起一缕${targetPlaceholder}的发丝，在指尖绕来绕去.`, `${selfPlaceholder}勾起自己的一缕头发在指尖绕来绕去.`],
+                img: "SiblingsCheekKiss"
             },
-            desc: null,
-            // descString: [`${selfPlaceholder}勾起一缕${targetPlaceholder}的发丝，在指尖绕来绕去.`, `${selfPlaceholder}勾起自己的一缕头发在指尖绕来绕去.`],
-            img: "SiblingsCheekKiss"
-        },
-        XSAct_皱鼻子: {
-            act: {
-                Name: "XSAct_皱鼻子",
-                Target: [],
-                TargetSelf: ["ItemNose"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ["ItemHoodCovered", "ItemNoseCovered"]
+            XSAct_皱鼻子: {
+                act: {
+                    Name: "XSAct_皱鼻子",
+                    Target: [],
+                    TargetSelf: ["ItemNose"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ["ItemHoodCovered", "ItemNoseCovered"]
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}皱了皱自己的鼻头.`],
+                img: "RestHead"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}皱了皱自己的鼻头.`],
-            img: "RestHead"
-        },
-        XSAct_打喷嚏: {
-            act: {
-                Name: "XSAct_打喷嚏",
-                Target: [],
-                TargetSelf: ["ItemNose"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ["UseMouth", "ItemHoodCovered"],
-                StimulationAction: "Talk"
+            XSAct_打喷嚏: {
+                act: {
+                    Name: "XSAct_打喷嚏",
+                    Target: [],
+                    TargetSelf: ["ItemNose"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ["UseMouth", "ItemHoodCovered"],
+                    StimulationAction: "Talk"
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}打了个喷嚏.`],
+                img: "Kiss"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}打了个喷嚏.`],
-            img: "Kiss"
-        },
-        XSAct_深呼吸: {
-            act: {
-                Name: "XSAct_深呼吸",
-                Target: [],
-                TargetSelf: ["ItemNose"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ["UseMouth", "ItemHoodCovered", "ItemNoseCovered"],
-                StimulationAction: "Talk"
+            XSAct_深呼吸: {
+                act: {
+                    Name: "XSAct_深呼吸",
+                    Target: [],
+                    TargetSelf: ["ItemNose"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ["UseMouth", "ItemHoodCovered", "ItemNoseCovered"],
+                    StimulationAction: "Talk"
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}深深的吸了口气.`],
+                img: "Kiss"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}深深的吸了口气.`],
-            img: "Kiss"
-        },
-        XSAct_低头: {
-            act: {
-                Name: "XSAct_低头",
-                Target: [],
-                TargetSelf: ["ItemHood"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ["ItemHoodCovered", "MoveHead"]
+            XSAct_低头: {
+                act: {
+                    Name: "XSAct_低头",
+                    Target: [],
+                    TargetSelf: ["ItemHood"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ["ItemHoodCovered", "MoveHead"]
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}红润着脸蛋低头逃避.`],
+                img: "RestHead"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}红润着脸蛋低头逃避.`],
-            img: "RestHead"
-        },
-        XSAct_恳求的摇头: {
-            act: {
-                Name: "XSAct_恳求的摇头",
-                Target: ["ItemHead"],
-                TargetSelf: [],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ["MoveHead"]
+            XSAct_恳求的摇头: {
+                act: {
+                    Name: "XSAct_恳求的摇头",
+                    Target: ["ItemHead"],
+                    TargetSelf: [],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ["MoveHead"]
+                },
+                desc: null,
+                // descString: [`${selfPlaceholder}对着${targetPlaceholder}的方向恳求的摇头.`, ``],
+                img: "RestHead"
             },
-            desc: null,
-            // descString: [`${selfPlaceholder}对着${targetPlaceholder}的方向恳求的摇头.`, ``],
-            img: "RestHead"
-        },
-        XSAct_恳求的看: {
-            act: {
-                Name: "XSAct_恳求的看",
-                Target: ["ItemHead"],
-                TargetSelf: [],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ["CanLook"]
+            XSAct_恳求的看: {
+                act: {
+                    Name: "XSAct_恳求的看",
+                    Target: ["ItemHead"],
+                    TargetSelf: [],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ["CanLook"]
+                },
+                desc: null,
+                // descString: [`${selfPlaceholder}汪着眼睛恳求的看着${targetPlaceholder}.`, ""],
+                img: "RestHead"
             },
-            desc: null,
-            // descString: [`${selfPlaceholder}汪着眼睛恳求的看着${targetPlaceholder}.`, ""],
-            img: "RestHead"
-        },
-        XSAct_内八夹腿: {
-            act: {
-                Name: "XSAct_内八夹腿",
-                Target: [],
-                TargetSelf: ["ItemLegs"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: []
+            XSAct_内八夹腿: {
+                act: {
+                    Name: "XSAct_内八夹腿",
+                    Target: [],
+                    TargetSelf: ["ItemLegs"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: []
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}通红的脸蛋忍耐着快感，大腿紧紧夹起来，摆出着内八的姿势，身体微微颤抖.`],
+                img: "Kick"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}通红的脸蛋忍耐着快感，大腿紧紧夹起来，摆出着内八的姿势，身体微微颤抖.`],
-            img: "Kick"
-        },
-        XSAct_噘嘴: {
-            act: {
-                Name: "XSAct_噘嘴",
-                Target: [],
-                TargetSelf: ["ItemMouth", "ItemMouth2", "ItemMouth3"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ["UseMouth"]
+            XSAct_噘嘴: {
+                act: {
+                    Name: "XSAct_噘嘴",
+                    Target: [],
+                    TargetSelf: ["ItemMouth", "ItemMouth2", "ItemMouth3"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ["UseMouth"]
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}有些不满的噘起嘴巴.`],
+                img: "PoliteKiss"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}有些不满的噘起嘴巴.`],
-            img: "PoliteKiss"
-        },
-        XSAct_抿住嘴巴: {
-            act: {
-                Name: "XSAct_抿住嘴巴",
-                Target: [],
-                TargetSelf: ["ItemMouth", "ItemMouth2", "ItemMouth3"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ["UseMouth"]
+            XSAct_抿住嘴巴: {
+                act: {
+                    Name: "XSAct_抿住嘴巴",
+                    Target: [],
+                    TargetSelf: ["ItemMouth", "ItemMouth2", "ItemMouth3"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ["UseMouth"]
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}抿住嘴巴.`],
+                img: "PoliteKiss"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}抿住嘴巴.`],
-            img: "PoliteKiss"
-        },
-        XSAct_瘪嘴: {
-            act: {
-                Name: "XSAct_瘪嘴",
-                Target: [],
-                TargetSelf: ["ItemMouth", "ItemMouth2", "ItemMouth3"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ["UseMouth"]
+            XSAct_瘪嘴: {
+                act: {
+                    Name: "XSAct_瘪嘴",
+                    Target: [],
+                    TargetSelf: ["ItemMouth", "ItemMouth2", "ItemMouth3"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ["UseMouth"]
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}瘪着嘴巴，一副委屈的样子.`],
+                img: "PoliteKiss"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}瘪着嘴巴，一副委屈的样子.`],
-            img: "PoliteKiss"
-        },
-        XSAct_坐直身体: {
-            act: {
-                Name: "XSAct_坐直身体",
-                Target: [],
-                TargetSelf: ["ItemTorso", "ItemTorso2"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: []
+            XSAct_坐直身体: {
+                act: {
+                    Name: "XSAct_坐直身体",
+                    Target: [],
+                    TargetSelf: ["ItemTorso", "ItemTorso2"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: []
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}挺直了腰，坐直了身体.`],
+                img: "Kick"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}挺直了腰，坐直了身体.`],
-            img: "Kick"
-        },
-        XSAct_挺胸收腹: {
-            act: {
-                Name: "XSAct_挺胸收腹",
-                Target: [],
-                TargetSelf: ["ItemBreast"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: []
+            XSAct_挺胸收腹: {
+                act: {
+                    Name: "XSAct_挺胸收腹",
+                    Target: [],
+                    TargetSelf: ["ItemBreast"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: []
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}挺起胸部，微收下巴，腹部用力收腰.`],
+                img: "Kick"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}挺起胸部，微收下巴，腹部用力收腰.`],
-            img: "Kick"
-        },
-        XSAct_站直身体: {
-            act: {
-                Name: "XSAct_站直身体",
-                Target: [],
-                TargetSelf: ["ItemTorso", "ItemTorso2"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ["NotKneeling"]
+            XSAct_站直身体: {
+                act: {
+                    Name: "XSAct_站直身体",
+                    Target: [],
+                    TargetSelf: ["ItemTorso", "ItemTorso2"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ["NotKneeling"]
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}挺胸收腹，努力绷紧小腿，站直了身体.`],
+                img: "Kick"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}挺胸收腹，努力绷紧小腿，站直了身体.`],
-            img: "Kick"
-        },
-        XSAct_身体一颤: {
-            act: {
-                Name: "XSAct_身体一颤",
-                Target: [],
-                TargetSelf: ["ItemTorso", "ItemTorso2"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: []
+            XSAct_身体一颤: {
+                act: {
+                    Name: "XSAct_身体一颤",
+                    Target: [],
+                    TargetSelf: ["ItemTorso", "ItemTorso2"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: []
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}的身体猛然颤抖了一下.`],
+                img: "Kick"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}的身体猛然颤抖了一下.`],
-            img: "Kick"
-        },
-        XSAct_活动大腿: {
-            act: {
-                Name: "XSAct_活动大腿",
-                Target: [],
-                TargetSelf: ["ItemLegs"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: []
+            XSAct_活动大腿: {
+                act: {
+                    Name: "XSAct_活动大腿",
+                    Target: [],
+                    TargetSelf: ["ItemLegs"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: []
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}尝试活动了一下腿部.`],
+                img: "Kick"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}尝试活动了一下腿部.`],
-            img: "Kick"
-        },
-        XSAct_活动手臂: {
-            act: {
-                Name: "XSAct_活动手臂",
-                Target: [],
-                TargetSelf: ["ItemArms"],
-                MaxProgress: 30,
-                MaxProgressSelf: 30,
-                Prerequisite: ["CantUseArms"]
+            XSAct_活动手臂: {
+                act: {
+                    Name: "XSAct_活动手臂",
+                    Target: [],
+                    TargetSelf: ["ItemArms"],
+                    MaxProgress: 30,
+                    MaxProgressSelf: 30,
+                    Prerequisite: ["CantUseArms"]
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}一边按摩一边活动着手臂.`],
+                img: "MasturbateHand"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}一边按摩一边活动着手臂.`],
-            img: "MasturbateHand"
-        },
-        XSAct_绷紧膝盖: {
-            act: {
-                Name: "XSAct_绷紧膝盖",
-                Target: [],
-                TargetSelf: ["ItemLegs"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ["NotKneeling"]
+            XSAct_绷紧膝盖: {
+                act: {
+                    Name: "XSAct_绷紧膝盖",
+                    Target: [],
+                    TargetSelf: ["ItemLegs"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ["NotKneeling"]
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}努力的绷紧膝盖，尽可能站的更直.`],
+                img: "Kick"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}努力的绷紧膝盖，尽可能站的更直.`],
-            img: "Kick"
-        },
-        XSAct_绷直脚踝: {
-            act: {
-                Name: "XSAct_绷直脚踝",
-                Target: [],
-                TargetSelf: ["ItemBoots"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: [],
+            XSAct_绷直脚踝: {
+                act: {
+                    Name: "XSAct_绷直脚踝",
+                    Target: [],
+                    TargetSelf: ["ItemBoots"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: [],
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}不自觉的用力绷直脚踝，释放涌来的快感.`],
+                img: "Kick"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}不自觉的用力绷直脚踝，释放涌来的快感.`],
-            img: "Kick"
-        },
-        XSAct_蜷缩脚趾: {
-            act: {
-                Name: "XSAct_蜷缩脚趾",
-                Target: [],
-                TargetSelf: ["ItemBoots"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: [],
+            XSAct_蜷缩脚趾: {
+                act: {
+                    Name: "XSAct_蜷缩脚趾",
+                    Target: [],
+                    TargetSelf: ["ItemBoots"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: [],
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}脚趾互相纠结，又时而蜷缩，忍耐着快感袭来.`],
+                img: "Kick"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}脚趾互相纠结，又时而蜷缩，忍耐着快感袭来.`],
-            img: "Kick"
-        },
-        XSAct_踮脚: {
-            act: {
-                Name: "XSAct_踮脚",
-                Target: [],
-                TargetSelf: ["ItemBoots"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ["CantUseFeet"],
+            XSAct_踮脚: {
+                act: {
+                    Name: "XSAct_踮脚",
+                    Target: [],
+                    TargetSelf: ["ItemBoots"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ["CantUseFeet"],
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}努力的踮起脚.`],
+                img: "Kick"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}努力的踮起脚.`],
-            img: "Kick"
-        },
-        XSAct_兴奋的伸出舌头: {
-            act: {
-                Name: "XSAct_兴奋的伸出舌头",
-                Target: [],
-                TargetSelf: ["ItemMouth", "ItemMouth2", "ItemMouth3"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ["UseMouth"]
+            XSAct_兴奋的伸出舌头: {
+                act: {
+                    Name: "XSAct_兴奋的伸出舌头",
+                    Target: [],
+                    TargetSelf: ["ItemMouth", "ItemMouth2", "ItemMouth3"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ["UseMouth"]
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}兴奋的伸出舌头.}`],
+                img: "MasturbateTongue"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}兴奋的伸出舌头.}`],
-            img: "MasturbateTongue"
-        },
-        XSAct_兴奋的扭动: {
-            act: {
-                Name: "XSAct_兴奋的扭动",
-                Target: [],
-                TargetSelf: ["ItemTorso", "ItemTorso2"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: []
+            XSAct_兴奋的扭动: {
+                act: {
+                    Name: "XSAct_兴奋的扭动",
+                    Target: [],
+                    TargetSelf: ["ItemTorso", "ItemTorso2"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: []
+                },
+                desc: null,
+                // descString: ['', `${selfPlaceholder}兴奋的扭动着身体.`],
+                img: 'Wiggle'
             },
-            desc: null,
-            // descString: ['', `${selfPlaceholder}兴奋的扭动着身体.`],
-            img: 'Wiggle'
-        },
-        XSAct_呼吸平复: {
-            act: {
-                Name: "XSAct_呼吸平复",
-                Target: [],
-                TargetSelf: ["ItemNose"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: []
+            XSAct_呼吸平复: {
+                act: {
+                    Name: "XSAct_呼吸平复",
+                    Target: [],
+                    TargetSelf: ["ItemNose"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: []
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}的呼吸渐渐平复.`],
+                img: "PoliteKiss"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}的呼吸渐渐平复.`],
-            img: "PoliteKiss"
-        },
-        XSAct_呼吸紊乱: {
-            act: {
-                Name: "XSAct_呼吸紊乱",
-                Target: [],
-                TargetSelf: ["ItemNose"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: []
+            XSAct_呼吸紊乱: {
+                act: {
+                    Name: "XSAct_呼吸紊乱",
+                    Target: [],
+                    TargetSelf: ["ItemNose"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: []
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}的呼吸渐渐紊乱起来，发出软软的鼻音.`],
+                img: "Whisper"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}的呼吸渐渐紊乱起来，发出软软的鼻音.`],
-            img: "Whisper"
-        },
-        XSAct_嘟囔着想说什么: {
-            act: {
-                Name: "XSAct_嘟囔着想说什么",
-                Target: [],
-                TargetSelf: ["ItemMouth", "ItemMouth2", "ItemMouth3"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ["UseMouth"]
+            XSAct_嘟囔着想说什么: {
+                act: {
+                    Name: "XSAct_嘟囔着想说什么",
+                    Target: [],
+                    TargetSelf: ["ItemMouth", "ItemMouth2", "ItemMouth3"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ["UseMouth"]
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}嘟囔着想说什么.`],
+                img: "Whisper"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}嘟囔着想说什么.`],
-            img: "Whisper"
-        },
-        XSAct_失神的伸出舌头: {
-            act: {
-                Name: "XSAct_失神的伸出舌头",
-                Target: [],
-                TargetSelf: ["ItemMouth", "ItemMouth2", "ItemMouth3"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ["UseMouth"]
+            XSAct_失神的伸出舌头: {
+                act: {
+                    Name: "XSAct_失神的伸出舌头",
+                    Target: [],
+                    TargetSelf: ["ItemMouth", "ItemMouth2", "ItemMouth3"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ["UseMouth"]
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}失神的伸出自己的舌头.`],
+                img: "MasturbateTongue"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}失神的伸出自己的舌头.`],
-            img: "MasturbateTongue"
-        },
-        XSAct_慢慢伸出舌头: {
-            act: {
-                Name: "XSAct_慢慢伸出舌头",
-                Target: [],
-                TargetSelf: ["ItemMouth", "ItemMouth2", "ItemMouth3"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ["UseMouth"]
+            XSAct_慢慢伸出舌头: {
+                act: {
+                    Name: "XSAct_慢慢伸出舌头",
+                    Target: [],
+                    TargetSelf: ["ItemMouth", "ItemMouth2", "ItemMouth3"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ["UseMouth"]
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}慢慢的伸出了自己的舌头.`],
+                img: "MasturbateTongue"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}慢慢的伸出了自己的舌头.`],
-            img: "MasturbateTongue"
-        },
-        XSAct_微微摇头: {
-            act: {
-                Name: "XSAct_微微摇头",
-                Target: [],
-                TargetSelf: ["ItemHead"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ['MoveHead']
+            XSAct_微微摇头: {
+                act: {
+                    Name: "XSAct_微微摇头",
+                    Target: [],
+                    TargetSelf: ["ItemHead"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ['MoveHead']
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}微微的摇了摇头.`],
+                img: "Suck"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}微微的摇了摇头.`],
-            img: "Suck"
-        },
-        XSAct_微微点头: {
-            act: {
-                Name: "XSAct_微微点头",
-                Target: [],
-                TargetSelf: ["ItemHead"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ['MoveHead']
+            XSAct_微微点头: {
+                act: {
+                    Name: "XSAct_微微点头",
+                    Target: [],
+                    TargetSelf: ["ItemHead"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ['MoveHead']
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}微微的点了点头.`],
+                img: "Nod"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}微微的点了点头.`],
-            img: "Nod"
-        },
-        XSAct_身体颤抖的摇头: {
-            act: {
-                Name: "XSAct_身体颤抖的摇头",
-                Target: [],
-                TargetSelf: ["ItemHead"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ['MoveHead']
+            XSAct_身体颤抖的摇头: {
+                act: {
+                    Name: "XSAct_身体颤抖的摇头",
+                    Target: [],
+                    TargetSelf: ["ItemHead"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ['MoveHead']
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}浑身颤抖的摇了摇头.`],
+                img: "Suck"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}浑身颤抖的摇了摇头.`],
-            img: "Suck"
-        },
-        XSAct_身体颤抖的点头: {
-            act: {
-                Name: "XSAct_身体颤抖的点头",
-                Target: [],
-                TargetSelf: ["ItemHead"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ['MoveHead']
+            XSAct_身体颤抖的点头: {
+                act: {
+                    Name: "XSAct_身体颤抖的点头",
+                    Target: [],
+                    TargetSelf: ["ItemHead"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ['MoveHead']
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}浑身颤抖的点了点头.`],
+                img: "Nod"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}浑身颤抖的点了点头.`],
-            img: "Nod"
-        },
-        XSAct_歪头疑惑: {
-            act: {
-                Name: "XSAct_歪头疑惑",
-                Target: [],
-                TargetSelf: ["ItemNeck"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ['MoveHead']
+            XSAct_歪头疑惑: {
+                act: {
+                    Name: "XSAct_歪头疑惑",
+                    Target: [],
+                    TargetSelf: ["ItemNeck"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ['MoveHead']
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}歪着脑袋一副疑惑的样子.`],
+                img: "Suck"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}歪着脑袋一副疑惑的样子.`],
-            img: "Suck"
-        },
-        XSAct_扭动身体: {
-            act: {
-                Name: "XSAct_扭动身体",
-                Target: [],
-                TargetSelf: ["ItemTorso", "ItemTorso2"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: []
+            XSAct_扭动身体: {
+                act: {
+                    Name: "XSAct_扭动身体",
+                    Target: [],
+                    TargetSelf: ["ItemTorso", "ItemTorso2"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: []
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}扭动着身体.`],
+                img: "Wiggle"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}扭动着身体.`],
-            img: "Wiggle"
-        },
-        XSAct_活动四肢: {
-            act: {
-                Name: "XSAct_活动四肢",
-                Target: ['ItemArms', 'ItemLegs', 'ItemFeet', 'ItemBoots'],
-                TargetSelf: [],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ["CantUseArms", "CantUseFeet"]
+            XSAct_活动四肢: {
+                act: {
+                    Name: "XSAct_活动四肢",
+                    Target: ['ItemArms', 'ItemLegs', 'ItemFeet', 'ItemBoots'],
+                    TargetSelf: [],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ["CantUseArms", "CantUseFeet"]
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}活动了下自己的四肢.`],
+                img: "Slap"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}活动了下自己的四肢.`],
-            img: "Slap"
-        },
-        XSAct_看他: {
-            act: {
-                Name: "XSAct_看他",
-                Target: ['ItemHead'],
-                TargetSelf: [],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ['CanLook']
+            XSAct_看他: {
+                act: {
+                    Name: "XSAct_看他",
+                    Target: ['ItemHead'],
+                    TargetSelf: [],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ['CanLook']
+                },
+                desc: null,
+                // descString: [`${selfPlaceholder}看向了${targetPlaceholder}.`, ''],
+                img: "SiblingsCheekKiss"
             },
-            desc: null,
-            // descString: [`${selfPlaceholder}看向了${targetPlaceholder}.`, ''],
-            img: "SiblingsCheekKiss"
-        },
-        XSAct_缩脖子: {
-            act: {
-                Name: "XSAct_缩脖子",
-                Target: [],
-                TargetSelf: ["ItemNeck"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: []
+            XSAct_缩脖子: {
+                act: {
+                    Name: "XSAct_缩脖子",
+                    Target: [],
+                    TargetSelf: ["ItemNeck"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: []
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}缩了下自己的脖子.`],
+                img: "Suck"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}缩了下自己的脖子.`],
-            img: "Suck"
-        },
-        XSAct_脸红喘气: {
-            act: {
-                Name: "XSAct_脸红喘气",
-                Target: [],
-                TargetSelf: ["ItemMouth", "ItemMouth2", "ItemMouth3"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: []
+            XSAct_脸红喘气: {
+                act: {
+                    Name: "XSAct_脸红喘气",
+                    Target: [],
+                    TargetSelf: ["ItemMouth", "ItemMouth2", "ItemMouth3"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: []
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}面色潮红的喘着气.`],
+                img: "Whisper"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}面色潮红的喘着气.`],
-            img: "Whisper"
-        },
-        XSAct_轻声喘气: {
-            act: {
-                Name: "XSAct_轻声喘气",
-                Target: [],
-                TargetSelf: ["ItemMouth", "ItemMouth2", "ItemMouth3"],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: []
+            XSAct_轻声喘气: {
+                act: {
+                    Name: "XSAct_轻声喘气",
+                    Target: [],
+                    TargetSelf: ["ItemMouth", "ItemMouth2", "ItemMouth3"],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: []
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}轻声喘着气.`],
+                img: "Whisper"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}轻声喘着气.`],
-            img: "Whisper"
-        },
-        XSAct_跺脚: {
-            act: {
-                Name: "XSAct_跺脚",
-                Target: [],
-                TargetSelf: ['ItemBoots'],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ['NotKneeling']
+            XSAct_跺脚: {
+                act: {
+                    Name: "XSAct_跺脚",
+                    Target: [],
+                    TargetSelf: ['ItemBoots'],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ['NotKneeling']
+                },
+                desc: null,
+                // descString: ["", `${selfPlaceholder}跺了跺脚.`],
+                img: "Step"
             },
-            desc: null,
-            // descString: ["", `${selfPlaceholder}跺了跺脚.`],
-            img: "Step"
-        },
-        XSAct_头蹭: {
-            act: {
-                Name: "XSAct_头蹭",
-                Target: ['ItemHead', 'ItemNeck', 'ItemBreast', 'ItemArms', 'ItemLegs', 'ItemFeet', 'ItemBoots', 'ItemPelvis'],
-                TargetSelf: [],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: []
+            XSAct_头蹭: {
+                act: {
+                    Name: "XSAct_头蹭",
+                    Target: ['ItemHead', 'ItemNeck', 'ItemBreast', 'ItemArms', 'ItemLegs', 'ItemFeet', 'ItemBoots', 'ItemPelvis'],
+                    TargetSelf: [],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: []
+                },
+                desc: null,
+                // descString: [`${selfPlaceholder}用自己的脑袋蹭了蹭${targetPlaceholder}的${this.bodyNamePlaceholder}.`, ''],
+                img: "SiblingsCheekKiss",
+                isBase: true
             },
-            desc: null,
-            // descString: [`${selfPlaceholder}用自己的脑袋蹭了蹭${targetPlaceholder}的${this.bodyNamePlaceholder}.`, ''],
-            img: "SiblingsCheekKiss",
-            isBase: true
-        },
-        XSAct_脸蹭: {
-            act: {
-                Name: "XSAct_脸蹭",
-                Target: ['ItemHead', 'ItemNeck', 'ItemBreast', 'ItemArms', 'ItemLegs', 'ItemFeet', 'ItemBoots', 'ItemPelvis'],
-                TargetSelf: [],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: []
+            XSAct_脸蹭: {
+                act: {
+                    Name: "XSAct_脸蹭",
+                    Target: ['ItemHead', 'ItemNeck', 'ItemBreast', 'ItemArms', 'ItemLegs', 'ItemFeet', 'ItemBoots', 'ItemPelvis'],
+                    TargetSelf: [],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: []
+                },
+                desc: null,
+                // descString: [`${selfPlaceholder}用自己的脸颊蹭了蹭${targetPlaceholder}的${this.bodyNamePlaceholder}.`, ''],
+                img: "SiblingsCheekKiss",
+                isBase: true
             },
-            desc: null,
-            // descString: [`${selfPlaceholder}用自己的脸颊蹭了蹭${targetPlaceholder}的${this.bodyNamePlaceholder}.`, ''],
-            img: "SiblingsCheekKiss",
-            isBase: true
-        },
-        XSAct_鼻子蹭: {
-            act: {
-                Name: "XSAct_鼻子蹭",
-                Target: ['ItemHead', 'ItemNeck', 'ItemBreast', 'ItemArms', 'ItemLegs', 'ItemFeet', 'ItemBoots', 'ItemPelvis'],
-                TargetSelf: [],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ['MoveHead']
+            XSAct_鼻子蹭: {
+                act: {
+                    Name: "XSAct_鼻子蹭",
+                    Target: ['ItemHead', 'ItemNeck', 'ItemBreast', 'ItemArms', 'ItemLegs', 'ItemFeet', 'ItemBoots', 'ItemPelvis'],
+                    TargetSelf: [],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ['MoveHead']
+                },
+                desc: null,
+                // descString: [`${selfPlaceholder}用自己的鼻子蹭了蹭${targetPlaceholder}的${this.bodyNamePlaceholder}.`, ''],
+                img: "Nod",
+                isBase: true
             },
-            desc: null,
-            // descString: [`${selfPlaceholder}用自己的鼻子蹭了蹭${targetPlaceholder}的${this.bodyNamePlaceholder}.`, ''],
-            img: "Nod",
-            isBase: true
-        },
-        XSAct_埋怀里: {
-            act: {
-                Name: "XSAct_埋怀里",
-                Target: ['ItemBreast'],
-                TargetSelf: [],
-                MaxProgress: 20,
-                MaxProgressSelf: 20,
-                Prerequisite: ['MoveHead']
-            },
-            desc: null,
-            // descString: [`${selfPlaceholder}把脑袋埋在${targetPlaceholder}的怀里.`, ''],
-            img: "SiblingsCheekKiss"
+            XSAct_埋怀里: {
+                act: {
+                    Name: "XSAct_埋怀里",
+                    Target: ['ItemBreast'],
+                    TargetSelf: [],
+                    MaxProgress: 20,
+                    MaxProgressSelf: 20,
+                    Prerequisite: ['MoveHead']
+                },
+                desc: null,
+                // descString: [`${selfPlaceholder}把脑袋埋在${targetPlaceholder}的怀里.`, ''],
+                img: "SiblingsCheekKiss"
+            }
         }
-    }
 
 
 
@@ -1033,11 +1033,10 @@ export class ActivityModule extends BaseModule {
     }
 
 
-    public getAllAct(): XSA_ActivityName_onlyName[] {
-        const result: XSA_ActivityName_onlyName[] = []
+    public getAllAct(): string[] {
+        const result: string[] = []
         for (const a in this.activityToAddDict) {
-            const suffix = this.getActName(a).substring(6) as XSA_ActivityName_onlyName; // 从索引为 6 的位置开始截取到字符串末尾
-
+            const suffix = this.getStr("Activity", this.getActName(a));
             result.push(suffix); // 输出：XXXX
         }
         conDebug({
