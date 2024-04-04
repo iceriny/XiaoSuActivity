@@ -135,7 +135,7 @@ export class ChatroomModule extends BaseModule {
             const msg = args[1];
             const matchWord = L.get("Chatroom", "Prefix.reply");// 
             if (msg.startsWith(`🪧${matchWord}*>`)) {
-                const match = msg.match(new RegExp(`^🪧(${matchWord}*>.+<*)s(.+)`))
+                const match = msg.match(new RegExp(`^(🪧${matchWord}\\*>.+<\\*)(.+)`, 's'))
                 if (match) {
                     args[1] = match[2];
                     ChatRoomSendLocal(`--🪧--${match[1]}--🪧--`)
