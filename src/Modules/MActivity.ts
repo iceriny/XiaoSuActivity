@@ -1036,7 +1036,7 @@ export class ActivityModule extends BaseModule {
     public getAllAct(): string[] {
         const result: string[] = []
         for (const a in this.activityToAddDict) {
-            const suffix = this.getStr("Activity", this.getActName(a));
+            const suffix = this.getStr("Activity", this.getActName(a).substring(6));
             result.push(suffix); // 输出：XXXX
         }
         conDebug({
