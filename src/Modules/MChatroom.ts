@@ -25,14 +25,14 @@ export class ChatroomModule extends BaseModule {
             ['delete', L.get("Chatroom", "Contextmenu.Button.delete")]
         ]
 
-        for (let i = 0; i <= 9; i++){
+        for (let i = 0; i <= 9; i++) {
             this.moan.push(L.get("Chatroom", `moan.${i}` as strKey<"Chatroom">))
         }
 
-        for (let i = 0; i <= 7; i++){
+        for (let i = 0; i <= 7; i++) {
             ChatroomModule.kaomojiSet.help.push(L.get("Chatroom", `kaomojiHelp.${i}` as strKey<"Chatroom">))
         }
-        
+
     }
 
 
@@ -104,7 +104,7 @@ export class ChatroomModule extends BaseModule {
         // 处理聊天室发送消息时 接受 " ` " 命令和 接受 " | " 命令
         hookFunction("CommandParse", 0,
             (args, next) => {
-                let msg: string = args[0];
+                let msg = args[0];
 
                 // 匹配[ ` ]开头的命令 处理结巴系统
                 const match = msg.match(/^`([1-9])?(m)?( )? (.*)/);
@@ -130,19 +130,28 @@ export class ChatroomModule extends BaseModule {
                 args[0] = msg;
                 return next(args);
             });
+
         // 处理聊天室接受消息时 的 " 🪧回复* " 命令显示
-        hookFunction("ChatRoomMessageDisplay", 10, (args, next) => {
-            const msg = args[1];
-            const matchWord = L.get("Chatroom", "Prefix.reply");// 
-            if (msg.startsWith(`🪧${matchWord}*>`)) {
-                const match = msg.match(new RegExp(`^(🪧${matchWord}\\*>.+<\\*)(.+)`, 's'))
-                if (match) {
-                    args[1] = match[2];
-                    ChatRoomSendLocal(`--🪧--${match[1]}--🪧--`)
+        hookFunction("ChatRoomMessage", 51, (args, next) => {
+            const msg = args[0];
+            const type = msg.Type;
+            if (type === "Chat") {
+                const content = msg.Content;
+                const matchWord = L.get("Chatroom", "Prefix.reply");
+                if (content.startsWith(`🪧${matchWord}*>`)){
+                    const match = content.match(new RegExp(`^🪧${matchWord}\\*>(.+)<\\*(.+)`, 's'))
+                    conDebug({
+                        name: "ChatRoomMessage 回复debug",
+                        content: match
+                    })
+                    if (match) {
+                        ChatRoomSendLocal(`·🪧·  ${matchWord}==>  ${match[1]}  ·🪧·`);
+                        args[0].Content = match[2];
+                    }
                 }
             }
             next(args);
-        });
+        })
     }
 
 

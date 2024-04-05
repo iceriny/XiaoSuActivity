@@ -153,7 +153,7 @@ export class ActivityModule extends BaseModule {
                     }
                 }
             }
-            return next(args);
+            next(args);
         });
     }
 
