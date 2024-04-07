@@ -21,7 +21,8 @@ export default {
       const DEBUG=true;`;
     },
     plugins: [terser({
-      mangle: false
+      mangle: false,
+      ecma: 2020,
     })]
   },
   plugins: [
@@ -29,6 +30,6 @@ export default {
     resolve({ browser: true }),
     typescript({ tsconfig: "./tsconfig.json", inlineSources: true }), // 使用 TypeScript 插件
     commonjs(),
-    json()
+    json(),
   ]
 };

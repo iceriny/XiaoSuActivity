@@ -4,8 +4,11 @@ import { MODULES } from "Modules/ModulesDict";
 import { CHANGELOG, ChangeType } from "changeLogData";
 
 //   VVVVVVVVVVVVVVVVVVVVVVVVVVVVV  ----用得到的常数---- VVVVVVVVVVVVVVVVVVVVVVV    //
-
-export const CSShref = DEBUG ? "https://iceriny.github.io/XiaoSuActivity/dev/XSActivityStyle.css" : "https://iceriny.github.io/XiaoSuActivity/main/XSActivityStyle.css";
+export const ModRef = "https://iceriny.github.io/XiaoSuActivity/"
+export const VerType = DEBUG ? "dev/" : "main/";
+export const RealRef = `${ModRef}${VerType}`
+export const CSShref = `${RealRef}XSActivityStyle.css`;
+export const EmojiWorkerRef = `${RealRef}emojiWorkers.js`;
 
 //   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ----用得到的常数---- ^^^^^^^^^^^^^^^^^^^^^^^    //
 

@@ -1,6 +1,7 @@
 import { BaseModule } from "Modules/BaseModule";
-import { MSGType, SendChat, SendEmote, conDebug, copyAndDownloadHtmlElement, hookFunction, patchFunction, timeRange } from "utils";
+import { EmojiWorkerRef, MSGType, SendChat, SendEmote, SendLocalMessage, conDebug, copyAndDownloadHtmlElement, hookFunction, patchFunction, timeRange } from "utils";
 import { Localization as L } from "localization";
+import { Emoji } from "./Emoji";
 
 export class ChatroomModule extends BaseModule {
 
@@ -42,17 +43,28 @@ export class ChatroomModule extends BaseModule {
      * hook函数列表处理
      */
     hookListHandler(): void {
+        // 生成InputChat元素时将InputChat元素保存起来
+        hookFunction("ChatRoomCreateElement", 0, (args, next) => {
+            next(args);
+            ChatroomModule.InputElement = document.getElementById('InputChat') as HTMLInputElement;
 
-        hookFunction("ChatRoomLoad", this.priority, (args, next) => {
-            const result = next(args);
-            if (!ChatroomModule.InputElement) {
-                ChatroomModule.InputElement = document.getElementById('InputChat') as HTMLInputElement;
-            }
+            ChatroomModule.InputElement.addEventListener("input", (e) => {
+                // Todo: 完成输入框监听时的处理程序
+                ChatroomModule.inputHandle(e);
+            })
+
             ChatroomModule.buildKaomojiButton()
-
-            return result;
         });
 
+        // hookFunction("ChatRoomLoad", this.priority, (args, next) => {
+        //     const result = next(args);
+        //     if (!ChatroomModule.InputElement) {
+        //         ChatroomModule.InputElement = document.getElementById('InputChat') as HTMLInputElement;
+        //     }
+        //     ChatroomModule.buildKaomojiButton()
+
+        //     return result;
+        // });
 
         // 调整按钮位置
         hookFunction("ElementPosition", this.priority, (args, next) => {
@@ -63,13 +75,14 @@ export class ChatroomModule extends BaseModule {
             return result;
         });
         // 生成InputChat元素时将InputChat元素保存起来
-        hookFunction("ElementCreateTextArea", this.priority, (args, next) => {
-            const result = next(args);
-            if (args[0] === "InputChat") {
-                ChatroomModule.InputElement = document.getElementById('InputChat') as HTMLInputElement;
-            }
-            return result;
-        });
+        // hookFunction("ElementCreateTextArea", this.priority, (args, next) => {
+        //     const result = next(args);
+        //     if (args[0] === "InputChat") {
+        //         ChatroomModule.InputElement = document.getElementById('InputChat') as HTMLInputElement;
+        //     }
+        //     return result;
+        // });
+
         // 当聊天室清理全部元素时 删除表情系统元素
         hookFunction("ChatRoomClearAllElements", this.priority, (args, next) => {
             ChatroomModule.removeKaomojiMenu();
@@ -138,7 +151,7 @@ export class ChatroomModule extends BaseModule {
             if (type === "Chat") {
                 const content = msg.Content;
                 const matchWord = L.get("Chatroom", "Prefix.reply");
-                if (content.startsWith(`🪧${matchWord}*>`)){
+                if (content.startsWith(`🪧${matchWord}*>`)) {
                     const match = content.match(new RegExp(`^🪧${matchWord}\\*>(.+)<\\*(.+)`, 's'))
                     conDebug({
                         name: "ChatRoomMessage 回复debug",
@@ -798,5 +811,70 @@ export class ChatroomModule extends BaseModule {
             }
         }
         return allKaomojiList;
+    }
+
+    // VV Emoji相关方法 VV //
+    private static EmojiMenu: HTMLDivElement | null = null;
+    private static Emoji: Emoji | null = null;
+    private static emojiWorker: Worker | null = null;
+
+    private static getEmojiMenu(): HTMLDivElement {
+        if (this.EmojiMenu) return this.EmojiMenu;
+
+        const EmojiMenu: HTMLDivElement = document.createElement('div');
+        EmojiMenu.className = 'emoji-menu';
+
+        this.EmojiMenu = EmojiMenu;
+        return EmojiMenu;
+    }
+
+    private static getEmojiWorker(): Worker {
+        if (this.emojiWorker) return this.emojiWorker;
+
+        const emojiWorker: Worker = new Worker(EmojiWorkerRef);
+        this.emojiWorker = emojiWorker;
+        return emojiWorker;
+    }
+
+    private static displayEmojiMenu() {
+        const EmojiMenu: HTMLDivElement = this.getEmojiMenu();
+        EmojiMenu.style.display = 'flex';
+    }
+    private static hideEmojiMenu() {
+        const EmojiMenu: HTMLDivElement = this.getEmojiMenu();
+        EmojiMenu.style.display = 'none';
+    }
+
+    private static inputHandle(event: Event) {
+        const value: string = (event.target as HTMLInputElement).value;
+
+        // `: [EmojiKey]` 触发emoji菜单弹出
+        const match = value.match(/:\/(.+)/);
+        if (match) {
+            this.displayEmojiMenu();
+
+            this.EmojiMenu!.innerHTML = '';
+            const w = this.getEmojiWorker();
+            w.postMessage(match[1]);
+            w.addEventListener('message', (e) => {
+                const data = e.data as string[];
+
+                for (const emoji of data) {
+                    const emojiElement: HTMLDivElement = document.createElement('div');
+                    emojiElement.className = 'emoji';
+                    emojiElement.innerText = emoji;
+                    emojiElement.addEventListener('click', (event) => {
+                        this.emojiClick(event, emojiElement);
+                    });
+                    this.EmojiMenu!.appendChild(emojiElement);
+                }
+            })
+
+        } else {
+            this.hideEmojiMenu();
+        }
+    }
+    private static emojiClick(event: Event, emojiElement: HTMLDivElement) {
+        SendLocalMessage(`${emojiElement.innerText}`);
     }
 }
