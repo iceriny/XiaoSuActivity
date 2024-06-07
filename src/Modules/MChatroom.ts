@@ -157,12 +157,22 @@ export class ChatroomModule extends BaseModule {
 
     pathListHandler(): void {
         // 处理将消息添加右键菜单 (回复、复制、悄悄话、删除)
-        patchFunction("ChatRoomMessageDisplay", {
-            "div.innerHTML = displayMessage;": `
-            if (!!window.AddChatRightClickEvent) window.AddChatRightClickEvent(div);
-            div.innerHTML = displayMessage;
-            `
-        });
+        if (GameVersion === "R104") {
+            patchFunction("ChatRoomMessageDisplay", {
+                "div.innerHTML = displayMessage;": `
+                if (!!window.AddChatRightClickEvent) window.AddChatRightClickEvent(div);
+                div.innerHTML = displayMessage;
+                `
+            });
+        } else {
+            // R105
+            hookFunction("ChatRoomMessageDisplay", 0, (args, next) => {
+                // TODO: Remove the `void`-to-`HTMLDivElement` casting once the BC R105 annotations are available
+                const div = next(args) as any as HTMLDivElement;
+                if (!!window.AddChatRightClickEvent) window.AddChatRightClickEvent(div);
+                return div;
+            });
+        }
     }
 
     // -----------右键菜单----------- //
