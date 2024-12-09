@@ -82,29 +82,39 @@ export class ActivityModule extends BaseModule {
             }
         });
 
-        /**
-         * args[0]: "Assets/Female3DCG/Activity/XSAct_XXX.png"
-         */
-        hookFunction("DrawImageResize", 10, (args, next) => {
-            const source = args[0];
+        if (GameVersion === "R110") {
+            /**
+             * args[0]: "Assets/Female3DCG/Activity/XSAct_XXX.png"
+             */
+            hookFunction("DrawImageResize", 10, (args, next) => {
+                const source = args[0];
 
-            if (typeof source !== "string") return next(args);
-            // 使用 split 方法拆分字符串
-            const parts = source.split('/');
-            const fileName = parts[parts.length - 1];  // 获取文件名部分，即 "XSAct_XXX.png"
+                if (typeof source !== "string") return next(args);
+                // 使用 split 方法拆分字符串
+                const parts = source.split('/');
+                const fileName = parts[parts.length - 1];  // 获取文件名部分，即 "XSAct_XXX.png"
 
-            // 进一步处理文件名，去掉 ".png" 后缀
-            const aName = fileName.replace('.png', '');
+                // 进一步处理文件名，去掉 ".png" 后缀
+                const aName = fileName.replace('.png', '');
 
-            if (aName.indexOf("XSAct_") == 0) {
-                const resultName = `Assets/Female3DCG/Activity/${this.activityToAddDict[aName as XSA_ActivityName].img}.png`;
-                args[0] = resultName;
+                if (aName.indexOf("XSAct_") == 0) {
+                    const resultName = `Assets/Female3DCG/Activity/${this.activityToAddDict[aName as XSA_ActivityName].img}.png`;
+                    args[0] = resultName;
+                    return next(args);
+                }
                 return next(args);
-            }
-            return next(args);
-        });
-
-
+            });
+        } else { // R111
+            hookFunction("ElementButton.CreateForActivity", 0, (args: any[], next) => {
+                const activity: ItemActivity = args[1];
+                const name = activity.Activity.Name;
+                if (name.includes("XSAct")) {
+                    args[4] ??= {}; // null | { image?: string }
+                    args[4].image = `./Assets/Female3DCG/Activity/${this.activityToAddDict[name as XSA_ActivityName].img}.png`;
+                }
+                return next(args as never);
+            });
+        }
 
         /** 瘙痒动作增加抵抗难度 */
         hookFunction("ChatRoomMessage", this.priority, (args, next) => {
@@ -260,7 +270,7 @@ export class ActivityModule extends BaseModule {
      * @param  Target - 活动的目标
      * @param  TargetSelf - 活动的自身目标
      * @param  Reverse - 是否反转前置条件的判断
-     * @param  MakeSound - 是否播放声音 used for setting {@link ExtendedItemAutoPunishHandled} 
+     * @param  MakeSound - 是否播放声音 used for setting {@link ExtendedItemAutoPunishHandled}
      * @param  StimulationAction - 当使用该活动时触发的动作
      * @param  ActivityExpression - 活动表达式,包含一系列的动作 该活动的默认表达式。可以使用资产上的ActivityExpression进行覆盖。
      * -------
