@@ -1,41 +1,42 @@
 {
-  "name": "xiao-su-activity",
-  "version": "0.4.0",
-  "description": "https://iceriny.github.io/XiaoSuActivity/userLoad.user.js",
-  "main": "rollup.config.js",
-  "keywords": [],
-  "author": "XiaoSu",
-  "license": "ISC",
-  "dependencies": {
-    "@types/randomcolor": "^0.5.9",
-    "bc-stubs": "^102.0.0",
-    "bondage-club-mod-sdk": "^1.2.0",
-    "fuse.js": "^7.1.0",
-    "lz-string": "^1.5.0",
-    "randomcolor": "^0.6.2"
-  },
-  "devDependencies": {
-    "@rollup/plugin-commonjs": "^25.0.7",
-    "@rollup/plugin-json": "^6.1.0",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-terser": "^0.4.4",
-    "@types/lz-string": "^1.5.0",
-    "@typescript-eslint/eslint-plugin": "^6.21.0",
-    "eslint": "^8.56.0",
-    "eslint-config-standard-with-typescript": "^43.0.1",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-n": "^16.6.2",
-    "eslint-plugin-promise": "^6.1.1",
-    "install": "^0.13.0",
-    "npm": "^10.4.0",
-    "rollup": "^4.9.6",
-    "rollup-plugin-progress": "^1.1.2",
-    "rollup-plugin-typescript2": "^0.36.0",
-    "terser": "^5.27.0",
-    "typescript": "^5.3.3"
-  },
-  "scripts": {
-    "build": "rollup -c rollup.config.mjs",
-    "dev": "rollup -c rollup.dev.config.mjs"
-  }
+    "name": "xiao-su-activity",
+    "version": "0.4.1",
+    "description": "https://iceriny.github.io/XiaoSuActivity/userLoad.user.js",
+    "main": "rollup.config.js",
+    "keywords": [],
+    "author": "XiaoSu",
+    "license": "ISC",
+    "dependencies": {
+        "@types/randomcolor": "^0.5.9",
+        "bc-stubs": "^102.0.0",
+        "bondage-club-mod-sdk": "^1.2.0",
+        "fuse.js": "^7.1.0",
+        "lz-string": "^1.5.0",
+        "randomcolor": "^0.6.2"
+    },
+    "devDependencies": {
+        "@rollup/plugin-commonjs": "^25.0.7",
+        "@rollup/plugin-json": "^6.1.0",
+        "@rollup/plugin-node-resolve": "^15.2.3",
+        "@rollup/plugin-terser": "^0.4.4",
+        "@types/lz-string": "^1.5.0",
+        "@typescript-eslint/eslint-plugin": "^6.21.0",
+        "eslint": "^8.56.0",
+        "eslint-config-standard-with-typescript": "^43.0.1",
+        "eslint-plugin-import": "^2.29.1",
+        "eslint-plugin-n": "^16.6.2",
+        "eslint-plugin-promise": "^6.1.1",
+        "install": "^0.13.0",
+        "npm": "^10.4.0",
+        "rollup": "^4.9.6",
+        "rollup-plugin-progress": "^1.1.2",
+        "rollup-plugin-typescript2": "^0.36.0",
+        "terser": "^5.27.0",
+        "typescript": "^5.3.3"
+    },
+    "scripts": {
+        "build": "rollup -c rollup.config.mjs",
+        "dev": "rollup -c rollup.dev.config.mjs",
+        "local_dev": "rollup -c rollup.local.dev.config.mjs"
+    }
 }

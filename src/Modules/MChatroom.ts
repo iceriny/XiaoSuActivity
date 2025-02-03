@@ -8,7 +8,7 @@ import {
     conDebug,
     copyAndDownloadHtmlElement,
     hookFunction,
-    patchFunction,
+    // patchFunction,
     timeRange,
 } from "utils";
 import { Localization as L } from "localization";
@@ -18,7 +18,7 @@ export class ChatroomModule extends BaseModule {
     // VVVV==========初始化与加载函数==========VVVV //
     public Load(): void {
         this.hookListHandler();
-        this.pathListHandler();
+        // this.pathListHandler();
 
         this.Loaded = true;
     }
@@ -64,7 +64,6 @@ export class ChatroomModule extends BaseModule {
             ) as HTMLInputElement;
 
             ChatroomModule.InputElement.addEventListener("input", (e) => {
-                // Todo: 完成输入框监听时的处理程序
                 ChatroomModule.inputHandle(e);
             });
 
@@ -72,9 +71,9 @@ export class ChatroomModule extends BaseModule {
         });
 
         // 调整按钮位置
-        hookFunction("ElementPosition", this.priority, (args, next) => {
+        hookFunction("ElementPositionFix", this.priority, (args, next) => {
             const result = next(args);
-            if (args[0] === "InputChat") {
+            if (args[0] === "chat-room-div") {
                 ChatroomModule.ResizeKaomojiButton();
             }
             return result;
@@ -202,28 +201,35 @@ export class ChatroomModule extends BaseModule {
             }
             next(args);
         });
+
+        hookFunction("ChatRoomMessageDisplay", 0, (args, next) => {
+            const div = next(args) as any as HTMLDivElement;
+            if (window.AddChatRightClickEvent)
+                window.AddChatRightClickEvent(div);
+            return div;
+        });
     }
 
-    pathListHandler(): void {
-        // 处理将消息添加右键菜单 (回复、复制、悄悄话、删除)
-        if (GameVersion === "R104") {
-            patchFunction("ChatRoomMessageDisplay", {
-                "div.innerHTML = displayMessage;": `
-                if (!!window.AddChatRightClickEvent) window.AddChatRightClickEvent(div);
-                div.innerHTML = displayMessage;
-                `,
-            });
-        } else {
-            // R105
-            hookFunction("ChatRoomMessageDisplay", 0, (args, next) => {
-                // TODO: Remove the `void`-to-`HTMLDivElement` casting once the BC R105 annotations are available
-                const div = next(args) as any as HTMLDivElement;
-                if (window.AddChatRightClickEvent)
-                    window.AddChatRightClickEvent(div);
-                return div;
-            });
-        }
-    }
+    /** 使用hook实现 */
+    // pathListHandler(): void {
+    //     // 处理将消息添加右键菜单 (回复、复制、悄悄话、删除)
+    //     if (GameVersion === "R104") {
+    //         patchFunction("ChatRoomMessageDisplay", {
+    //             "div.innerHTML = displayMessage;": `
+    //             if (!!window.AddChatRightClickEvent) window.AddChatRightClickEvent(div);
+    //             div.innerHTML = displayMessage;
+    //             `,
+    //         });
+    //     } else {
+    //         // R105
+    //         hookFunction("ChatRoomMessageDisplay", 0, (args, next) => {
+    //             const div = next(args) as any as HTMLDivElement;
+    //             if (window.AddChatRightClickEvent)
+    //                 window.AddChatRightClickEvent(div);
+    //             return div;
+    //         });
+    //     }
+    // }
 
     // -----------右键菜单----------- //
     AddChatRightClickEvent(div: HTMLDivElement) {
@@ -788,9 +794,9 @@ export class ChatroomModule extends BaseModule {
         }
         button.innerHTML = ":)";
 
-        this.ResizeKaomojiButton();
         this.KaomojiButton = button;
         document.body.appendChild(button);
+        this.ResizeKaomojiButton();
         return button;
     }
 
@@ -802,9 +808,9 @@ export class ChatroomModule extends BaseModule {
             const InputRect = this.InputElement.getBoundingClientRect();
 
             this.KaomojiButton.style.top =
-                parseInt(InputRect.top) - window.innerHeight * 0.026 + "px";
+                InputRect.top - window.innerHeight * 0.026 + "px";
             this.KaomojiButton.style.left =
-                parseInt(InputRect.left) - window.innerHeight * 0.026 + "px";
+                InputRect.left - window.innerHeight * 0.026 + "px";
         }
     }
     /**
