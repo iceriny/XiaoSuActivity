@@ -294,3 +294,27 @@
 }
 
 /* End context menu */
+
+
+
+/* Emoji Menu */
+.emoji-menu {
+    position: absolute;
+    padding: 1em;
+    z-index: 1000;
+
+    flex-direction: column;
+    color: #242424;
+    background-color: #e2cdd3d4;
+    border-radius: 0.5em;
+    box-shadow: 0 0 0.5em 0.1em rgba(0, 0, 0, 0.238);
+}
+.emoji-menu .emoji {
+    cursor: pointer;
+    margin: 3px;
+    padding: 3px;
+    
+    border-radius: 10px;
+}
+
+/* End Emoji Menu */
