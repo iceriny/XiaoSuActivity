@@ -8,6 +8,8 @@ interface Window {
 	MODULES?: { [key: string]: unknown };
 	XSA_STRINGS?: unknown;
 
+	Emoji: unknown;
+
 	AddChatRightClickEvent?: (div: HTMLDivElement) => void;
 }
 /**
@@ -63,3 +65,18 @@ interface CharacterOnlineSharedSettings {
 	XSA?: XSA_OnlineSharedSettingsData;
 }
 
+type emojiItem = {
+	"name": string,
+	"zh_name": string,
+	"emoji": string,
+	"Rank": number,
+	"Category": string,
+	"Subcategory": string
+}
+
+type emojiItemKey = Extract<keyof emojiItem, string>;
+
+interface emojiHandleEventData {
+	keyword: string;
+	emoji: unknown;
+}

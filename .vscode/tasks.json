@@ -1,21 +1,29 @@
 {
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"type": "npm",
-			"script": "build",
-			"group": "build",
-			"problemMatcher": [],
-			"label": "npm: build",
-			"detail": "rollup -c rollup.config.mjs"
-		},
-		{
-			"type": "npm",
-			"script": "dev",
-			"group": "build",
-			"problemMatcher": [],
-			"label": "npm: dev",
-			"detail": "rollup -c rollup.dev.config.mjs"
-		}
-	]
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "npm",
+            "script": "build",
+            "group": "build",
+            "problemMatcher": [],
+            "label": "npm: build",
+            "detail": "rollup -c rollup.config.mjs"
+        },
+        {
+            "type": "npm",
+            "script": "dev",
+            "group": "build",
+            "problemMatcher": [],
+            "label": "npm: dev",
+            "detail": "rollup -c rollup.dev.config.mjs"
+        },
+        {
+            "type": "npm",
+            "script": "local_dev",
+            "group": "build",
+            "problemMatcher": [],
+            "label": "npm: local dev",
+            "detail": "rollup -c rollup.local.dev.config.mjs"
+        }
+    ]
 }

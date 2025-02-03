@@ -53,7 +53,6 @@ function initWait() {
 export function init() {
     if (window.XSActivity_Loaded) return;
 
-
     const InitModuleCount = ModuleLoader.InitModules();
 
     conDebug({

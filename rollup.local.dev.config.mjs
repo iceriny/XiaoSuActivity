@@ -10,7 +10,7 @@ import json from "@rollup/plugin-json";
 export default {
     input: "src/main.ts", // 入口文件路径
     output: {
-        file: "dist/dev/XSActivity_dev.js", // 输出文件路径
+        file: "../../source/Bondage-College/BondageClub/Mod/XiaoSuActivity_dev.js", // 输出文件路径
         format: "iife", // 输出格式
         sourcemap: true,
         name: "XiaoSuActivity", // 全局变量名称
