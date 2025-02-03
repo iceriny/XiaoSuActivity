@@ -69,8 +69,6 @@ export class ChatroomModule extends BaseModule {
             });
 
             ChatroomModule.buildKaomojiButton();
-
-            return result;
         });
 
         // 调整按钮位置
