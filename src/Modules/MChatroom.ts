@@ -51,6 +51,7 @@ export class ChatroomModule extends BaseModule {
     }
 
     static InputElement: HTMLInputElement | null = null;
+    static InputElementListener = (event: Event) => ChatroomModule.inputHandle(event);
 
     /**
      * hook函数列表处理
@@ -61,12 +62,13 @@ export class ChatroomModule extends BaseModule {
             next(args);
             if (!ChatroomModule.InputElement) {
                 ChatroomModule.InputElement = document.getElementById(
-                    "InputChat"
+                "InputChat"
                 ) as HTMLInputElement;
-            
-                ChatroomModule.InputElement.addEventListener("input", (e) => {
-                    ChatroomModule.inputHandle(e);
-                });
+
+                ChatroomModule.InputElement.addEventListener(
+                    "input",
+                    ChatroomModule.InputElementListener
+                );
             }
 
             ChatroomModule.buildKaomojiButton();
@@ -95,6 +97,7 @@ export class ChatroomModule extends BaseModule {
             this.priority,
             (args, next) => {
                 ChatroomModule.removeKaomojiMenu();
+                ChatroomModule.InputElement?.removeEventListener("input", ChatroomModule.InputElementListener);
                 ChatroomModule.InputElement = null;
                 return next(args);
             }
