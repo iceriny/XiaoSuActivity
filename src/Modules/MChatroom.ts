@@ -59,13 +59,15 @@ export class ChatroomModule extends BaseModule {
         // 生成InputChat元素时将InputChat元素保存起来
         hookFunction("ChatRoomCreateElement", 0, (args, next) => {
             next(args);
-            ChatroomModule.InputElement = document.getElementById(
-                "InputChat"
-            ) as HTMLInputElement;
-
-            ChatroomModule.InputElement.addEventListener("input", (e) => {
-                ChatroomModule.inputHandle(e);
-            });
+            if (!ChatroomModule.InputElement) {
+                ChatroomModule.InputElement = document.getElementById(
+                    "InputChat"
+                ) as HTMLInputElement;
+            
+                ChatroomModule.InputElement.addEventListener("input", (e) => {
+                    ChatroomModule.inputHandle(e);
+                });
+            }
 
             ChatroomModule.buildKaomojiButton();
         });
