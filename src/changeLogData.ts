@@ -164,4 +164,10 @@ export const CHANGELOG: ChangeLogObj[] = [
         type: ChangeType.main,
         changes: ["修复了颜文字按钮的位置问题."],
     },
+    {
+        version: "0.4.4",
+        description: "修复一些问题.",
+        type: ChangeType.main,
+        changes: ["修复了在长时间游戏时, 游戏卡顿的问题.Fixed the issue of game freezing during long gaming sessions."],
+    },
 ];

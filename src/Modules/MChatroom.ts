@@ -51,6 +51,9 @@ export class ChatroomModule extends BaseModule {
     }
 
     static InputElement: HTMLInputElement | null = null;
+    static InputElementInputListener: (e: Event) => void = (e) => {
+        ChatroomModule.inputHandle(e);
+    }
 
     /**
      * hook函数列表处理
@@ -59,13 +62,13 @@ export class ChatroomModule extends BaseModule {
         // 生成InputChat元素时将InputChat元素保存起来
         hookFunction("ChatRoomCreateElement", 0, (args, next) => {
             next(args);
+            if (ChatroomModule.InputElement == null)
+                return;
             ChatroomModule.InputElement = document.getElementById(
                 "InputChat"
             ) as HTMLInputElement;
 
-            ChatroomModule.InputElement.addEventListener("input", (e) => {
-                ChatroomModule.inputHandle(e);
-            });
+            ChatroomModule.InputElement.addEventListener("input", ChatroomModule.InputElementInputListener);
 
             ChatroomModule.buildKaomojiButton();
         });
@@ -93,6 +96,7 @@ export class ChatroomModule extends BaseModule {
             this.priority,
             (args, next) => {
                 ChatroomModule.removeKaomojiMenu();
+                ChatroomModule.InputElement?.removeEventListener("input", ChatroomModule.InputElementInputListener);
                 ChatroomModule.InputElement = null;
                 return next(args);
             }
