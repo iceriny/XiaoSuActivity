@@ -165,6 +165,15 @@ export class ActivityModule extends BaseModule {
             }
             next(args);
         });
+
+        if (GameVersion !== "R121") {
+            hookFunction("PreferenceGetActivityFactor", this.priority, (args, next) => {
+                if (typeof args[1] === "string" && args[1].indexOf("XSAct_") == 0) {
+                    return 2;
+                }
+                return next(args);
+            });
+        }
     }
 
     //============================================================
