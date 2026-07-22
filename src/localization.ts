@@ -6,9 +6,10 @@ export class Localization {
 
     public static init() {
         conDebug("本地化模块初始化.");
-        hookFunction("TranslationNextLanguage", 0, (args, next) => {
-            next(args);
-            Localization.init();
+        hookFunction("TranslationSwitchLanguage", 0, (args, next) => {
+            const result = next(args);
+            Localization.getLangJson();
+            return result;
         })
         
         this.getLangJson();
