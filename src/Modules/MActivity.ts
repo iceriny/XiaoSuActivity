@@ -24,6 +24,8 @@ const targetPlaceholder = "TargetCharacter";
  * - 接受特定动作的特殊效果 当前为瘙痒增加高潮抵抗难度
  */
 export class ActivityModule extends BaseModule {
+    private readonly activityText = new Map<string, string>();
+
     public Init(): void {
         this.priority = 50;
     }
@@ -41,6 +43,10 @@ export class ActivityModule extends BaseModule {
      * 狗子函数队列处理
      */
     hookListHandler(): void {
+        hookFunction("ActivityDictionaryText", 1, (args, next) => {
+            return this.activityText.get(args[0]) ?? next(args);
+        });
+
         /**
          * 处理没有装本插件的玩家接受到的消息
          * 原理为使用hookFunction来拦截ServerSend函数的执行,并判断消息中是否包含自定义活动的关键词,如果包含则执行自定义操作
@@ -58,7 +64,7 @@ export class ActivityModule extends BaseModule {
                     let msg = ActivityDictionaryText(data.Content);
                     msg = CommonStringSubstitute(msg, substitutions ?? [])
                     data.Dictionary.push({
-                        Tag: "MISSING ACTIVITY DESCRIPTION FOR KEYWORD " + data.Content,
+                        Tag: `MISSING TEXT IN "ActivityDictionary.csv": ${data.Content}`,
                         Text: msg
                     });
                 }
@@ -192,8 +198,8 @@ export class ActivityModule extends BaseModule {
             //加载文字描述
             const activityDesc = this.activityToAddDict[aN as XSA_ActivityName].desc;
 
-            activityDesc?.forEach((d) => {
-                ActivityDictionary?.push(d);
+            activityDesc?.forEach(([key, text]) => {
+                this.activityText.set(key, text);
             });
             actLength += 1;
         }

@@ -85,7 +85,7 @@ export function SendActivity(msg: string, sourceCharacter: number, targetCharact
     const sourceCharacterNickname = sourceCharacterObj ? CharacterNickname(sourceCharacterObj) : "",
         targetCharacterNickname = targetCharacterObj ? CharacterNickname(targetCharacterObj) : "";
     const resultDict: ChatMessageDictionary = [
-        { Tag: "MISSING ACTIVITY DESCRIPTION FOR KEYWORD XSA_ActMessage", Text: msg.replaceAll("{source}", sourceCharacterNickname).replaceAll("{target}", targetCharacterNickname) }
+        { Tag: "MISSING TEXT IN \"ActivityDictionary.csv\": XSA_ActMessage", Text: msg.replaceAll("{source}", sourceCharacterNickname).replaceAll("{target}", targetCharacterNickname) }
     ]
 
     resultDict.push({ SourceCharacter: sourceCharacter });
