@@ -6,10 +6,10 @@ export class Localization {
 
     public static init() {
         conDebug("本地化模块初始化.");
-        // @ts-expect-error: 更换已弃用的 TranslationNextLanguage 函数至 TranslationSwitchLanguage，未来升级bc-stubs后应删除此处的忽略错误
         hookFunction("TranslationSwitchLanguage", 0, (args, next) => {
-            next(args);
-            Localization.init();
+            const result = next(args);
+            Localization.getLangJson();
+            return result;
         })
         
         this.getLangJson();

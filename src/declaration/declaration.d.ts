@@ -1,5 +1,6 @@
 declare const XSActivity_VERSION: string;
 declare const DEBUG: boolean;
+declare function TranslationSwitchLanguage(languageCode: ServerChatRoomLanguage | "TW"): void;
 interface Window {
 	XSActivity_Loaded?: boolean;
 	XSActivity_VERSION?: string;
