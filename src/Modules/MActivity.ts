@@ -129,7 +129,7 @@ export class ActivityModule extends BaseModule {
                 const name = activity.Activity.Name;
                 if (name.includes("XSAct")) {
                     args[4] ??= {}; // null | { image?: string }
-                    args[4].image = `./Assets/Female3DCG/Activity/${this.activityToAddDict[name as XSA_ActivityName].img}.png`;
+                    args[4].image = `./Icons/Activity/${this.activityToAddDict[name as XSA_ActivityName].img}.png`;
                 }
                 return next(args as never);
             });
