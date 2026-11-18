@@ -4,8 +4,11 @@ import commonjs from "@rollup/plugin-commonjs";
 import resolve from "@rollup/plugin-node-resolve";
 import terser from "@rollup/plugin-terser";
 import progress from "rollup-plugin-progress";
-import packageJson from "./package.json" assert { type: "json" };
+import { createRequire } from "node:module";
 import json from "@rollup/plugin-json";
+
+const require = createRequire(import.meta.url);
+const packageJson = require("./package.json");
 
 export default [{
     input: "src/main.ts", // 入口文件路径

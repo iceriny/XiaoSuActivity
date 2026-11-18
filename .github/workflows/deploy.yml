@@ -1,0 +1,77 @@
+name: Deploy to GitHub Pages
+
+# main 與 dev 兩個版本合併成同一個 Pages 部署：
+# 官方 deploy-pages 每次發布整個網站，分成兩個 workflow 會互相覆蓋。
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# 預設不給任何權限，每個 job 只拿自己需要的
+permissions: {}
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # 建置（會執行 npm 依賴）時只有唯讀權限，沒有任何寫入能力
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '20'
+
+      # 依 lockfile 安裝，並停用依賴套件的 install/postinstall 腳本
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Test initialization
+        run: npm test
+
+      - name: Build main
+        run: |
+          npm run build
+          cp userLoad.user.js dist/
+          cp css/* dist/
+          cp translation/* dist/
+          mkdir -p _site
+          mv dist _site/main
+
+      - name: Build dev
+        run: |
+          npm run dev
+          cp userLoad_dev.user.js dist/dev/
+          cp css/* dist/dev/
+          cp translation/* dist/dev/
+          mv dist/dev _site/dev
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    # 只有部署 job 能寫 Pages，且不需要 contents 權限
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
